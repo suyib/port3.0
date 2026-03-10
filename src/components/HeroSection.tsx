@@ -48,7 +48,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            style={{ minWidth: 0 }}>
+            style={{ minWidth: 0, clipPath: 'inset(0 100px 0 0)' }}>
             
             <img
               alt="Designer portrait"
