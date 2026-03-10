@@ -51,9 +51,9 @@ const HeroSection = () => {
             <div className="relative w-72 h-72 md:w-96 md:h-96">
               <div className="absolute inset-0 rounded-full bg-secondary" />
               <img
-                src={avatarImg}
+
                 alt="Designer portrait"
-                className="relative z-10 w-full h-full object-cover rounded-full" />
+                className="relative z-10 w-full h-full object-cover rounded-none" src="/lovable-uploads/0c1f6509-616b-403d-9acc-42b61c9612ec.png" />
               
             </div>
           </motion.div>
