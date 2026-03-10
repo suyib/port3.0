@@ -388,7 +388,7 @@ const CaseStudy = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="font-body text-lg text-muted-foreground leading-relaxed max-w-3xl"
+            className="font-body text-lg text-muted-foreground leading-relaxed"
           >
             {project.outcome}
           </motion.p>
