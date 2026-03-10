@@ -6,13 +6,13 @@
 
 @layer base {
   :root {
-    --background: 30 18% 97%;
+    --background: 30 22% 97%;
     --foreground: 225 13% 12%;
 
-    --card: 0 0% 100%;
+    --card: 30 22% 97%;
     --card-foreground: 225 13% 12%;
 
-    --popover: 0 0% 100%;
+    --popover: 30 22% 97%;
     --popover-foreground: 225 13% 12%;
 
     --primary: 225 13% 12%;
@@ -39,7 +39,7 @@
     --blush: 350 33% 85%;
     --blush-foreground: 225 13% 12%;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 30 22% 97%;
     --sidebar-foreground: 224 10% 32%;
     --sidebar-primary: 225 13% 12%;
     --sidebar-primary-foreground: 30 18% 97%;
