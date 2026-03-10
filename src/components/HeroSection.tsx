@@ -48,13 +48,12 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}>
             
-            <div className="relative w-72 h-72 md:w-96 md:h-96">
-              <div className="absolute inset-0 rounded-full bg-secondary" />
+            <div className="relative w-[36rem] h-[36rem] md:w-[48rem] md:h-[48rem]">
               <img
-
                 alt="Designer portrait"
-                className="relative z-10 w-full h-full object-cover rounded-none" src="/lovable-uploads/0c1f6509-616b-403d-9acc-42b61c9612ec.png" />
-              
+                className="relative z-10 w-full h-full object-cover rounded-none"
+                src="/lovable-uploads/0c1f6509-616b-403d-9acc-42b61c9612ec.png"
+              />
             </div>
           </motion.div>
         </div>
