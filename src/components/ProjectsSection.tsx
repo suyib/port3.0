@@ -1,28 +1,6 @@
 import { motion } from "framer-motion";
-import project1 from "@/assets/project-1.jpg";
-import project2 from "@/assets/project-2.jpg";
-import project3 from "@/assets/project-3.jpg";
-
-const projects = [
-  {
-    title: "FinTrack Dashboard",
-    category: "Mobile App · UI/UX · Development",
-    image: project1,
-    description: "A comprehensive finance tracking app with real-time analytics and intuitive data visualization.",
-  },
-  {
-    title: "Namely E-Commerce",
-    category: "Web Design · Frontend · Shopify",
-    image: project2,
-    description: "A luxury fashion e-commerce platform with a focus on editorial-style product presentation.",
-  },
-  {
-    title: "Mesthane Brand Identity",
-    category: "Branding · Design System · Print",
-    image: project3,
-    description: "Complete brand identity system including logo, color palette, typography, and marketing collateral.",
-  },
-];
+import { Link } from "react-router-dom";
+import { projects } from "@/data/projects";
 
 const ProjectsSection = () => {
   return (
@@ -60,12 +38,12 @@ const ProjectsSection = () => {
                 <p className="font-body text-sm text-muted-foreground tracking-wide mb-3">{project.category}</p>
                 <h3 className="font-display text-3xl md:text-4xl text-foreground mb-4">{project.title}</h3>
                 <p className="font-body text-lg text-muted-foreground leading-relaxed mb-6">{project.description}</p>
-                <a
-                  href="#"
+                <Link
+                  to={`/project/${project.slug}`}
                   className="inline-flex items-center font-body text-sm font-medium text-foreground border-b-2 border-accent pb-1 hover:border-foreground transition-colors"
                 >
                   View Case Study →
-                </a>
+                </Link>
               </div>
             </motion.div>
           ))}
