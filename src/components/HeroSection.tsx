@@ -13,7 +13,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-center lg:text-left">
+            className="text-center lg:text-left order-2 lg:order-1">
             
             <p className="font-body text-xs sm:text-sm tracking-[0.3em] uppercase text-muted-foreground mb-4 sm:mb-6">
               suyin tung, Full-Stack Designer
