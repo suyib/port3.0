@@ -18,9 +18,7 @@ const HeroSection = () => {
               Full-Stack Designer
             </p>
             <h1 className="text-5xl md:text-7xl leading-[0.95] tracking-tight text-foreground font-sans lg:text-7xl font-bold">
-              Calculated
-              <br />
-              {" "}design.
+              Calculated design.
             </h1>
             <h2 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight text-foreground italic mt-2">
               Measurable impact.
