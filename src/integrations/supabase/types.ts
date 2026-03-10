@@ -14,7 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      projects: {
+        Row: {
+          category: string
+          challenge: string
+          comparison: Json
+          component_states: Json
+          created_at: string
+          description: string
+          headline: string
+          id: string
+          image_url: string
+          outcome: string
+          pain_points: Json
+          process: Json
+          published: boolean
+          role: string
+          slug: string
+          solution: string
+          sort_order: number
+          takeaways: Json
+          tech_pivot: Json
+          timeline: string
+          title: string
+          tools: string[]
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          challenge?: string
+          comparison?: Json
+          component_states?: Json
+          created_at?: string
+          description?: string
+          headline?: string
+          id?: string
+          image_url?: string
+          outcome?: string
+          pain_points?: Json
+          process?: Json
+          published?: boolean
+          role?: string
+          slug: string
+          solution?: string
+          sort_order?: number
+          takeaways?: Json
+          tech_pivot?: Json
+          timeline?: string
+          title: string
+          tools?: string[]
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          challenge?: string
+          comparison?: Json
+          component_states?: Json
+          created_at?: string
+          description?: string
+          headline?: string
+          id?: string
+          image_url?: string
+          outcome?: string
+          pain_points?: Json
+          process?: Json
+          published?: boolean
+          role?: string
+          slug?: string
+          solution?: string
+          sort_order?: number
+          takeaways?: Json
+          tech_pivot?: Json
+          timeline?: string
+          title?: string
+          tools?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
