@@ -14,6 +14,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   if (loading) return null;
   if (session) return <Navigate to="/admin" replace />;
