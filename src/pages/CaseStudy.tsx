@@ -171,7 +171,7 @@ const CaseStudy = () => {
             <h2 className="font-display text-4xl md:text-5xl text-foreground">Before → After</h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl">
+          <div className="grid md:grid-cols-2 gap-8">
             {/* Before */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
