@@ -26,21 +26,8 @@ const CaseStudy = () => {
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Back Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/40">
-        <div className="container mx-auto px-6 lg:px-16 py-4">
-          <Link
-            to="/#projects"
-            className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft size={16} />
-            Back to Projects
-          </Link>
-        </div>
-      </nav>
-
       {/* 1. HERO */}
-      <section className="pt-32 pb-8">
+      <section className="pt-24 pb-8">
         <div className="container mx-auto px-6 lg:px-16">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">{project.category}</p>
