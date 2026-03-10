@@ -35,7 +35,7 @@ const AboutSection = () => {
               from concept to deployment.
             </p>
             <p className="font-body text-lg text-muted-foreground leading-relaxed mb-12">
-              Through experience, research, and design principles, I combine strategic thinking with hands-on craftsmanship. Every pixel is intentional, and every line of code is purposeful.
+              Through experience, research, and design principles, I combine strategic thinking with hands-on craftsmanship. I ensure that every pixel is intentional, and every line of code serves a purpose.     
             
             </p>
 
