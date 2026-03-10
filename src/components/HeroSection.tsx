@@ -5,7 +5,7 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden lg:overflow-visible">
       {/* Blush circle */}
-      <div className="absolute top-[45%] -translate-y-1/2 left-1/2 -translate-x-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] lg:left-[calc(60%-400px)] lg:translate-x-0 lg:w-[800px] lg:h-[800px] rounded-full bg-blush opacity-20" />
+      <div className="absolute top-[45%] -translate-y-1/2 left-[60%] -translate-x-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] lg:left-[calc(70%-400px)] lg:translate-x-0 lg:w-[800px] lg:h-[800px] rounded-full bg-blush opacity-20" />
 
       <div className="container mx-auto px-6 lg:px-16 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center pt-24 lg:pt-0">
