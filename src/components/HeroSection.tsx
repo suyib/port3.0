@@ -3,7 +3,7 @@ import avatarImg from "@/assets/avatar.png";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center overflow-visible">
       {/* Blush circle */}
       <div className="absolute top-1/2 -translate-y-1/2 left-[calc(60%-400px)] w-[800px] h-[800px] rounded-full bg-blush opacity-20" />
 
@@ -53,7 +53,7 @@ const HeroSection = () => {
             <img
               alt="Designer portrait"
               className="relative z-10 object-contain max-w-none"
-              style={{ width: '800px', height: 'auto', marginLeft: '100px' }}
+              style={{ width: '800px', height: 'auto', marginLeft: '100px', clipPath: 'inset(0 100px 0 0)' }}
               src="/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png" />
             
           </motion.div>
