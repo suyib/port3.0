@@ -51,7 +51,7 @@ const HeroSection = () => {
             <div className="relative w-[900px] h-[900px] overflow-hidden">
               <img
                 alt="Designer portrait"
-                className="relative z-10 w-full h-full object-contain" src="/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png" />
+                className="relative z-10 w-[900px] h-auto object-contain" src="/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png" />
 
               
             </div>
