@@ -321,7 +321,7 @@ const CaseStudy = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-6 max-w-4xl">
+          <div className="space-y-6">
             {project.componentStates.map((comp, index) => (
               <motion.div
                 key={comp.component}
