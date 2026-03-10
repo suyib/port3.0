@@ -24,7 +24,7 @@ const HeroSection = () => {
             <h2 className="font-display text-2xl sm:text-4xl lg:text-4xl leading-[0.95] tracking-tight text-foreground mt-2 font-bold py-[11px]">
               Measurable impact.
             </h2>
-            <p className="font-body text-base sm:text-lg text-muted-foreground mt-6 sm:mt-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="font-body text-base sm:text-lg text-muted-foreground mt-6 sm:mt-8 max-w-xl mx-auto lg:mx-0 leading-relaxed text-left">
               Full Stack Designer specializing in evidence-based systems. I transform complex user behaviors into high-conversion interfaces through rigorous testing and behavioral analytics.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10 justify-center lg:justify-start">
@@ -57,8 +57,8 @@ const HeroSection = () => {
           </motion.div>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 };
 
 export default HeroSection;
