@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Lightbulb, Layers, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Lightbulb, Layers, AlertTriangle, Target, Code2, Zap } from "lucide-react";
 import { projects } from "@/data/projects";
 import NotFound from "./NotFound";
 
@@ -26,7 +26,7 @@ const CaseStudy = () => {
       </nav>
 
       {/* Hero */}
-      <section className="pt-32 pb-12">
+      <section className="pt-32 pb-6">
         <div className="container mx-auto px-6 lg:px-16">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -40,14 +40,41 @@ const CaseStudy = () => {
             <h1 className="font-display text-5xl md:text-7xl text-foreground mb-6">
               {project.title}
             </h1>
-            <p className="font-body text-xl text-muted-foreground leading-relaxed">
+            <p className="font-body text-xl md:text-2xl text-foreground/80 leading-relaxed mb-4 font-medium">
+              {project.tagline}
+            </p>
+            <p className="font-body text-lg text-muted-foreground leading-relaxed">
               {project.overview}
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Problem & Goal — NEW */}
+      {/* Target Audience */}
+      <section className="pb-12">
+        <div className="container mx-auto px-6 lg:px-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="max-w-3xl flex items-start gap-4 bg-secondary/50 border border-border/30 rounded-xl p-5"
+          >
+            <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Target size={16} className="text-accent" />
+            </div>
+            <div>
+              <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">
+                Target Audience
+              </p>
+              <p className="font-body text-foreground leading-relaxed">
+                {project.targetAudience}
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Problem & Goal */}
       <section className="pb-16">
         <div className="container mx-auto px-6 lg:px-16">
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl">
@@ -217,7 +244,7 @@ const CaseStudy = () => {
         <div className="border-t border-border/40" />
       </div>
 
-      {/* Design Decisions — NEW */}
+      {/* Design Decisions */}
       <section className="py-24">
         <div className="container mx-auto px-6 lg:px-16">
           <motion.div
@@ -265,7 +292,62 @@ const CaseStudy = () => {
         <div className="border-t border-border/40" />
       </div>
 
-      {/* Design System — NEW */}
+      {/* Edge Cases — NEW */}
+      <section className="py-24">
+        <div className="container mx-auto px-6 lg:px-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-16 max-w-3xl"
+          >
+            <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">
+              Edge Cases
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl text-foreground mb-6">
+              Thinking Beyond the Happy Path
+            </h2>
+            <p className="font-body text-lg text-muted-foreground leading-relaxed">
+              Great design handles the exceptions as gracefully as the ideal scenario.
+            </p>
+          </motion.div>
+
+          <div className="space-y-6 max-w-3xl">
+            {project.edgeCases.map((edgeCase, index) => (
+              <motion.div
+                key={edgeCase.scenario}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-card border border-border/40 rounded-xl p-6 md:p-8"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Zap size={16} className="text-accent" />
+                  </div>
+                  <div>
+                    <p className="font-body text-sm font-medium text-foreground mb-2">
+                      {edgeCase.scenario}
+                    </p>
+                    <p className="font-body text-muted-foreground leading-relaxed">
+                      {edgeCase.solution}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="container mx-auto px-6 lg:px-16">
+        <div className="border-t border-border/40" />
+      </div>
+
+      {/* Design System */}
       <section className="py-24">
         <div className="container mx-auto px-6 lg:px-16">
           <motion.div
@@ -318,7 +400,60 @@ const CaseStudy = () => {
         <div className="border-t border-border/40" />
       </div>
 
-      {/* Constraint / Reflection — NEW */}
+      {/* Tech Stack — NEW */}
+      <section className="py-24">
+        <div className="container mx-auto px-6 lg:px-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-16 max-w-3xl"
+          >
+            <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">
+              Technology
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl text-foreground mb-6">
+              Tech Stack
+            </h2>
+            <p className="font-body text-lg text-muted-foreground leading-relaxed">
+              Design decisions don't exist in a vacuum — here's how the frontend connects to the backend.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl">
+            {project.techStack.map((tech, index) => (
+              <motion.div
+                key={tech.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
+                className="flex gap-4 items-start bg-card border border-border/40 rounded-xl p-6"
+              >
+                <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Code2 size={16} className="text-accent" />
+                </div>
+                <div>
+                  <p className="font-body text-sm font-medium text-foreground mb-1">
+                    {tech.name}
+                  </p>
+                  <p className="font-body text-sm text-muted-foreground leading-relaxed">
+                    {tech.purpose}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="container mx-auto px-6 lg:px-16">
+        <div className="border-t border-border/40" />
+      </div>
+
+      {/* Constraint / Reflection */}
       <section className="py-24">
         <div className="container mx-auto px-6 lg:px-16">
           <motion.div
