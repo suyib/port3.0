@@ -23,7 +23,7 @@ const HeroSection = () => {
             <h2 className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-foreground mt-2 font-bold lg:text-4xl py-[11px]">
               Measurable impact.
             </h2>
-            <p className="font-body text-lg text-muted-foreground mt-8 max-w-md leading-relaxed">
+            <p className="font-body text-lg text-muted-foreground mt-8 max-w-xl leading-relaxed">
                Full Stack Designer specializing in evidence-based systems. I transform complex user behaviors into high-conversion interfaces through rigorous testing and behavioral analytics.     
             
             </p>
