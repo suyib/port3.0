@@ -2,8 +2,8 @@ import { motion } from "framer-motion";
 
 const stats = [
 { number: "3+", label: "Years Experience" },
-{ number: "50+", label: "Projects Delivered" },
-{ number: "30+", label: "Happy Clients" }];
+{ number: "40+", label: "Projects Delivered" },
+{ number: "10+", label: "Happy Clients" }];
 
 
 const AboutSection = () => {
