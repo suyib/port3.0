@@ -53,7 +53,7 @@ const HeroSection = () => {
             <img
               alt="Designer portrait"
               className="relative z-10 object-contain max-w-none"
-              style={{ width: '800px', height: 'auto', marginLeft: '100px', clipPath: 'inset(0 100px 0 0)' }}
+              style={{ width: '800px', height: 'auto', transform: 'translateX(10%)' }}
               src="/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png" />
             
           </motion.div>
