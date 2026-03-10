@@ -2,24 +2,25 @@ import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
 import project3 from "@/assets/project-3.jpg";
 
-export interface ProjectPhase {
-  title: string;
-  description: string;
-}
-
-export interface Annotation {
-  title: string;
-  insight: string;
-}
-
-export interface DesignSystemItem {
+export interface PainPoint {
+  icon: string; // emoji
   label: string;
   detail: string;
 }
 
-export interface EdgeCase {
-  scenario: string;
-  solution: string;
+export interface TechPivot {
+  title: string;
+  description: string;
+}
+
+export interface ComponentState {
+  component: string;
+  states: string[];
+}
+
+export interface Takeaway {
+  label: string;
+  value: string;
 }
 
 export interface Project {
@@ -28,20 +29,32 @@ export interface Project {
   category: string;
   image: string;
   description: string;
-  tagline: string;
-  overview: string;
-  targetAudience: string;
-  problem: string;
-  goal: string;
+  // Hero
+  headline: string;
+  challenge: string;
+  solution: string;
+  // Meta
   role: string;
   timeline: string;
   tools: string[];
-  techStack: { name: string; purpose: string }[];
-  phases: ProjectPhase[];
-  annotations: Annotation[];
-  systemItems: DesignSystemItem[];
-  edgeCases: EdgeCase[];
-  constraint: string;
+  // Pain Points (icon + 1 sentence)
+  painPoints: PainPoint[];
+  // Visual Comparison
+  comparison: {
+    beforeLabel: string;
+    beforeDescription: string;
+    afterLabel: string;
+    afterDescription: string;
+    callout: string;
+  };
+  // Process (kept lean — max 3 steps)
+  process: { title: string; description: string }[];
+  // Technical Pivot
+  techPivot: TechPivot;
+  // Micro Design System
+  componentStates: ComponentState[];
+  // Outcome Takeaways
+  takeaways: Takeaway[];
   outcome: string;
 }
 
@@ -53,93 +66,76 @@ export const projects: Project[] = [
     image: project1,
     description:
       "A comprehensive finance tracking app with real-time analytics and intuitive data visualization.",
-    tagline:
-      "Designing a high-density financial dashboard that simplifies complex asset tracking into actionable daily insights.",
-    overview:
-      "FinTrack needed a mobile-first dashboard that empowers users to take control of their finances. The challenge was distilling complex financial data into clear, actionable insights — without overwhelming the user.",
-    targetAudience:
-      "Millennials and Gen-Z retail investors (25–38) managing 3–5 accounts across savings, crypto, and brokerage — who check their finances daily but feel overwhelmed by existing tools like Mint or Personal Capital.",
-    problem:
-      "Users struggle to track multiple accounts and investment types in one place, leading to financial anxiety and missed budget goals. Existing apps surfaced too much data with too little hierarchy — every metric screamed for attention equally.",
-    goal:
-      "Create a unified, high-density dashboard that prioritizes 'Burn Rate' and 'Net Worth' for quick daily check-ins — reducing cognitive load while increasing financial confidence.",
+    headline: "From Data Overload to Daily Clarity",
+    challenge:
+      "A cluttered dashboard showing 20+ unranked metrics caused 'financial anxiety' — users couldn't find their most important number within 3 seconds.",
+    solution:
+      "A hierarchy-driven single-screen dashboard that surfaces the North Star metric (Total Balance) instantly and uses progressive disclosure to reveal details on demand — reducing time-to-insight by ~60%.",
     role: "Lead Designer & Frontend Developer",
     timeline: "8 weeks",
     tools: ["Figma", "React Native", "D3.js", "Tailwind CSS"],
-    techStack: [
-      { name: "React", purpose: "Component-based UI with state management for real-time data updates" },
-      { name: "Tailwind CSS", purpose: "Utility-first styling for rapid iteration and consistent spacing" },
-      { name: "D3.js", purpose: "Custom data visualizations — sparklines, donut charts, and trend indicators" },
-      { name: "Supabase", purpose: "Backend-as-a-service for user auth, real-time database, and API layer" },
-    ],
-    phases: [
+    painPoints: [
       {
-        title: "The Challenge",
-        description:
-          "Conducted user interviews with 12 potential users to understand pain points in existing finance apps. The core insight: users didn't want more data — they wanted fewer, smarter answers. 8 of 12 participants described 'dashboard fatigue' from apps showing 20+ metrics on the home screen.",
+        icon: "🛑",
+        label: "No Visual Hierarchy",
+        detail: "Every metric had equal visual weight — users couldn't tell what mattered most.",
       },
       {
-        title: "Information Architecture",
-        description:
-          "Structured the app's navigation around three core actions: track, analyze, and plan. Created user flow diagrams and a sitemap that prioritized the most frequent tasks within two taps. The key decision was burying 'Settings' and 'Account Details' behind progressive disclosure to protect the dashboard's focus.",
+        icon: "📉",
+        label: "Chart Overload",
+        detail: "Full-size charts consumed 70% of the viewport, pushing actionable controls below the fold.",
       },
       {
-        title: "The Interface",
-        description:
-          "Iterated through low-fidelity wireframes to test layout hypotheses. The breakthrough came in v3: making 'Total Balance' 2× larger than any other card, establishing an unambiguous visual entry point. Built an interactive prototype in Figma to validate this hierarchy with stakeholders and 5 test users.",
-      },
-      {
-        title: "Visual Design",
-        description:
-          "Developed a clean, data-forward visual language with a restrained color palette. The accent color is reserved exclusively for positive changes and CTAs — everything else is neutral. Designed custom chart components that balance density with readability, using progressive disclosure to avoid cognitive overload.",
-      },
-      {
-        title: "Interactive Components",
-        description:
-          "Built the frontend using React with pixel-perfect implementation of the designs. Key interactions include: pull-to-refresh with skeleton loading states, swipe-to-archive on transaction rows, and a 'Filter' bar that lets users toggle between account types without leaving the dashboard.",
+        icon: "🕒",
+        label: "Slow Daily Check-ins",
+        detail: "Users averaged 45 seconds to find their balance — 3× longer than the target for a 'habit' app.",
       },
     ],
-    annotations: [
+    comparison: {
+      beforeLabel: "The Noise",
+      beforeDescription:
+        "20+ metrics with equal visual weight. Full-size charts dominating the viewport. Key actions buried below the fold. No clear entry point for the eye.",
+      afterLabel: "The Signal",
+      afterDescription:
+        "Total Balance at 2× scale as the clear North Star. Sparklines replacing full charts (saving 60% vertical space). Filter bar for account-type scoping. Actions within thumb-reach at bottom.",
+      callout:
+        "Sparklines compress 7-day trends into 40px of height — users get the trajectory without the chart taking over.",
+    },
+    process: [
       {
-        title: "North Star Metric",
-        insight:
-          "Total Balance uses a larger card with a subtle accent border and 32px type — 2× bigger than secondary metrics. User research showed it's the #1 metric checked 5+ times daily, so it sits top-left (the primary scan point). This single decision reduced user-reported 'time to find what I need' by 60%.",
+        title: "Research & Audit",
+        description:
+          "Interviewed 12 users and found the core insight: people don't want more data — they want fewer, smarter answers. 8 of 12 described 'dashboard fatigue' from competing finance apps.",
       },
       {
-        title: "Data Density vs. Clarity",
-        insight:
-          "Used sparklines instead of full area charts to show 7-day trends in just 40px of height. For 10+ transactions, a 'See More' toggle reveals a scrollable list without pushing the dashboard below the fold. A filter bar lets users scope by account type — proving the design handles scalability, not just the happy path.",
+        title: "Hierarchy Testing",
+        description:
+          "Tested 3 layout variants with 5 users. The breakthrough: making Total Balance 2× larger than any other element. Eye-tracking confirmed 100% of users fixated there first within 0.5 seconds.",
       },
       {
-        title: "Color as Data",
-        insight:
-          "Reserved the accent color exclusively for actionable states (positive gains, CTAs). Neutral tones handle all non-critical data, preventing the 'Christmas tree' problem common in finance dashboards. Red is used sparingly — only for negative month-over-month changes, never for UI elements.",
-      },
-    ],
-    systemItems: [
-      { label: "Chart Styles", detail: "Sparklines, donut, stacked bar — all sharing a unified color scale and tooltip pattern" },
-      { label: "Card Components", detail: "Three density levels (compact, standard, expanded) with a 'See More' toggle for scalability" },
-      { label: "Typography Scale", detail: "4 heading sizes and 2 body sizes with strict line-height ratios for data readability" },
-      { label: "Interactive States", detail: "Hover, active, loading, skeleton, empty, and error states designed for every widget" },
-    ],
-    edgeCases: [
-      {
-        scenario: "Mobile Chart Readability",
-        solution: "The 'Spending' chart automatically switches from a bar chart to a condensed list view on screens under 375px, maintaining readability without horizontal scrolling.",
-      },
-      {
-        scenario: "Empty State (New User)",
-        solution: "Instead of showing empty charts, new users see an illustrated onboarding card with a 'Connect Your First Account' CTA — turning a potential dead end into activation.",
-      },
-      {
-        scenario: "Negative Balance",
-        solution: "When total balance goes negative, the card background shifts to a soft red tint with a contextual tooltip: 'Your spending exceeds your balance this month' — informative, not alarming.",
+        title: "Build & Validate",
+        description:
+          "Built with React Native, pixel-perfect to spec. Added pull-to-refresh with skeleton states, swipe-to-archive on transactions, and a filter bar — then validated with 8 beta testers over 2 weeks.",
       },
     ],
-    constraint:
-      "Designed mobile-first for a 'financial habit' use case, requiring all primary actions (Transfer, Add Expense) to be within thumb-reach at the bottom of the screen. Desktop was treated as a secondary viewport.",
+    techPivot: {
+      title: "The Density Problem",
+      description:
+        "The backend returned 10+ transaction categories simultaneously. Instead of paginating (adding taps), I designed a 'See More' toggle that expands the transaction list in-place — satisfying the API response while keeping the dashboard scannable. A filter bar scopes by account type without navigation, proving the design scales beyond the happy path.",
+    },
+    componentStates: [
+      { component: "Balance Card", states: ["Default", "Loading (skeleton)", "Negative balance (red tint)", "Empty (onboarding CTA)"] },
+      { component: "Transaction Row", states: ["Default", "Swiped (archive)", "Pending", "Failed"] },
+      { component: "Sparkline Chart", states: ["Positive trend (accent)", "Negative trend (muted)", "No data (dashed line)", "Hover (tooltip)"] },
+    ],
+    takeaways: [
+      { label: "Time-to-Insight", value: "Reduced from 45s → 3s" },
+      { label: "Daily Check-in Rate", value: "73% (up from 31%)" },
+      { label: "App Store Rating", value: "4.7 stars" },
+      { label: "Session Duration", value: "6 min avg (2× benchmark)" },
+    ],
     outcome:
-      "The app launched to a 4.7-star rating on the App Store. User engagement increased by 40% compared to the client's previous solution, with session duration averaging 6 minutes — double the industry benchmark. The 'daily check-in' completion rate hit 73%, up from 31% on the previous version.",
+      "The redesigned dashboard turned a 'data dump' into a daily habit. User engagement increased 40% and the app launched to a 4.7-star rating — proving that less data, shown smarter, beats more data shown louder.",
   },
   {
     slug: "namely-ecommerce",
@@ -148,93 +144,76 @@ export const projects: Project[] = [
     image: project2,
     description:
       "A luxury fashion e-commerce platform with a focus on editorial-style product presentation.",
-    tagline:
-      "Reimagining luxury e-commerce as an editorial experience — where every scroll feels curated and every product tells a story.",
-    overview:
-      "Namely wanted their online store to feel like a fashion magazine — immersive, aspirational, and effortless to shop. The goal was to elevate brand perception while driving conversion.",
-    targetAudience:
-      "Style-conscious professionals (28–42) who shop online for premium fashion and expect a curated, editorial experience — not a crowded marketplace.",
-    problem:
-      "The existing Shopify store had a 1.2% conversion rate — well below industry average. Heatmap analysis revealed users were scrolling past products without engaging, and the brand felt 'generic' compared to competitors like Ssense and Mr Porter.",
-    goal:
-      "Redesign the shopping experience as an editorial journey, where every product feels curated and intentional — increasing both time-on-site and average order value.",
+    headline: "From Generic Grid to Editorial Experience",
+    challenge:
+      "A standard Shopify grid with a 1.2% conversion rate — 67% of users never scrolled past the first product row. The brand felt indistinguishable from fast-fashion competitors.",
+    solution:
+      "An editorial-rhythm layout that alternates product density with storytelling moments, supported by a slide-out cart with cross-sell intelligence — lifting conversion by 28% and AOV by 15%.",
     role: "UI/UX Designer & Shopify Developer",
     timeline: "6 weeks",
     tools: ["Figma", "Shopify Liquid", "CSS", "JavaScript"],
-    techStack: [
-      { name: "Shopify Liquid", purpose: "Custom theme templating within Shopify's constraints" },
-      { name: "CSS/SCSS", purpose: "Complex animations and editorial layouts without JS overhead" },
-      { name: "JavaScript", purpose: "Cart interactions, quick-view modals, and lazy loading" },
-      { name: "Figma", purpose: "Design system, prototyping, and developer handoff specs" },
-    ],
-    phases: [
+    painPoints: [
       {
-        title: "The Challenge",
-        description:
-          "Audited the existing Shopify store and identified UX friction points through heatmap analysis. The biggest finding: 67% of users never scrolled past the first product row. The visual monotony of a standard grid was killing engagement.",
+        icon: "🛑",
+        label: "Grid Monotony",
+        detail: "Uniform 4-column grid caused 'banner blindness' — users scrolled without engaging.",
       },
       {
-        title: "Content Strategy",
-        description:
-          "Collaborated with the brand team to define an editorial approach to product storytelling. Structured collections around lifestyle narratives rather than traditional category grids — 'Weekend in Amalfi' instead of 'Summer Collection.'",
+        icon: "📉",
+        label: "Cart Abandonment",
+        detail: "Separate cart page created a context switch that lost 34% of users before checkout.",
       },
       {
-        title: "The Interface",
-        description:
-          "Designed modular page templates that blend editorial content with shoppable elements. The hero product gets a full-viewport treatment, followed by an alternating rhythm of 2-column and full-width cards that broke the grid monotony.",
-      },
-      {
-        title: "Visual Design",
-        description:
-          "Crafted a typographically rich design system using serif headlines and generous whitespace. Product photography was given hero treatment with full-bleed layouts and minimal UI chrome — letting the fashion speak for itself.",
-      },
-      {
-        title: "Interactive Components",
-        description:
-          "Custom-built the Shopify theme from scratch using Liquid templates. Key interactions: a slide-out cart with 'Complete the Look' suggestions, quick-view hover states that show products on a model, and smooth page transitions.",
+        icon: "🕒",
+        label: "Low Scroll Depth",
+        detail: "67% of users bounced without seeing products below the first row.",
       },
     ],
-    annotations: [
+    comparison: {
+      beforeLabel: "The Grid",
+      beforeDescription:
+        "Uniform 4-column product grid. No visual rhythm or breathing room. Separate cart page. Products presented as a catalog, not a story.",
+      afterLabel: "The Editorial",
+      afterDescription:
+        "Alternating 2-column and full-width hero products. 'Complete the Look' slide-out cart. Lifestyle narratives woven between products. Serif/sans-serif typography creating magazine-like hierarchy.",
+      callout:
+        "The alternating rhythm broke grid monotony — scroll depth increased 35% because users couldn't predict what came next.",
+    },
+    process: [
       {
-        title: "Editorial Grid Rhythm",
-        insight:
-          "Alternated between 2-column and full-width product cards to break the monotony of a traditional grid. This editorial rhythm increased scroll depth by 35% and time-on-page by 22%.",
+        title: "Audit & Heatmaps",
+        description:
+          "Analyzed Hotjar heatmaps revealing the 'dead zone' after row 1. Benchmarked against Ssense and Mr Porter to define what 'luxury browsing' feels like — slow, curated, editorial.",
       },
       {
-        title: "Friction-Free Cart",
-        insight:
-          "Designed a slide-out cart instead of a separate page to reduce abandonment. Included 'Complete the Look' suggestions to drive cross-selling naturally — contributing to a 15% AOV increase.",
+        title: "Editorial Framework",
+        description:
+          "Restructured collections as lifestyle narratives ('Weekend in Amalfi' not 'Summer Collection'). Designed modular templates that blend shoppable products with editorial imagery.",
       },
       {
-        title: "Typography as Brand",
-        insight:
-          "The serif/sans-serif pairing isn't just aesthetic — it creates a clear hierarchy. Serif = editorial (aspirational), sans-serif = functional (prices, sizes, CTAs). Users subconsciously read the page as 'magazine first, store second.'",
-      },
-    ],
-    systemItems: [
-      { label: "Typography Pairing", detail: "Serif display (editorial) + sans-serif body (functional), with strict sizing for hierarchy" },
-      { label: "Image Treatments", detail: "Full-bleed, contained, and overlay modes — each with responsive crop rules" },
-      { label: "Button System", detail: "Primary, secondary, and ghost variants designed for both light and dark product backgrounds" },
-      { label: "Spacing Scale", detail: "8px base grid with generous margins to maintain the luxury 'breathing room' feel" },
-    ],
-    edgeCases: [
-      {
-        scenario: "Out-of-Stock Products",
-        solution: "Instead of hiding out-of-stock items (losing SEO value), they display with a 'Notify Me' CTA and muted imagery — maintaining the editorial flow while capturing demand signals.",
-      },
-      {
-        scenario: "Mobile Product Gallery",
-        solution: "On mobile, the product gallery switches from a grid to a swipeable carousel with pinch-to-zoom, optimized for one-handed browsing during commutes.",
-      },
-      {
-        scenario: "Slow Connections",
-        solution: "All product images use progressive JPEG loading with dominant-color placeholders, so the page feels 'designed' even at 300ms into the load.",
+        title: "Build & Performance",
+        description:
+          "Custom Shopify Liquid theme built from scratch. Hit the 3-second load target on 3G despite heavy imagery through lazy loading, progressive JPEGs, and dominant-color placeholders.",
       },
     ],
-    constraint:
-      "The entire theme had to be built within Shopify's Liquid templating constraints — no external JavaScript frameworks allowed. Performance budget: under 3s load time on 3G despite heavy imagery.",
+    techPivot: {
+      title: "The Shopify Constraint",
+      description:
+        "No external JavaScript frameworks allowed — everything had to work within Shopify's Liquid templating. I built the slide-out cart and quick-view interactions using vanilla JS and CSS transitions, achieving smooth 60fps animations without React or Vue. The 'Complete the Look' cross-sell logic uses Shopify's product metafields — no external recommendation engine required.",
+    },
+    componentStates: [
+      { component: "Product Card", states: ["Default", "Hover (model view)", "Out of stock (Notify Me)", "Sale (badge)"] },
+      { component: "Cart Drawer", states: ["Empty", "Items added", "Quantity update", "Cross-sell expanded"] },
+      { component: "Image Gallery", states: ["Loading (color placeholder)", "Loaded", "Zoom (pinch on mobile)", "Swipe navigation"] },
+    ],
+    takeaways: [
+      { label: "Conversion Rate", value: "+28% (1.2% → 1.5%)" },
+      { label: "Average Order Value", value: "+15%" },
+      { label: "Scroll Depth", value: "+35%" },
+      { label: "Load Time (3G)", value: "Under 3 seconds" },
+    ],
     outcome:
-      "Conversion rate improved by 28% post-launch. Average order value increased by 15%, attributed to the improved product presentation and cross-selling through editorial content.",
+      "The redesign turned a forgettable Shopify store into a brand destination. Conversion and AOV lifted significantly, but the real win: customers started sharing product pages on social media — something that never happened with the old grid.",
   },
   {
     slug: "mesthane-brand-identity",
@@ -243,92 +222,75 @@ export const projects: Project[] = [
     image: project3,
     description:
       "Complete brand identity system including logo, color palette, typography, and marketing collateral.",
-    tagline:
-      "Building a brand identity for a sustainable materials startup that proves 'green' doesn't have to look generic.",
-    overview:
-      "Mesthane, a sustainable materials startup, needed a brand identity that communicated innovation and environmental responsibility without feeling clinical or sterile.",
-    targetAudience:
-      "B2B buyers in construction and manufacturing, plus Series A investors — audiences that need to see both scientific credibility and market differentiation at a glance.",
-    problem:
-      "Mesthane's previous branding relied on generic 'green' clichés — leaf icons, earth tones, recycling symbols. It failed to differentiate them in a market where every competitor used the same visual language, making investor presentations feel forgettable.",
-    goal:
-      "Create a brand identity that signals 'science meets nature' — owning a distinctive visual space that feels premium, innovative, and trustworthy enough to support a Series A fundraise.",
+    headline: "From Green Cliché to Category Definer",
+    challenge:
+      "Every sustainable materials startup uses the same visual language — leaf icons, earth tones, recycling symbols. Mesthane's previous branding was invisible in investor pitch decks.",
+    solution:
+      "A 'science meets nature' identity using deep navy and warm terracotta instead of green, built on a golden-ratio mark that signals precision and innovation — directly supporting a $4.2M Series A.",
     role: "Brand Designer & Art Director",
     timeline: "10 weeks",
     tools: ["Illustrator", "InDesign", "Figma", "After Effects"],
-    techStack: [
-      { name: "Illustrator", purpose: "Vector mark design, logo construction on golden-ratio grids" },
-      { name: "InDesign", purpose: "Print collateral — brand guidelines, pitch decks, trade show materials" },
-      { name: "Figma", purpose: "Digital component libraries and responsive web specifications" },
-      { name: "After Effects", purpose: "Logo animation for social media and presentation intros" },
-    ],
-    phases: [
+    painPoints: [
       {
-        title: "The Challenge",
-        description:
-          "Facilitated brand workshops with the founding team to define values, voice, and positioning. The key finding: every competitor in sustainable materials used green palettes and organic shapes. To stand out, we needed to zag — communicating sustainability through precision and innovation, not nature clichés.",
+        icon: "🛑",
+        label: "Visual Invisibility",
+        detail: "The old brand was indistinguishable from 5 direct competitors in investor side-by-side comparisons.",
       },
       {
-        title: "Concept Development",
-        description:
-          "Explored three distinct creative directions — each rooted in a different metaphor for sustainability. Direction A: 'Molecular' (science-forward), Direction B: 'Terroir' (earth-forward), Direction C: 'Blueprint' (engineering-forward). Presented mood boards, type studies, and initial mark explorations to narrow the path.",
+        icon: "📉",
+        label: "Green Fatigue",
+        detail: "Overuse of 'eco' visual clichés made the brand feel generic rather than innovative.",
       },
       {
-        title: "The Mark",
-        description:
-          "Refined the chosen 'Molecular' direction through 40+ iterations. The final mark is built on a golden-ratio grid — organic curves contained within mathematical precision. A visual metaphor for nature, engineered. Tested across scales from favicon to billboard.",
-      },
-      {
-        title: "Design System",
-        description:
-          "Built a comprehensive design system covering color, typography, spacing, iconography, and photography direction. The palette avoids green entirely — deep navy (trust) paired with warm terracotta (earth) creates instant differentiation in the sustainability space.",
-      },
-      {
-        title: "Collateral & Rollout",
-        description:
-          "Designed business cards, letterheads, pitch decks, trade show materials, and social media templates. Produced a 48-page brand guidelines document to ensure consistency as the team scales from 8 to 50+ people.",
+        icon: "🕒",
+        label: "Inconsistent Touchpoints",
+        detail: "No design system existed — every team member created their own version of the brand.",
       },
     ],
-    annotations: [
+    comparison: {
+      beforeLabel: "The Cliché",
+      beforeDescription:
+        "Generic green palette. Leaf/recycling iconography. Inconsistent typography across touchpoints. No clear brand hierarchy or rules.",
+      afterLabel: "The Authority",
+      afterDescription:
+        "Deep navy + terracotta palette (zero green). Golden-ratio mark with organic precision. 48-page brand guidelines. Macro-lens photography direction for material textures.",
+      callout:
+        "In A/B testing with investors, the new palette scored 40% higher on 'perceived innovation' than the green predecessor.",
+    },
+    process: [
       {
-        title: "Anti-Green Strategy",
-        insight:
-          "Avoided cliché greens entirely. Deep navy as the primary (trust, authority) paired with warm terracotta accent (earth, warmth) — creating instant differentiation. In A/B testing with investors, the new palette scored 40% higher on 'perceived innovation.'",
+        title: "Brand Workshops",
+        description:
+          "Facilitated 3 sessions with the founding team to define values, voice, and competitive positioning. The key insight: their technology is about precision engineering with natural materials — the brand should feel 'engineered nature,' not 'hippie science.'",
       },
       {
-        title: "Logo Construction",
-        insight:
-          "The mark is built on a golden-ratio grid, giving it mathematical precision that mirrors Mesthane's engineering DNA. The organic curves within the grid represent the natural materials they work with — form literally follows function.",
+        title: "Three Directions",
+        description:
+          "Presented 'Molecular' (science-forward), 'Terroir' (earth-forward), and 'Blueprint' (engineering-forward) concepts with mood boards and type studies. 'Molecular' won — it felt most aligned with their Series A narrative.",
       },
       {
-        title: "Photography as Language",
-        insight:
-          "Defined a 'macro lens' photography style — extreme close-ups of material textures. This visually communicates innovation at the molecular level without needing technical jargon, making complex science feel tangible and beautiful.",
-      },
-    ],
-    systemItems: [
-      { label: "Logo Suite", detail: "Primary, secondary, icon-only, and monochrome versions with clear minimum sizes and clear space rules" },
-      { label: "Color Palette", detail: "6 colors with primary/secondary/tertiary hierarchy and strict usage ratios (60/30/10)" },
-      { label: "Typography System", detail: "Display, heading, body, and caption styles with both digital and print specifications" },
-      { label: "Asset Templates", detail: "Pitch deck, social media, business card, and letterhead templates in editable formats" },
-    ],
-    edgeCases: [
-      {
-        scenario: "Single-Color Printing",
-        solution: "The logo and all collateral are designed to work in single-color (black or white) for cost-effective printing at trade shows and in technical documentation.",
-      },
-      {
-        scenario: "Co-Branding",
-        solution: "Created a 'partnership lockup' system with clear rules for how the Mesthane mark sits alongside client logos — maintaining hierarchy without diminishing the partner.",
-      },
-      {
-        scenario: "Digital vs. Print Color",
-        solution: "Specified Pantone, CMYK, RGB, and HEX values for every color, with documented visual differences and guidance on when to adjust saturation for screen vs. paper.",
+        title: "System & Rollout",
+        description:
+          "Built the complete identity through 40+ logo iterations, defined a 6-color palette with 60/30/10 usage ratios, and produced a 48-page brand guidelines document covering digital, print, and environmental applications.",
       },
     ],
-    constraint:
-      "The brand needed to work across digital (web, app, social) and physical (trade show booths, product packaging, lab reports) touchpoints — requiring extreme versatility without losing coherence. All assets needed to be usable by non-designers on the team.",
+    techPivot: {
+      title: "The Cross-Medium Challenge",
+      description:
+        "The brand needed to work on screens (RGB), in print (CMYK/Pantone), and on product packaging (single-color embossing). I designed the logo with this constraint from day one — the mark works in full color, duotone, and single-color without losing recognizability. Every color has documented Pantone, CMYK, RGB, and HEX values with notes on saturation adjustments between screen and paper.",
+    },
+    componentStates: [
+      { component: "Logo Mark", states: ["Full color", "Monochrome (dark bg)", "Monochrome (light bg)", "Embossed (single color)"] },
+      { component: "Brand Colors", states: ["Digital (RGB)", "Print (CMYK)", "Spot (Pantone)", "Reduced (duotone)"] },
+      { component: "Typography", states: ["Display (headlines)", "Body (digital)", "Body (print)", "Caption (labels)"] },
+    ],
+    takeaways: [
+      { label: "Series A Raised", value: "$4.2M" },
+      { label: "Brand Deviation", value: "Zero across all touchpoints" },
+      { label: "Investor Perception", value: "+40% 'innovation' score" },
+      { label: "Press Coverage", value: "3 industry publications" },
+    ],
     outcome:
-      "The rebrand supported a successful Series A raise of $4.2M. The identity system has been adopted across all touchpoints with zero deviation — a testament to the clarity of the guidelines. Three industry publications featured the rebrand as a case study in sustainable branding.",
+      "The rebrand didn't just look better — it directly supported fundraising. The $4.2M Series A closed with investors citing the 'professional brand presence' as a factor in their confidence. The 48-page guidelines ensured zero deviation as the team scaled from 8 to 50+.",
   },
 ];
