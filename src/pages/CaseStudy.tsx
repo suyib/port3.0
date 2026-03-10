@@ -134,7 +134,7 @@ const CaseStudy = () => {
             <h2 className="font-display text-4xl md:text-5xl text-foreground">What Wasn't Working</h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl">
+          <div className="grid md:grid-cols-3 gap-8">
             {project.painPoints.map((point, i) => (
               <motion.div
                 key={point.label}
