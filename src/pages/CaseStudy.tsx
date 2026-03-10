@@ -243,7 +243,7 @@ const CaseStudy = () => {
             <h2 className="font-display text-4xl md:text-5xl text-foreground">How I Got There</h2>
           </motion.div>
 
-          <div className="space-y-16 max-w-3xl">
+          <div className="space-y-16">
             {project.process.map((step, index) => (
               <motion.div
                 key={step.title}
