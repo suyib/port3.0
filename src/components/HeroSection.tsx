@@ -51,9 +51,9 @@ const HeroSection = () => {
             <div className="relative w-[36rem] h-[36rem] md:w-[48rem] md:h-[48rem] overflow-hidden">
               <img
                 alt="Designer portrait"
-                className="relative z-10 w-full h-full object-contain"
-                src="/lovable-uploads/0c1f6509-616b-403d-9acc-42b61c9612ec.png"
-              />
+                className="relative z-10 w-full h-full object-contain" src="/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png" />
+
+              
             </div>
           </motion.div>
         </div>
