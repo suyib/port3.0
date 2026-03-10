@@ -49,10 +49,11 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
           >
-            <div className="relative w-[900px] overflow-hidden">
+            <div className="relative overflow-visible">
               <img
                 alt="Designer portrait"
-                className="relative z-10 w-[900px] h-auto object-contain"
+                className="relative z-10 object-contain"
+                style={{ width: '900px', height: 'auto' }}
                 src="/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png"
               />
             </div>
