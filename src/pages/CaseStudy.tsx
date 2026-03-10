@@ -34,7 +34,7 @@ const CaseStudy = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-4xl"
+            className=""
           >
             <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">
               {project.category}
@@ -49,7 +49,7 @@ const CaseStudy = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="grid md:grid-cols-2 gap-6 max-w-4xl"
+            className="grid md:grid-cols-2 gap-6"
           >
             <div className="bg-card border border-border/40 rounded-2xl p-8">
               <p className="font-body text-xs tracking-[0.2em] uppercase text-destructive mb-3 font-medium">
@@ -78,7 +78,7 @@ const CaseStudy = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.25 }}
-            className="flex flex-wrap gap-x-12 gap-y-4 max-w-4xl"
+            className="flex flex-wrap gap-x-12 gap-y-4"
           >
             <div>
               <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">Role</p>
@@ -134,7 +134,7 @@ const CaseStudy = () => {
             <h2 className="font-display text-4xl md:text-5xl text-foreground">What Wasn't Working</h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl">
+          <div className="grid md:grid-cols-3 gap-8">
             {project.painPoints.map((point, i) => (
               <motion.div
                 key={point.label}
@@ -171,7 +171,7 @@ const CaseStudy = () => {
             <h2 className="font-display text-4xl md:text-5xl text-foreground">Before → After</h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl">
+          <div className="grid md:grid-cols-2 gap-8">
             {/* Before */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -213,7 +213,7 @@ const CaseStudy = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-8 max-w-5xl"
+            className="mt-8"
           >
             <div className="bg-accent/5 border border-accent/20 rounded-xl px-6 py-4 flex items-start gap-3">
               <Zap size={18} className="text-accent flex-shrink-0 mt-0.5" />
@@ -243,7 +243,7 @@ const CaseStudy = () => {
             <h2 className="font-display text-4xl md:text-5xl text-foreground">How I Got There</h2>
           </motion.div>
 
-          <div className="space-y-16 max-w-3xl">
+          <div className="space-y-16">
             {project.process.map((step, index) => (
               <motion.div
                 key={step.title}
@@ -278,7 +278,7 @@ const CaseStudy = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl"
+            className=""
           >
             <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">Technical Constraint</p>
             <h2 className="font-display text-4xl md:text-5xl text-foreground mb-10">
@@ -310,7 +310,7 @@ const CaseStudy = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-14 max-w-3xl"
+            className="mb-14"
           >
             <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">UI Kit</p>
             <h2 className="font-display text-4xl md:text-5xl text-foreground mb-4">
@@ -321,7 +321,7 @@ const CaseStudy = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-6 max-w-4xl">
+          <div className="space-y-6">
             {project.componentStates.map((comp, index) => (
               <motion.div
                 key={comp.component}
@@ -367,7 +367,7 @@ const CaseStudy = () => {
           </motion.div>
 
           {/* Metric cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
             {project.takeaways.map((t, i) => (
               <motion.div
                 key={t.label}
@@ -388,7 +388,7 @@ const CaseStudy = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="font-body text-lg text-muted-foreground leading-relaxed max-w-3xl"
+            className="font-body text-lg text-muted-foreground leading-relaxed"
           >
             {project.outcome}
           </motion.p>
