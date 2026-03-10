@@ -27,7 +27,7 @@ const HeroSection = () => {
             <p className="font-body text-base sm:text-lg text-muted-foreground mt-6 sm:mt-8 max-w-xl leading-relaxed">
               Full Stack Designer specializing in evidence-based systems. I transform complex user behaviors into high-conversion interfaces through rigorous testing and behavioral analytics.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10 justify-start">
               <a
                 href="#projects"
                 className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-primary text-primary-foreground font-body font-medium text-sm tracking-wide hover:opacity-90 transition-opacity">
