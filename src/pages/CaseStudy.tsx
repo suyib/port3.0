@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Lightbulb, Layers, AlertTriangle } from "lucide-react";
 import { projects } from "@/data/projects";
 import NotFound from "./NotFound";
 
@@ -26,7 +26,7 @@ const CaseStudy = () => {
       </nav>
 
       {/* Hero */}
-      <section className="pt-32 pb-20">
+      <section className="pt-32 pb-12">
         <div className="container mx-auto px-6 lg:px-16">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -47,11 +47,56 @@ const CaseStudy = () => {
         </div>
       </section>
 
+      {/* Problem & Goal — NEW */}
+      <section className="pb-16">
+        <div className="container mx-auto px-6 lg:px-16">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-card border border-border/40 rounded-2xl p-8"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 rounded-full bg-destructive/10 flex items-center justify-center">
+                  <AlertTriangle size={16} className="text-destructive" />
+                </div>
+                <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground">
+                  The Problem
+                </p>
+              </div>
+              <p className="font-body text-foreground leading-relaxed">
+                {project.problem}
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="bg-card border border-border/40 rounded-2xl p-8"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
+                  <Lightbulb size={16} className="text-accent" />
+                </div>
+                <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground">
+                  The Goal
+                </p>
+              </div>
+              <p className="font-body text-foreground leading-relaxed">
+                {project.goal}
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Hero Image */}
       <motion.section
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
+        transition={{ duration: 0.7, delay: 0.3 }}
         className="pb-24"
       >
         <div className="container mx-auto px-6 lg:px-16">
@@ -164,6 +209,137 @@ const CaseStudy = () => {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="container mx-auto px-6 lg:px-16">
+        <div className="border-t border-border/40" />
+      </div>
+
+      {/* Design Decisions — NEW */}
+      <section className="py-24">
+        <div className="container mx-auto px-6 lg:px-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-16"
+          >
+            <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">
+              Rationale
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl text-foreground">
+              Key Design Decisions
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {project.annotations.map((annotation, index) => (
+              <motion.div
+                key={annotation.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-card border border-border/40 rounded-2xl p-8"
+              >
+                <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mb-5">
+                  <Lightbulb size={18} className="text-accent" />
+                </div>
+                <h3 className="font-display text-xl text-foreground mb-3">
+                  {annotation.title}
+                </h3>
+                <p className="font-body text-muted-foreground leading-relaxed">
+                  {annotation.insight}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="container mx-auto px-6 lg:px-16">
+        <div className="border-t border-border/40" />
+      </div>
+
+      {/* Design System — NEW */}
+      <section className="py-24">
+        <div className="container mx-auto px-6 lg:px-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-16 max-w-3xl"
+          >
+            <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">
+              System
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl text-foreground mb-6">
+              Component Library
+            </h2>
+            <p className="font-body text-lg text-muted-foreground leading-relaxed">
+              Beyond individual screens, I built a scalable system to ensure consistency across the product.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl">
+            {project.systemItems.map((item, index) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
+                className="flex gap-4 items-start bg-card border border-border/40 rounded-xl p-6"
+              >
+                <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Layers size={16} className="text-foreground" />
+                </div>
+                <div>
+                  <p className="font-body text-sm font-medium text-foreground mb-1">
+                    {item.label}
+                  </p>
+                  <p className="font-body text-sm text-muted-foreground leading-relaxed">
+                    {item.detail}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="container mx-auto px-6 lg:px-16">
+        <div className="border-t border-border/40" />
+      </div>
+
+      {/* Constraint / Reflection — NEW */}
+      <section className="py-24">
+        <div className="container mx-auto px-6 lg:px-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl"
+          >
+            <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">
+              Reflection
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl text-foreground mb-8">
+              Key Constraint
+            </h2>
+            <div className="bg-card border border-border/40 rounded-2xl p-8 md:p-10">
+              <p className="font-body text-lg text-foreground leading-relaxed italic">
+                "{project.constraint}"
+              </p>
+            </div>
+          </motion.div>
         </div>
       </section>
 
