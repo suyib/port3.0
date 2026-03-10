@@ -278,7 +278,7 @@ const CaseStudy = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl"
+            className=""
           >
             <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">Technical Constraint</p>
             <h2 className="font-display text-4xl md:text-5xl text-foreground mb-10">
