@@ -3,41 +3,39 @@ import avatarImg from "@/assets/avatar.png";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center overflow-visible">
+    <section className="relative min-h-screen flex items-center overflow-hidden lg:overflow-visible">
       {/* Blush circle */}
-      <div className="absolute top-[45%] -translate-y-1/2 left-[calc(60%-400px)] w-[800px] h-[800px] rounded-full bg-blush opacity-20" />
+      <div className="absolute top-[45%] -translate-y-1/2 left-1/2 -translate-x-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] lg:left-[calc(60%-400px)] lg:translate-x-0 lg:w-[800px] lg:h-[800px] rounded-full bg-blush opacity-20" />
 
       <div className="container mx-auto px-6 lg:px-16 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center pt-24 lg:pt-0">
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}>
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-center lg:text-left">
             
-            <p className="font-body text-sm tracking-[0.3em] uppercase text-muted-foreground mb-6">
+            <p className="font-body text-xs sm:text-sm tracking-[0.3em] uppercase text-muted-foreground mb-4 sm:mb-6">
               suyin tung, Full-Stack Designer
             </p>
-            <h1 className="text-5xl md:text-7xl leading-[0.95] tracking-tight text-foreground font-sans font-bold lg:text-6xl">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl leading-[0.95] tracking-tight text-foreground font-sans font-bold">
               Calculated design.
             </h1>
-            <h2 className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-foreground mt-2 font-bold lg:text-4xl py-[11px]">
+            <h2 className="font-display text-2xl sm:text-4xl lg:text-4xl leading-[0.95] tracking-tight text-foreground mt-2 font-bold py-[11px]">
               Measurable impact.
             </h2>
-            <p className="font-body text-lg text-muted-foreground mt-8 max-w-xl leading-relaxed">
-               Full Stack Designer specializing in evidence-based systems. I transform complex user behaviors into high-conversion interfaces through rigorous testing and behavioral analytics.     
-            
+            <p className="font-body text-base sm:text-lg text-muted-foreground mt-6 sm:mt-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+              Full Stack Designer specializing in evidence-based systems. I transform complex user behaviors into high-conversion interfaces through rigorous testing and behavioral analytics.
             </p>
-            <div className="flex gap-4 mt-10">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10 justify-center lg:justify-start">
               <a
                 href="#projects"
-                className="inline-flex items-center px-8 py-4 rounded-full bg-primary text-primary-foreground font-body font-medium text-sm tracking-wide hover:opacity-90 transition-opacity">
-                
+                className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-primary text-primary-foreground font-body font-medium text-sm tracking-wide hover:opacity-90 transition-opacity">
                 View Work
               </a>
               <a
                 href="#contact"
-                className="inline-flex items-center px-8 py-4 rounded-full border border-foreground text-foreground font-body font-medium text-sm tracking-wide hover:bg-foreground hover:text-background transition-colors">
-                
+                className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 rounded-full border border-foreground text-foreground font-body font-medium text-sm tracking-wide hover:bg-foreground hover:text-background transition-colors">
                 Get in Touch
               </a>
             </div>
@@ -52,15 +50,15 @@ const HeroSection = () => {
             
             <img
               alt="Designer portrait"
-              className="relative z-10 object-contain max-w-none"
-              style={{ width: '800px', height: 'auto', transform: 'translateX(10%)' }}
+              className="relative z-10 object-contain w-[300px] sm:w-[500px] lg:w-[800px] lg:max-w-none"
+              style={{ height: 'auto' }}
               src="/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png" />
             
           </motion.div>
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 };
 
 export default HeroSection;
