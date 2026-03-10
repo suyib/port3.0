@@ -49,7 +49,7 @@ const CaseStudy = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="grid md:grid-cols-2 gap-6 max-w-4xl"
+            className="grid md:grid-cols-2 gap-6"
           >
             <div className="bg-card border border-border/40 rounded-2xl p-8">
               <p className="font-body text-xs tracking-[0.2em] uppercase text-destructive mb-3 font-medium">
