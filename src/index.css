@@ -18,34 +18,34 @@
     --primary: 225 13% 12%;
     --primary-foreground: 30 18% 97%;
 
-    --secondary: 350 33% 92%;
+    --secondary: 350 15% 88%;
     --secondary-foreground: 225 13% 12%;
 
-    --muted: 350 20% 94%;
+    --muted: 350 12% 92%;
     --muted-foreground: 224 10% 32%;
 
-    --accent: 350 39% 84%;
+    --accent: 350 15% 59%;
     --accent-foreground: 225 13% 12%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 350 18% 90%;
-    --input: 350 18% 90%;
+    --border: 350 10% 88%;
+    --input: 350 10% 88%;
     --ring: 225 13% 12%;
 
     --radius: 0.75rem;
 
-    --blush: 350 33% 85%;
+    --blush: 350 15% 72%;
     --blush-foreground: 225 13% 12%;
 
     --sidebar-background: 30 22% 97%;
     --sidebar-foreground: 224 10% 32%;
     --sidebar-primary: 225 13% 12%;
     --sidebar-primary-foreground: 30 18% 97%;
-    --sidebar-accent: 350 33% 92%;
+    --sidebar-accent: 350 15% 88%;
     --sidebar-accent-foreground: 225 13% 12%;
-    --sidebar-border: 350 18% 90%;
+    --sidebar-border: 350 10% 88%;
     --sidebar-ring: 225 13% 12%;
 
     --font-display: 'Outfit', sans-serif;
@@ -64,15 +64,15 @@
     --secondary: 224 10% 22%;
     --secondary-foreground: 30 18% 97%;
     --muted: 224 10% 22%;
-    --muted-foreground: 350 20% 70%;
-    --accent: 350 33% 85%;
+    --muted-foreground: 350 12% 65%;
+    --accent: 350 15% 59%;
     --accent-foreground: 225 13% 12%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 224 10% 22%;
     --input: 224 10% 22%;
     --ring: 30 18% 97%;
-    --blush: 350 25% 22%;
+    --blush: 350 15% 22%;
     --blush-foreground: 30 18% 97%;
     --sidebar-background: 225 13% 10%;
     --sidebar-foreground: 30 18% 97%;
