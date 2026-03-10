@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { projects } from "@/data/projects";
+import { useProjects } from "@/hooks/useProjects";
 
 const ProjectsSection = () => {
+  const { data: projects, isLoading } = useProjects(true);
+
   return (
     <section id="projects" className="py-32">
       <div className="container mx-auto px-6 lg:px-16">
@@ -17,37 +19,55 @@ const ProjectsSection = () => {
           <h2 className="font-display text-4xl md:text-5xl text-foreground">Projects</h2>
         </motion.div>
 
-        <div className="space-y-24">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.7, delay: index * 0.1 }}
-              className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? "lg:direction-rtl" : ""}`}
-            >
-              <div className={`overflow-hidden rounded-2xl bg-secondary ${index % 2 === 1 ? "lg:order-2" : ""}`}>
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-80 md:h-[480px] object-cover hover:scale-105 transition-transform duration-700"
-                />
+        {isLoading ? (
+          <div className="space-y-24">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="grid lg:grid-cols-2 gap-12 items-center animate-pulse">
+                <div className="bg-secondary rounded-2xl h-80 md:h-[480px]" />
+                <div className="space-y-4">
+                  <div className="h-4 bg-secondary rounded w-1/3" />
+                  <div className="h-8 bg-secondary rounded w-2/3" />
+                  <div className="h-20 bg-secondary rounded" />
+                  <div className="h-4 bg-secondary rounded w-1/4" />
+                </div>
               </div>
-              <div className={index % 2 === 1 ? "lg:order-1" : ""}>
-                <p className="font-body text-sm text-muted-foreground tracking-wide mb-3">{project.category}</p>
-                <h3 className="font-display text-3xl md:text-4xl text-foreground mb-4">{project.title}</h3>
-                <p className="font-body text-lg text-muted-foreground leading-relaxed mb-6">{project.description}</p>
-                <Link
-                  to={`/project/${project.slug}`}
-                  className="inline-flex items-center font-body text-sm font-medium text-foreground border-b-2 border-accent pb-1 hover:border-foreground transition-colors"
-                >
-                  View Case Study →
-                </Link>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : !projects?.length ? (
+          <p className="font-body text-muted-foreground text-center py-12">No projects published yet.</p>
+        ) : (
+          <div className="space-y-24">
+            {projects.map((project, index) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.7, delay: index * 0.1 }}
+                className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? "lg:direction-rtl" : ""}`}
+              >
+                <div className={`overflow-hidden rounded-2xl bg-secondary ${index % 2 === 1 ? "lg:order-2" : ""}`}>
+                  <img
+                    src={project.image_url}
+                    alt={project.title}
+                    className="w-full h-80 md:h-[480px] object-cover hover:scale-105 transition-transform duration-700"
+                  />
+                </div>
+                <div className={index % 2 === 1 ? "lg:order-1" : ""}>
+                  <p className="font-body text-sm text-muted-foreground tracking-wide mb-3">{project.category}</p>
+                  <h3 className="font-display text-3xl md:text-4xl text-foreground mb-4">{project.title}</h3>
+                  <p className="font-body text-lg text-muted-foreground leading-relaxed mb-6">{project.description}</p>
+                  <Link
+                    to={`/project/${project.slug}`}
+                    className="inline-flex items-center font-body text-sm font-medium text-foreground border-b-2 border-accent pb-1 hover:border-foreground transition-colors"
+                  >
+                    View Case Study →
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
