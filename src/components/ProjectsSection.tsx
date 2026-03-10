@@ -68,6 +68,24 @@ const ProjectsSection = () => {
             ))}
           </div>
         )}
+
+        {/* View All Projects button */}
+        {!isLoading && projects && projects.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-center mt-16"
+          >
+            <Link
+              to="/projects"
+              className="inline-flex items-center font-body text-sm font-medium text-foreground border-2 border-foreground/20 px-8 py-3 rounded-full hover:bg-foreground hover:text-background transition-all duration-300"
+            >
+              View All Projects →
+            </Link>
+          </motion.div>
+        )}
       </div>
     </section>
   );
