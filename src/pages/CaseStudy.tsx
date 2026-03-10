@@ -367,7 +367,7 @@ const CaseStudy = () => {
           </motion.div>
 
           {/* Metric cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
             {project.takeaways.map((t, i) => (
               <motion.div
                 key={t.label}
