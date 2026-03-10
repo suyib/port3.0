@@ -12,12 +12,12 @@ const HeroSection = () => {
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
+            transition={{ duration: 0.8, ease: "easeOut" }}>
+            
             <p className="font-body text-sm tracking-[0.3em] uppercase text-muted-foreground mb-6">
               Full-Stack Designer
             </p>
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight text-foreground">
+            <h1 className="text-5xl md:text-7xl leading-[0.95] tracking-tight text-foreground font-sans lg:text-7xl font-bold">
               Calculated
               <br />
               design.
@@ -31,14 +31,14 @@ const HeroSection = () => {
             <div className="flex gap-4 mt-10">
               <a
                 href="#projects"
-                className="inline-flex items-center px-8 py-4 rounded-full bg-primary text-primary-foreground font-body font-medium text-sm tracking-wide hover:opacity-90 transition-opacity"
-              >
+                className="inline-flex items-center px-8 py-4 rounded-full bg-primary text-primary-foreground font-body font-medium text-sm tracking-wide hover:opacity-90 transition-opacity">
+                
                 View Work
               </a>
               <a
                 href="#contact"
-                className="inline-flex items-center px-8 py-4 rounded-full border border-foreground text-foreground font-body font-medium text-sm tracking-wide hover:bg-foreground hover:text-background transition-colors"
-              >
+                className="inline-flex items-center px-8 py-4 rounded-full border border-foreground text-foreground font-body font-medium text-sm tracking-wide hover:bg-foreground hover:text-background transition-colors">
+                
                 Get in Touch
               </a>
             </div>
@@ -48,21 +48,21 @@ const HeroSection = () => {
             className="relative flex justify-center lg:justify-end"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-          >
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}>
+            
             <div className="relative w-72 h-72 md:w-96 md:h-96">
               <div className="absolute inset-0 rounded-full bg-secondary" />
               <img
                 src={avatarImg}
                 alt="Designer portrait"
-                className="relative z-10 w-full h-full object-cover rounded-full"
-              />
+                className="relative z-10 w-full h-full object-cover rounded-full" />
+              
             </div>
           </motion.div>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 };
 
 export default HeroSection;
