@@ -21,7 +21,7 @@ const HeroSection = () => {
             <h1 className="text-3xl sm:text-5xl lg:text-6xl leading-[0.95] tracking-[-0.03em] text-foreground font-sans font-bold">
               Calculated design.
             </h1>
-            <h2 className="font-display text-2xl sm:text-4xl leading-[0.95] tracking-tight text-foreground mt-2 my-0 py-0 lg:text-3xl font-semibold">
+            <h2 className="font-display text-2xl sm:text-4xl leading-[0.95] tracking-tight text-foreground mt-2 my-0 py-0 font-semibold lg:text-4xl">
               Measurable impact.
             </h2>
             <p className="font-body text-base sm:text-lg text-muted-foreground mt-6 sm:mt-8 max-w-xl leading-relaxed">
