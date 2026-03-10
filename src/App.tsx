@@ -7,6 +7,7 @@ import Index from "./pages/Index.tsx";
 import CaseStudy from "./pages/CaseStudy.tsx";
 import Login from "./pages/Login.tsx";
 import Admin from "./pages/Admin.tsx";
+import Navbar from "./components/Navbar.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -17,6 +18,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/project/:slug" element={<CaseStudy />} />
