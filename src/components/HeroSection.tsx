@@ -44,19 +44,18 @@ const HeroSection = () => {
           </motion.div>
 
           <motion.div
-            className="relative flex justify-center lg:justify-end"
+            className="relative flex justify-center lg:justify-end overflow-visible"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            style={{ minWidth: 0 }}
           >
-            <div className="relative overflow-visible">
-              <img
-                alt="Designer portrait"
-                className="relative z-10 object-contain"
-                style={{ width: '900px', height: 'auto' }}
-                src="/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png"
-              />
-            </div>
+            <img
+              alt="Designer portrait"
+              className="relative z-10 object-contain max-w-none"
+              style={{ width: '900px', height: 'auto' }}
+              src="/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png"
+            />
           </motion.div>
         </div>
       </div>
