@@ -15,7 +15,7 @@ const HeroSection = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}>
             
             <p className="font-body text-sm tracking-[0.3em] uppercase text-muted-foreground mb-6">
-              Full-Stack Designer
+              suyin tung, Full-Stack Designer
             </p>
             <h1 className="text-5xl md:text-7xl leading-[0.95] tracking-tight text-foreground font-sans lg:text-7xl font-bold">
               Calculated design.
