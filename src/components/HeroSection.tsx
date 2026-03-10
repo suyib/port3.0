@@ -3,7 +3,7 @@ import avatarImg from "@/assets/avatar.png";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center overflow-visible">
       {/* Blush circle */}
       <div className="absolute top-1/2 -translate-y-1/2 left-[calc(60%-400px)] w-[800px] h-[800px] rounded-full bg-blush opacity-20" />
 
