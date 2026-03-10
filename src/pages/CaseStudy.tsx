@@ -78,7 +78,7 @@ const CaseStudy = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.25 }}
-            className="flex flex-wrap gap-x-12 gap-y-4 max-w-4xl"
+            className="flex flex-wrap gap-x-12 gap-y-4"
           >
             <div>
               <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">Role</p>
