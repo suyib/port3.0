@@ -24,8 +24,8 @@ const HeroSection = () => {
               Measurable impact.
             </h2>
             <p className="font-body text-lg text-muted-foreground mt-8 max-w-md leading-relaxed">
-              I design and build digital products that bridge the gap between beautiful interfaces and robust
-              engineering.
+               Full Stack Designer specializing in evidence-based systems. I transform complex user behaviors into high-conversion interfaces through rigorous testing and behavioral analytics.     
+            
             </p>
             <div className="flex gap-4 mt-10">
               <a
