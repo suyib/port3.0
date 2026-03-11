@@ -54,7 +54,13 @@ const ProjectsSection = () => {
                   />
                 </div>
                 <div className={index % 2 === 1 ? "lg:order-1" : ""}>
-                  <p className="font-body text-sm text-muted-foreground tracking-wide mb-3">{project.category}</p>
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {project.category.split(",").map((tag) => tag.trim()).filter(Boolean).map((tag) => (
+                      <span key={tag} className="font-body text-xs text-muted-foreground tracking-wide bg-secondary px-2.5 py-0.5 rounded-full">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                   <h3 className="font-display text-3xl md:text-4xl text-foreground mb-4">{project.title}</h3>
                   <p className="font-body text-lg text-muted-foreground leading-relaxed mb-6">{project.description}</p>
                   <Link

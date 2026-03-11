@@ -156,9 +156,13 @@ const Projects = () => {
                       className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
-                  <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-2">
-                    {project.category}
-                  </p>
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {project.category.split(",").map((tag) => tag.trim()).filter(Boolean).map((tag) => (
+                      <span key={tag} className="font-body text-[11px] tracking-[0.15em] uppercase text-muted-foreground bg-secondary px-2.5 py-0.5 rounded-full">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                   <h3 className="font-display text-xl text-foreground mb-2 group-hover:text-accent transition-colors">
                     {project.title}
                   </h3>
