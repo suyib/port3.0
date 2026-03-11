@@ -76,7 +76,7 @@ const CaseStudy = () => {
         <motion.section initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="pb-24">
           <div className="container mx-auto px-6 lg:px-16">
             <div className="overflow-hidden rounded-2xl">
-              <img src={project.image_url} alt={project.title} className="w-full h-[400px] md:h-[560px] object-cover" />
+              <img src={project.image_url} alt={project.title} className="w-full h-[400px] md:h-[560px] object-contain" />
             </div>
           </div>
         </motion.section>
