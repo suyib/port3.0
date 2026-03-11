@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      project_images: {
+        Row: {
+          created_at: string
+          id: string
+          project_id: string
+          sort_order: number
+          url: string
+          visible: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          project_id: string
+          sort_order?: number
+          url: string
+          visible?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          project_id?: string
+          sort_order?: number
+          url?: string
+          visible?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_images_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           category: string

@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Project } from "@/types/project";
+import type { Project, ProjectImage } from "@/types/project";
 import type { Json } from "@/integrations/supabase/types";
 
-function rowToProject(row: any): Project {
+function rowToProject(row: any, images?: ProjectImage[]): Project {
   return {
     ...row,
     pain_points: (row.pain_points ?? []) as Project["pain_points"],
@@ -12,6 +12,7 @@ function rowToProject(row: any): Project {
     tech_pivot: (row.tech_pivot ?? {}) as Project["tech_pivot"],
     component_states: (row.component_states ?? []) as Project["component_states"],
     takeaways: (row.takeaways ?? []) as Project["takeaways"],
+    images,
   };
 }
 
@@ -30,7 +31,24 @@ export function useProjects(publishedOnly = true) {
 
       const { data, error } = await query;
       if (error) throw error;
-      return (data ?? []).map(rowToProject);
+
+      const projectIds = (data ?? []).map((p) => p.id);
+      let images: any[] = [];
+      if (projectIds.length > 0) {
+        const { data: imgData } = await supabase
+          .from("project_images")
+          .select("*")
+          .in("project_id", projectIds)
+          .order("sort_order", { ascending: true });
+        images = imgData ?? [];
+      }
+
+      return (data ?? []).map((row) =>
+        rowToProject(
+          row,
+          images.filter((img: any) => img.project_id === row.id) as ProjectImage[]
+        )
+      );
     },
   });
 }
@@ -47,7 +65,14 @@ export function useProject(slug: string) {
 
       if (error) throw error;
       if (!data) return null;
-      return rowToProject(data);
+
+      const { data: imgData } = await supabase
+        .from("project_images")
+        .select("*")
+        .eq("project_id", data.id)
+        .order("sort_order", { ascending: true });
+
+      return rowToProject(data, (imgData ?? []) as ProjectImage[]);
     },
     enabled: !!slug,
   });
@@ -58,14 +83,15 @@ export function useSaveProject() {
 
   return useMutation({
     mutationFn: async (project: Partial<Project> & { slug: string; title: string }) => {
+      const { images, ...rest } = project as any;
       const payload = {
-        ...project,
-        pain_points: project.pain_points as unknown as Json,
-        comparison: project.comparison as unknown as Json,
-        process: project.process as unknown as Json,
-        tech_pivot: project.tech_pivot as unknown as Json,
-        component_states: project.component_states as unknown as Json,
-        takeaways: project.takeaways as unknown as Json,
+        ...rest,
+        pain_points: rest.pain_points as unknown as Json,
+        comparison: rest.comparison as unknown as Json,
+        process: rest.process as unknown as Json,
+        tech_pivot: rest.tech_pivot as unknown as Json,
+        component_states: rest.component_states as unknown as Json,
+        takeaways: rest.takeaways as unknown as Json,
       };
 
       if (project.id) {
@@ -116,6 +142,63 @@ export function useUploadProjectImage() {
         .getPublicUrl(path);
 
       return data.publicUrl;
+    },
+  });
+}
+
+export function useAddProjectImage() {
+  const qc = useQueryClient();
+  const uploadImage = useUploadProjectImage();
+
+  return useMutation({
+    mutationFn: async ({ projectId, file, sortOrder }: { projectId: string; file: File; sortOrder: number }) => {
+      const url = await uploadImage.mutateAsync(file);
+      const { error } = await supabase.from("project_images").insert({
+        project_id: projectId,
+        url,
+        sort_order: sortOrder,
+      });
+      if (error) throw error;
+      return url;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["projects"] });
+      qc.invalidateQueries({ queryKey: ["project"] });
+    },
+  });
+}
+
+export function useUpdateProjectImages() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (images: ProjectImage[]) => {
+      for (const img of images) {
+        const { error } = await supabase
+          .from("project_images")
+          .update({ sort_order: img.sort_order, visible: img.visible })
+          .eq("id", img.id);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["projects"] });
+      qc.invalidateQueries({ queryKey: ["project"] });
+    },
+  });
+}
+
+export function useDeleteProjectImage() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("project_images").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["projects"] });
+      qc.invalidateQueries({ queryKey: ["project"] });
     },
   });
 }

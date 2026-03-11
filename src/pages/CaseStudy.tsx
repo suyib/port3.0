@@ -71,16 +71,24 @@ const CaseStudy = () => {
         </div>
       </section>
 
-      {/* Hero Image */}
-      {project.image_url && (
-        <motion.section initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="pb-24">
-          <div className="container mx-auto px-6 lg:px-16">
-            <div className="overflow-hidden rounded-2xl">
-              <img src={project.image_url} alt={project.title} className="w-full h-[400px] md:h-[560px] object-contain" />
+      {/* Gallery Images */}
+      {(() => {
+        const visibleImages = project.images?.filter((i) => i.visible) ?? [];
+        const fallback = project.image_url ? [{ url: project.image_url, id: "fallback" }] : [];
+        const images = visibleImages.length > 0 ? visibleImages : fallback;
+        if (images.length === 0) return null;
+        return (
+          <motion.section initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="pb-24">
+            <div className="container mx-auto px-6 lg:px-16 space-y-6">
+              {images.map((img) => (
+                <div key={img.id} className="overflow-hidden rounded-2xl">
+                  <img src={img.url} alt={project.title} loading="lazy" className="w-full h-[400px] md:h-[560px] object-contain" />
+                </div>
+              ))}
             </div>
-          </div>
-        </motion.section>
-      )}
+          </motion.section>
+        );
+      })()}
 
       <Divider />
 

@@ -1,13 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useProjects, useSaveProject, useDeleteProject, useUploadProjectImage } from "@/hooks/useProjects";
+import {
+  useProjects,
+  useSaveProject,
+  useDeleteProject,
+  useUploadProjectImage,
+  useAddProjectImage,
+  useUpdateProjectImages,
+  useDeleteProjectImage,
+} from "@/hooks/useProjects";
 import { Navigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Plus, Pencil, Trash2, Eye, Upload, Save, X, GripVertical } from "lucide-react";
-import type { Project, PainPoint, ProcessStep, ComponentState, Takeaway } from "@/types/project";
+import {
+  ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff, Upload, Save, X, GripVertical,
+  ChevronUp, ChevronDown,
+} from "lucide-react";
+import type { Project, ProjectImage, PainPoint, ProcessStep, ComponentState, Takeaway } from "@/types/project";
 import { toast } from "sonner";
 
 const emptyProject: Omit<Project, "id"> = {
@@ -47,10 +58,15 @@ const Admin = () => {
   const saveProject = useSaveProject();
   const deleteProject = useDeleteProject();
   const uploadImage = useUploadProjectImage();
+  const addProjectImage = useAddProjectImage();
+  const updateProjectImages = useUpdateProjectImages();
+  const deleteProjectImage = useDeleteProjectImage();
 
   const [editing, setEditing] = useState<(Partial<Project> & { slug: string; title: string }) | null>(null);
   const [toolInput, setToolInput] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([]);
+  const [galleryDirty, setGalleryDirty] = useState(false);
 
   if (authLoading) return null;
   if (!session) return <Navigate to="/login" replace />;
@@ -58,11 +74,15 @@ const Admin = () => {
   const handleNew = () => {
     setEditing({ ...emptyProject } as any);
     setToolInput("");
+    setGalleryImages([]);
+    setGalleryDirty(false);
   };
 
   const handleEdit = (project: Project) => {
     setEditing({ ...project });
     setToolInput(project.tools.join(", "));
+    setGalleryImages(project.images ?? []);
+    setGalleryDirty(false);
   };
 
   const handleDelete = async (id: string) => {
@@ -91,12 +111,69 @@ const Admin = () => {
         image_url: imageUrl,
         tools: toolInput.split(",").map((t) => t.trim()).filter(Boolean),
       });
+
+      if (galleryDirty && galleryImages.length > 0) {
+        await updateProjectImages.mutateAsync(galleryImages);
+      }
+
       toast.success(editing.id ? "Project updated" : "Project created");
       setEditing(null);
       setImageFile(null);
+      setGalleryImages([]);
+      setGalleryDirty(false);
     } catch (e: any) {
       toast.error("Save failed: " + e.message);
     }
+  };
+
+  const handleGalleryUpload = async (files: FileList | null) => {
+    if (!files || !editing?.id) return;
+    const maxOrder = galleryImages.length > 0 ? Math.max(...galleryImages.map((i) => i.sort_order)) + 1 : 0;
+    for (let i = 0; i < files.length; i++) {
+      try {
+        await addProjectImage.mutateAsync({
+          projectId: editing.id,
+          file: files[i],
+          sortOrder: maxOrder + i,
+        });
+        toast.success(`Image ${i + 1} uploaded`);
+      } catch (e: any) {
+        toast.error("Upload failed: " + e.message);
+      }
+    }
+    // Refetch images
+    const { data: projects } = await import("@/integrations/supabase/client").then((m) =>
+      m.supabase
+        .from("project_images")
+        .select("*")
+        .eq("project_id", editing.id!)
+        .order("sort_order", { ascending: true })
+    );
+    setGalleryImages((projects ?? []) as ProjectImage[]);
+  };
+
+  const handleGalleryDelete = async (imgId: string) => {
+    if (!confirm("Permanently delete this image?")) return;
+    await deleteProjectImage.mutateAsync(imgId);
+    setGalleryImages((prev) => prev.filter((i) => i.id !== imgId));
+    toast.success("Image deleted");
+  };
+
+  const toggleVisibility = (imgId: string) => {
+    setGalleryImages((prev) =>
+      prev.map((i) => (i.id === imgId ? { ...i, visible: !i.visible } : i))
+    );
+    setGalleryDirty(true);
+  };
+
+  const moveImage = (index: number, direction: -1 | 1) => {
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= galleryImages.length) return;
+    const updated = [...galleryImages];
+    [updated[index], updated[newIndex]] = [updated[newIndex], updated[index]];
+    updated.forEach((img, i) => (img.sort_order = i));
+    setGalleryImages(updated);
+    setGalleryDirty(true);
   };
 
   const updateField = (field: string, value: any) => {
@@ -172,37 +249,40 @@ const Admin = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {projects.map((project) => (
-                <div
-                  key={project.id}
-                  className="bg-card border border-border/40 rounded-xl p-6 flex items-center gap-6"
-                >
-                  <GripVertical size={18} className="text-muted-foreground/40" />
-                  {project.image_url && (
-                    <img src={project.image_url} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-1">
-                      <h3 className="font-display text-lg text-foreground truncate">{project.title}</h3>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${project.published ? "bg-accent/10 text-accent" : "bg-muted text-muted-foreground"}`}>
-                        {project.published ? "Published" : "Draft"}
-                      </span>
+              {projects.map((project) => {
+                const thumb = project.images?.find((i) => i.visible)?.url || project.image_url;
+                return (
+                  <div
+                    key={project.id}
+                    className="bg-card border border-border/40 rounded-xl p-6 flex items-center gap-6"
+                  >
+                    <GripVertical size={18} className="text-muted-foreground/40" />
+                    {thumb && (
+                      <img src={thumb} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-1">
+                        <h3 className="font-display text-lg text-foreground truncate">{project.title}</h3>
+                        <span className={`text-xs px-2 py-0.5 rounded-full ${project.published ? "bg-accent/10 text-accent" : "bg-muted text-muted-foreground"}`}>
+                          {project.published ? "Published" : "Draft"}
+                        </span>
+                      </div>
+                      <p className="font-body text-sm text-muted-foreground truncate">{project.category}</p>
                     </div>
-                    <p className="font-body text-sm text-muted-foreground truncate">{project.category}</p>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <Button variant="ghost" size="icon" asChild>
+                        <Link to={`/project/${project.slug}`} target="_blank"><Eye size={16} /></Link>
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleEdit(project)}>
+                        <Pencil size={16} />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleDelete(project.id)}>
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <Button variant="ghost" size="icon" asChild>
-                      <Link to={`/project/${project.slug}`} target="_blank"><Eye size={16} /></Link>
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleEdit(project)}>
-                      <Pencil size={16} />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(project.id)}>
-                      <Trash2 size={16} />
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -249,8 +329,8 @@ const Admin = () => {
           <TextareaField label="Short Description" value={editing.description || ""} onChange={(v) => updateField("description", v)} rows={2} />
         </Section>
 
-        {/* Image */}
-        <Section title="Project Image">
+        {/* Cover Image (legacy, still used as fallback) */}
+        <Section title="Cover Image">
           <div className="flex items-start gap-6">
             {(editing.image_url || imageFile) && (
               <img
@@ -262,7 +342,7 @@ const Admin = () => {
             <div className="flex-1">
               <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-body transition-colors">
                 <Upload size={16} />
-                Upload Image
+                Upload Cover
                 <input
                   type="file"
                   accept="image/*"
@@ -275,6 +355,87 @@ const Admin = () => {
               )}
             </div>
           </div>
+        </Section>
+
+        {/* Gallery Images */}
+        <Section title="Gallery Images">
+          {!editing.id ? (
+            <p className="text-sm text-muted-foreground">Save the project first, then add gallery images.</p>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {galleryImages.map((img, index) => (
+                  <div
+                    key={img.id}
+                    className={`relative rounded-lg overflow-hidden border ${
+                      img.visible ? "border-border/40" : "border-destructive/30 opacity-60"
+                    }`}
+                  >
+                    <img src={img.url} alt="" className="w-full h-32 object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-between p-2">
+                      <div className="flex gap-1">
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          className="h-7 w-7"
+                          onClick={() => moveImage(index, -1)}
+                          disabled={index === 0}
+                        >
+                          <ChevronUp size={14} />
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          className="h-7 w-7"
+                          onClick={() => moveImage(index, 1)}
+                          disabled={index === galleryImages.length - 1}
+                        >
+                          <ChevronDown size={14} />
+                        </Button>
+                      </div>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          className="h-7 w-7"
+                          onClick={() => toggleVisibility(img.id)}
+                        >
+                          {img.visible ? <Eye size={14} /> : <EyeOff size={14} />}
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          className="h-7 w-7"
+                          onClick={() => handleGalleryDelete(img.id)}
+                        >
+                          <Trash2 size={14} />
+                        </Button>
+                      </div>
+                    </div>
+                    {!img.visible && (
+                      <div className="absolute top-2 left-2">
+                        <span className="text-[10px] bg-destructive/80 text-destructive-foreground px-2 py-0.5 rounded-full">Hidden</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-body transition-colors">
+                <Plus size={16} />
+                Add Images
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={(e) => handleGalleryUpload(e.target.files)}
+                />
+              </label>
+              {galleryDirty && (
+                <p className="text-xs text-accent">Unsaved reorder/visibility changes — click Save to apply.</p>
+              )}
+            </>
+          )}
         </Section>
 
         {/* Hero */}
