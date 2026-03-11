@@ -151,7 +151,7 @@ const Projects = () => {
                 >
                   <div className="overflow-hidden rounded-2xl bg-secondary mb-4">
                     <img
-                      src={project.image_url}
+                      src={project.images?.find((i) => i.visible)?.url || project.image_url}
                       alt={project.title}
                       className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700"
                     />
