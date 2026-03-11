@@ -240,7 +240,7 @@ const Admin = () => {
           <div className="grid md:grid-cols-2 gap-4">
             <Field label="Title" value={editing.title} onChange={(v) => updateField("title", v)} />
             <Field label="Slug" value={editing.slug} onChange={(v) => updateField("slug", v)} placeholder="my-project-name" />
-            <Field label="Category" value={editing.category || ""} onChange={(v) => updateField("category", v)} placeholder="UI/UX · Mobile · Development" />
+            <Field label="Category" value={editing.category || ""} onChange={(v) => updateField("category", v)} placeholder="UI/UX, Mobile, Branding" />
             <Field label="Role" value={editing.role || ""} onChange={(v) => updateField("role", v)} />
             <Field label="Timeline" value={editing.timeline || ""} onChange={(v) => updateField("timeline", v)} placeholder="8 weeks" />
             <Field label="Sort Order" value={String(editing.sort_order ?? 0)} onChange={(v) => updateField("sort_order", parseInt(v) || 0)} type="number" />
