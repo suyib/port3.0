@@ -11,8 +11,13 @@ const Projects = () => {
 
   const categories = useMemo(() => {
     if (!projects) return [];
-    const cats = [...new Set(projects.map((p) => p.category).filter(Boolean))];
-    return cats.sort();
+    const tags = new Set<string>();
+    projects.forEach((p) => {
+      if (p.category) {
+        p.category.split(",").map((s) => s.trim()).filter(Boolean).forEach((t) => tags.add(t));
+      }
+    });
+    return [...tags].sort();
   }, [projects]);
 
   const filtered = useMemo(() => {
