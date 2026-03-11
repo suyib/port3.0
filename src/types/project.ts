@@ -34,6 +34,14 @@ export interface Takeaway {
   value: string;
 }
 
+export interface ProjectImage {
+  id: string;
+  project_id: string;
+  url: string;
+  sort_order: number;
+  visible: boolean;
+}
+
 export interface Project {
   id: string;
   slug: string;
