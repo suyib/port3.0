@@ -29,7 +29,8 @@ const Projects = () => {
         p.description.toLowerCase().includes(search.toLowerCase()) ||
         p.category.toLowerCase().includes(search.toLowerCase()) ||
         p.tools.some((t) => t.toLowerCase().includes(search.toLowerCase()));
-      const matchesCategory = !activeCategory || p.category === activeCategory;
+      const projectTags = p.category.split(",").map((s) => s.trim());
+      const matchesCategory = !activeCategory || projectTags.includes(activeCategory);
       return matchesSearch && matchesCategory;
     });
   }, [projects, search, activeCategory]);
