@@ -64,4 +64,5 @@ export interface Project {
   outcome: string;
   sort_order: number;
   published: boolean;
+  images?: ProjectImage[];
 }
