@@ -1,6 +1,28 @@
 import { motion } from "framer-motion";
+import { Github, Linkedin, Twitter, Dribbble, Instagram, Mail, Globe } from "lucide-react";
+import { useSiteSettings, type SocialLink } from "@/hooks/useSiteSettings";
+
+const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  github: Github,
+  linkedin: Linkedin,
+  twitter: Twitter,
+  dribbble: Dribbble,
+  instagram: Instagram,
+  mail: Mail,
+  globe: Globe,
+};
+
+const fallbackSocials: SocialLink[] = [
+  { label: "Dribbble", url: "#", icon: "dribbble" },
+  { label: "GitHub", url: "#", icon: "github" },
+  { label: "LinkedIn", url: "#", icon: "linkedin" },
+  { label: "Twitter", url: "#", icon: "twitter" },
+];
 
 const ContactSection = () => {
+  const { data: settings } = useSiteSettings();
+  const socials = settings?.social_links?.length ? settings.social_links : fallbackSocials;
+
   return (
     <section id="contact" className="py-20">
       <div className="container mx-auto px-6 lg:px-16">
@@ -33,15 +55,21 @@ const ContactSection = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex justify-center gap-8 mt-16"
           >
-            {["Dribbble", "GitHub", "LinkedIn", "Twitter"].map((platform) => (
-              <a
-                key={platform}
-                href="#"
-                className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {platform}
-              </a>
-            ))}
+            {socials.map((social) => {
+              const Icon = iconMap[social.icon] || Globe;
+              return (
+                <a
+                  key={social.label}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Icon size={16} />
+                  {social.label}
+                </a>
+              );
+            })}
           </motion.div>
         </div>
       </div>
