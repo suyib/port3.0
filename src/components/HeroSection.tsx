@@ -50,7 +50,7 @@ const HeroSection = () => {
             
             <img
               alt="Designer portrait"
-              className="relative z-10 object-contain w-[500px] sm:w-[500px] lg:w-[800px] lg:max-w-none lg:translate-x-[10%]"
+              className="relative z-10 object-contain w-[80%] max-w-[500px] lg:w-[800px] lg:max-w-none lg:translate-x-[10%]"
               style={{ height: 'auto' }}
               src="/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png" />
             
