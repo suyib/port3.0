@@ -127,6 +127,39 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          design_skills: Json
+          dev_skills: Json
+          footer_left: string
+          footer_right: string
+          id: string
+          nav_links: Json
+          social_links: Json
+          updated_at: string
+        }
+        Insert: {
+          design_skills?: Json
+          dev_skills?: Json
+          footer_left?: string
+          footer_right?: string
+          id?: string
+          nav_links?: Json
+          social_links?: Json
+          updated_at?: string
+        }
+        Update: {
+          design_skills?: Json
+          dev_skills?: Json
+          footer_left?: string
+          footer_right?: string
+          id?: string
+          nav_links?: Json
+          social_links?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
