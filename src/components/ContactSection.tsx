@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Github, Linkedin, Twitter, Dribbble, Instagram, Mail, Globe } from "lucide-react";
 import { useSiteSettings, type SocialLink } from "@/hooks/useSiteSettings";
 
-const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+const iconMap: Record<string, any> = {
   github: Github,
   linkedin: Linkedin,
   twitter: Twitter,

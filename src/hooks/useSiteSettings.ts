@@ -55,12 +55,12 @@ export function useSiteSettings() {
 
       return {
         id: data.id,
-        nav_links: (data.nav_links ?? []) as NavLink[],
+        nav_links: (data.nav_links ?? []) as unknown as NavLink[],
         footer_left: data.footer_left,
         footer_right: data.footer_right,
-        social_links: (data.social_links ?? []) as SocialLink[],
-        design_skills: (data.design_skills ?? []) as string[],
-        dev_skills: (data.dev_skills ?? []) as string[],
+        social_links: (data.social_links ?? []) as unknown as SocialLink[],
+        design_skills: (data.design_skills ?? []) as unknown as string[],
+        dev_skills: (data.dev_skills ?? []) as unknown as string[],
       } as SiteSettings;
     },
   });
