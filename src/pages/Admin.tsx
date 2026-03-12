@@ -9,17 +9,35 @@ import {
   useUpdateProjectImages,
   useDeleteProjectImage,
 } from "@/hooks/useProjects";
+import { useSiteSettings, useSaveSiteSettings, type NavLink, type SocialLink, type SiteSettings } from "@/hooks/useSiteSettings";
 import { Navigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff, Upload, Save, X, GripVertical,
-  ChevronUp, ChevronDown,
+  ChevronUp, ChevronDown, Settings,
 } from "lucide-react";
 import type { Project, ProjectImage, PainPoint, ProcessStep, ComponentState, Takeaway } from "@/types/project";
 import { toast } from "sonner";
+
+const ICON_OPTIONS = [
+  { value: "github", label: "GitHub" },
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "twitter", label: "Twitter" },
+  { value: "dribbble", label: "Dribbble" },
+  { value: "instagram", label: "Instagram" },
+  { value: "mail", label: "Mail" },
+  { value: "globe", label: "Globe" },
+];
 
 const emptyProject: Omit<Project, "id"> = {
   slug: "",
@@ -62,14 +80,89 @@ const Admin = () => {
   const updateProjectImages = useUpdateProjectImages();
   const deleteProjectImage = useDeleteProjectImage();
 
+  const { data: siteSettings } = useSiteSettings();
+  const saveSiteSettings = useSaveSiteSettings();
+
   const [editing, setEditing] = useState<(Partial<Project> & { slug: string; title: string }) | null>(null);
   const [toolInput, setToolInput] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([]);
   const [galleryDirty, setGalleryDirty] = useState(false);
 
+  // Site settings editing state
+  const [showSettings, setShowSettings] = useState(false);
+  const [settingsForm, setSettingsForm] = useState<SiteSettings | null>(null);
+  const [skillInput, setSkillInput] = useState({ design: "", dev: "" });
+
   if (authLoading) return null;
   if (!session) return <Navigate to="/login" replace />;
+
+  const openSettings = () => {
+    if (siteSettings) {
+      setSettingsForm({ ...siteSettings });
+    }
+    setShowSettings(true);
+    setSkillInput({ design: "", dev: "" });
+  };
+
+  const handleSaveSettings = async () => {
+    if (!settingsForm) return;
+    try {
+      await saveSiteSettings.mutateAsync(settingsForm);
+      toast.success("Site settings saved");
+      setShowSettings(false);
+    } catch (e: any) {
+      toast.error("Failed to save settings: " + e.message);
+    }
+  };
+
+  // Nav links helpers
+  const addNavLink = () => {
+    if (!settingsForm) return;
+    setSettingsForm({ ...settingsForm, nav_links: [...settingsForm.nav_links, { label: "", href: "" }] });
+  };
+  const removeNavLink = (i: number) => {
+    if (!settingsForm) return;
+    const arr = [...settingsForm.nav_links];
+    arr.splice(i, 1);
+    setSettingsForm({ ...settingsForm, nav_links: arr });
+  };
+  const updateNavLink = (i: number, field: keyof NavLink, value: string) => {
+    if (!settingsForm) return;
+    const arr = [...settingsForm.nav_links];
+    arr[i] = { ...arr[i], [field]: value };
+    setSettingsForm({ ...settingsForm, nav_links: arr });
+  };
+
+  // Social links helpers
+  const addSocialLink = () => {
+    if (!settingsForm) return;
+    setSettingsForm({ ...settingsForm, social_links: [...settingsForm.social_links, { label: "", url: "", icon: "globe" }] });
+  };
+  const removeSocialLink = (i: number) => {
+    if (!settingsForm) return;
+    const arr = [...settingsForm.social_links];
+    arr.splice(i, 1);
+    setSettingsForm({ ...settingsForm, social_links: arr });
+  };
+  const updateSocialLink = (i: number, field: keyof SocialLink, value: string) => {
+    if (!settingsForm) return;
+    const arr = [...settingsForm.social_links];
+    arr[i] = { ...arr[i], [field]: value };
+    setSettingsForm({ ...settingsForm, social_links: arr });
+  };
+
+  // Skills helpers
+  const addSkill = (type: "design_skills" | "dev_skills", value: string) => {
+    if (!settingsForm || !value.trim()) return;
+    setSettingsForm({ ...settingsForm, [type]: [...settingsForm[type], value.trim()] });
+  };
+  const removeSkill = (type: "design_skills" | "dev_skills", i: number) => {
+    if (!settingsForm) return;
+    const arr = [...settingsForm[type]];
+    arr.splice(i, 1);
+    setSettingsForm({ ...settingsForm, [type]: arr });
+  };
 
   const handleNew = () => {
     setEditing({ ...emptyProject } as any);
@@ -141,7 +234,6 @@ const Admin = () => {
         toast.error("Upload failed: " + e.message);
       }
     }
-    // Refetch images
     const { data: projects } = await import("@/integrations/supabase/client").then((m) =>
       m.supabase
         .from("project_images")
@@ -216,6 +308,165 @@ const Admin = () => {
     });
   };
 
+  // Site Settings view
+  if (showSettings && settingsForm) {
+    return (
+      <main className="min-h-screen bg-background">
+        <nav className="border-b border-border/40 bg-background/80 backdrop-blur-md sticky top-0 z-50">
+          <div className="container mx-auto px-6 lg:px-16 py-4 flex items-center justify-between">
+            <button onClick={() => setShowSettings(false)} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft size={16} /> Back to List
+            </button>
+            <Button onClick={handleSaveSettings} disabled={saveSiteSettings.isPending}>
+              <Save size={16} className="mr-1" />
+              {saveSiteSettings.isPending ? "Saving..." : "Save Settings"}
+            </Button>
+          </div>
+        </nav>
+
+        <div className="container mx-auto px-6 lg:px-16 py-12 max-w-4xl space-y-12">
+          {/* Navigation Links */}
+          <Section title="Navigation Links">
+            <div className="space-y-3">
+              {settingsForm.nav_links.map((link, i) => (
+                <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-3 items-end">
+                  <Field label="Label" value={link.label} onChange={(v) => updateNavLink(i, "label", v)} placeholder="About" />
+                  <Field label="Link" value={link.href} onChange={(v) => updateNavLink(i, "href", v)} placeholder="#about or /page" />
+                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => removeNavLink(i)}>
+                    <X size={14} />
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <Button variant="outline" size="sm" onClick={addNavLink}>
+              <Plus size={14} className="mr-1" /> Add Link
+            </Button>
+          </Section>
+
+          {/* Footer */}
+          <Section title="Footer">
+            <Field label="Left Text" value={settingsForm.footer_left} onChange={(v) => setSettingsForm({ ...settingsForm, footer_left: v })} placeholder="© 2026 ST." />
+            <Field label="Right Text" value={settingsForm.footer_right} onChange={(v) => setSettingsForm({ ...settingsForm, footer_right: v })} placeholder="Portfolio ver 3.0" />
+          </Section>
+
+          {/* Social Links */}
+          <Section title="Social Links">
+            <div className="space-y-4">
+              {settingsForm.social_links.map((social, i) => (
+                <div key={i} className="grid grid-cols-[120px_1fr_1fr_auto] gap-3 items-end">
+                  <div className="space-y-1">
+                    <label className="font-body text-xs text-muted-foreground">Icon</label>
+                    <Select value={social.icon} onValueChange={(v) => updateSocialLink(i, "icon", v)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ICON_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Field label="Label" value={social.label} onChange={(v) => updateSocialLink(i, "label", v)} placeholder="GitHub" />
+                  <Field label="URL" value={social.url} onChange={(v) => updateSocialLink(i, "url", v)} placeholder="https://github.com/..." />
+                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => removeSocialLink(i)}>
+                    <X size={14} />
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <Button variant="outline" size="sm" onClick={addSocialLink}>
+              <Plus size={14} className="mr-1" /> Add Social Link
+            </Button>
+          </Section>
+
+          {/* Capabilities — Design */}
+          <Section title="Capabilities — Design">
+            <div className="flex flex-wrap gap-2">
+              {settingsForm.design_skills.map((skill, i) => (
+                <span key={i} className="inline-flex items-center gap-1.5 bg-secondary text-secondary-foreground px-3 py-1.5 rounded-full text-sm font-body">
+                  {skill}
+                  <button onClick={() => removeSkill("design_skills", i)} className="text-muted-foreground hover:text-foreground">
+                    <X size={12} />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Input
+                value={skillInput.design}
+                onChange={(e) => setSkillInput((p) => ({ ...p, design: e.target.value }))}
+                placeholder="Add a design skill..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addSkill("design_skills", skillInput.design);
+                    setSkillInput((p) => ({ ...p, design: "" }));
+                  }
+                }}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  addSkill("design_skills", skillInput.design);
+                  setSkillInput((p) => ({ ...p, design: "" }));
+                }}
+              >
+                Add
+              </Button>
+            </div>
+          </Section>
+
+          {/* Capabilities — Development */}
+          <Section title="Capabilities — Development">
+            <div className="flex flex-wrap gap-2">
+              {settingsForm.dev_skills.map((skill, i) => (
+                <span key={i} className="inline-flex items-center gap-1.5 bg-secondary text-secondary-foreground px-3 py-1.5 rounded-full text-sm font-body">
+                  {skill}
+                  <button onClick={() => removeSkill("dev_skills", i)} className="text-muted-foreground hover:text-foreground">
+                    <X size={12} />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Input
+                value={skillInput.dev}
+                onChange={(e) => setSkillInput((p) => ({ ...p, dev: e.target.value }))}
+                placeholder="Add a dev skill..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addSkill("dev_skills", skillInput.dev);
+                    setSkillInput((p) => ({ ...p, dev: "" }));
+                  }
+                }}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  addSkill("dev_skills", skillInput.dev);
+                  setSkillInput((p) => ({ ...p, dev: "" }));
+                }}
+              >
+                Add
+              </Button>
+            </div>
+          </Section>
+
+          <div className="flex justify-end pb-12">
+            <Button onClick={handleSaveSettings} size="lg" disabled={saveSiteSettings.isPending}>
+              <Save size={16} className="mr-2" />
+              {saveSiteSettings.isPending ? "Saving..." : "Save Settings"}
+            </Button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   // List view
   if (!editing) {
     return (
@@ -229,6 +480,9 @@ const Admin = () => {
               <h1 className="font-display text-xl text-foreground">Project Manager</h1>
             </div>
             <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" onClick={openSettings}>
+                <Settings size={16} className="mr-1" /> Site Settings
+              </Button>
               <Button onClick={handleNew} size="sm">
                 <Plus size={16} className="mr-1" /> New Project
               </Button>

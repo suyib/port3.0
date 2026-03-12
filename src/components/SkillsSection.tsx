@@ -1,9 +1,14 @@
 import { motion } from "framer-motion";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
-const designSkills = ["UI/UX Design", "Design Systems", "Prototyping", "Brand Identity", "Motion Design", "Illustration"];
-const devSkills = ["React / Next.js", "TypeScript", "Node.js", "Tailwind CSS", "PostgreSQL", "REST & GraphQL"];
+const fallbackDesign = ["UI/UX Design", "Design Systems", "Prototyping", "Brand Identity", "Motion Design", "Illustration"];
+const fallbackDev = ["React / Next.js", "TypeScript", "Node.js", "Tailwind CSS", "PostgreSQL", "REST & GraphQL"];
 
 const SkillsSection = () => {
+  const { data: settings } = useSiteSettings();
+  const designSkills = settings?.design_skills?.length ? settings.design_skills : fallbackDesign;
+  const devSkills = settings?.dev_skills?.length ? settings.dev_skills : fallbackDev;
+
   return (
     <section id="skills" className="py-20 bg-primary text-primary-foreground">
       <div className="container mx-auto px-6 lg:px-16">
