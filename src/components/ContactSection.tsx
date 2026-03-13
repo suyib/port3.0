@@ -23,6 +23,7 @@ const fallbackSocials: SocialLink[] = [
 
 const ContactSection = () => {
   const { data: settings } = useSiteSettings();
+  const { data: posts } = useBlogPosts();
   const socials = settings?.social_links?.length ? settings.social_links : fallbackSocials;
 
   return (
@@ -42,12 +43,22 @@ const ContactSection = () => {
             <p className="font-body text-lg text-muted-foreground mb-10 leading-relaxed">
               Have a project in mind? I'd love to hear about it. Drop me a line and let's make it happen.
             </p>
-            <Link
-              to="/contact"
-              className="inline-flex items-center px-10 py-5 rounded-full bg-accent text-accent-foreground font-body font-medium text-base tracking-wide hover:opacity-90 transition-opacity"
-            >
-              Get in Touch
-            </Link>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link
+                to="/contact"
+                className="inline-flex items-center px-10 py-5 rounded-full bg-accent text-accent-foreground font-body font-medium text-base tracking-wide hover:opacity-90 transition-opacity"
+              >
+                Get in Touch
+              </Link>
+              {posts && posts.length > 0 && (
+                <Link
+                  to="/insights"
+                  className="inline-flex items-center px-10 py-5 rounded-full border border-accent text-accent font-body font-medium text-base tracking-wide hover:bg-accent hover:text-accent-foreground transition-colors"
+                >
+                  Read Insights
+                </Link>
+              )}
+            </div>
           </motion.div>
 
           <motion.div
