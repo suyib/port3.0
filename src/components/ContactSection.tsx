@@ -41,12 +41,12 @@ const ContactSection = () => {
             <p className="font-body text-lg text-muted-foreground mb-10 leading-relaxed">
               Have a project in mind? I'd love to hear about it. Drop me a line and let's make it happen.
             </p>
-            <a
-              href="mailto:hello@example.com"
+            <Link
+              to="/contact"
               className="inline-flex items-center px-10 py-5 rounded-full bg-accent text-accent-foreground font-body font-medium text-base tracking-wide hover:opacity-90 transition-opacity"
             >
-              hello@example.com
-            </a>
+              Get in Touch
+            </Link>
           </motion.div>
 
           <motion.div
