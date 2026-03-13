@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Github, Linkedin, Twitter, Dribbble, Instagram, Mail, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useSiteSettings, type SocialLink } from "@/hooks/useSiteSettings";
 
 const iconMap: Record<string, any> = {
