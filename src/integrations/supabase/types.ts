@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          image_url: string
+          published: boolean
+          slug: string
+          summary: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          image_url?: string
+          published?: boolean
+          slug: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          image_url?: string
+          published?: boolean
+          slug?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      contact_submissions: {
+        Row: {
+          budget_range: string
+          company: string
+          created_at: string
+          goal: string
+          id: string
+          name: string
+          project_type: string
+          timeline: string
+        }
+        Insert: {
+          budget_range?: string
+          company: string
+          created_at?: string
+          goal?: string
+          id?: string
+          name: string
+          project_type: string
+          timeline?: string
+        }
+        Update: {
+          budget_range?: string
+          company?: string
+          created_at?: string
+          goal?: string
+          id?: string
+          name?: string
+          project_type?: string
+          timeline?: string
+        }
+        Relationships: []
+      }
       project_images: {
         Row: {
           created_at: string

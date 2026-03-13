@@ -6,6 +6,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import CaseStudy from "./pages/CaseStudy.tsx";
 import Projects from "./pages/Projects.tsx";
+import Insights from "./pages/Insights.tsx";
+import InsightPost from "./pages/InsightPost.tsx";
+import ContactPage from "./pages/Contact.tsx";
 import Login from "./pages/Login.tsx";
 import Admin from "./pages/Admin.tsx";
 import Navbar from "./components/Navbar.tsx";
@@ -24,6 +27,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/project/:slug" element={<CaseStudy />} />
+          <Route path="/insights" element={<Insights />} />
+          <Route path="/insights/:slug" element={<InsightPost />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
