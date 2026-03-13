@@ -290,6 +290,51 @@ const Admin = () => {
     setEditing((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
+  // Blog handlers
+  const handleNewPost = () => {
+    setEditingPost({ slug: "", title: "", image_url: "", summary: "", content: "", published: false });
+    setBlogImageFile(null);
+  };
+
+  const handleEditPost = (post: BlogPost) => {
+    setEditingPost({ ...post });
+    setBlogImageFile(null);
+  };
+
+  const handleDeletePost = async (id: string) => {
+    if (!confirm("Delete this post?")) return;
+    await deleteBlogPost.mutateAsync(id);
+    toast.success("Post deleted");
+  };
+
+  const handleSavePost = async () => {
+    if (!editingPost) return;
+    let imageUrl = editingPost.image_url || "";
+
+    if (blogImageFile) {
+      try {
+        imageUrl = await uploadBlogImage.mutateAsync(blogImageFile);
+      } catch (e: any) {
+        toast.error("Image upload failed: " + e.message);
+        return;
+      }
+    }
+
+    try {
+      await saveBlogPost.mutateAsync({
+        ...editingPost,
+        slug: editingPost.slug || "",
+        title: editingPost.title || "",
+        image_url: imageUrl,
+      } as any);
+      toast.success(editingPost.id ? "Post updated" : "Post created");
+      setEditingPost(null);
+      setBlogImageFile(null);
+    } catch (e: any) {
+      toast.error("Save failed: " + e.message);
+    }
+  };
+
   const updatePainPoint = (index: number, field: keyof PainPoint, value: string) => {
     setEditing((prev) => {
       if (!prev) return prev;
