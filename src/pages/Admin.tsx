@@ -10,6 +10,13 @@ import {
   useDeleteProjectImage,
 } from "@/hooks/useProjects";
 import { useSiteSettings, useSaveSiteSettings, type NavLink, type SocialLink, type SiteSettings } from "@/hooks/useSiteSettings";
+import {
+  useBlogPosts,
+  useSaveBlogPost,
+  useDeleteBlogPost,
+  useUploadBlogImage,
+  type BlogPost,
+} from "@/hooks/useBlogPosts";
 import { Navigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,7 +31,7 @@ import {
 } from "@/components/ui/select";
 import {
   ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff, Upload, Save, X, GripVertical,
-  ChevronUp, ChevronDown, Settings,
+  ChevronUp, ChevronDown, Settings, FileText,
 } from "lucide-react";
 import type { Project, ProjectImage, PainPoint, ProcessStep, ComponentState, Takeaway } from "@/types/project";
 import { toast } from "sonner";
