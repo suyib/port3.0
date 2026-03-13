@@ -90,11 +90,22 @@ const Admin = () => {
   const { data: siteSettings } = useSiteSettings();
   const saveSiteSettings = useSaveSiteSettings();
 
+  // Blog state
+  const { data: blogPosts, isLoading: blogLoading } = useBlogPosts(false);
+  const saveBlogPost = useSaveBlogPost();
+  const deleteBlogPost = useDeleteBlogPost();
+  const uploadBlogImage = useUploadBlogImage();
+
+  const [adminTab, setAdminTab] = useState<"projects" | "blog">("projects");
   const [editing, setEditing] = useState<(Partial<Project> & { slug: string; title: string }) | null>(null);
   const [toolInput, setToolInput] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([]);
   const [galleryDirty, setGalleryDirty] = useState(false);
+
+  // Blog editing state
+  const [editingPost, setEditingPost] = useState<Partial<BlogPost> | null>(null);
+  const [blogImageFile, setBlogImageFile] = useState<File | null>(null);
 
   // Site settings editing state
   const [showSettings, setShowSettings] = useState(false);
