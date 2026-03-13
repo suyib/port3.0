@@ -530,6 +530,78 @@ const Admin = () => {
     );
   }
 
+  // Blog post edit view
+  if (editingPost) {
+    return (
+      <main className="min-h-screen bg-background">
+        <nav className="border-b border-border/40 bg-background/80 backdrop-blur-md sticky top-0 z-50">
+          <div className="container mx-auto px-6 lg:px-16 py-4 flex items-center justify-between">
+            <button onClick={() => setEditingPost(null)} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft size={16} /> Back to List
+            </button>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Published</span>
+                <Switch
+                  checked={editingPost.published ?? false}
+                  onCheckedChange={(v) => setEditingPost((p) => p ? { ...p, published: v } : p)}
+                />
+              </div>
+              <Button onClick={handleSavePost} disabled={saveBlogPost.isPending}>
+                <Save size={16} className="mr-1" />
+                {saveBlogPost.isPending ? "Saving..." : "Save Post"}
+              </Button>
+            </div>
+          </div>
+        </nav>
+
+        <div className="container mx-auto px-6 lg:px-16 py-12 max-w-4xl space-y-12">
+          <Section title="Post Details">
+            <div className="grid md:grid-cols-2 gap-4">
+              <Field label="Title" value={editingPost.title || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, title: v } : p)} />
+              <Field label="Slug" value={editingPost.slug || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, slug: v } : p)} placeholder="my-post-slug" />
+            </div>
+          </Section>
+
+          <Section title="Cover Image">
+            <div className="flex items-start gap-6">
+              {(editingPost.image_url || blogImageFile) && (
+                <img
+                  src={blogImageFile ? URL.createObjectURL(blogImageFile) : editingPost.image_url}
+                  alt="Preview"
+                  className="w-40 h-28 object-cover rounded-lg"
+                />
+              )}
+              <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-body transition-colors">
+                <Upload size={16} />
+                Upload Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => setBlogImageFile(e.target.files?.[0] || null)}
+                />
+              </label>
+            </div>
+          </Section>
+
+          <Section title="Content">
+            <TextareaField label="Summary" value={editingPost.summary || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, summary: v } : p)} rows={3} />
+            <TextareaField label="Content" value={editingPost.content || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, content: v } : p)} rows={12} />
+            <p className="text-xs text-muted-foreground">Use double line breaks to separate paragraphs.</p>
+          </Section>
+
+          <div className="flex justify-end pb-12">
+            <Button onClick={handleSavePost} size="lg" disabled={saveBlogPost.isPending}>
+              <Save size={16} className="mr-2" />
+              {saveBlogPost.isPending ? "Saving..." : "Save Post"}
+            </Button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   // List view
   if (!editing) {
     return (
@@ -540,15 +612,21 @@ const Admin = () => {
               <Link to="/" className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
                 <ArrowLeft size={16} /> Back to Site
               </Link>
-              <h1 className="font-display text-xl text-foreground">Project Manager</h1>
+              <h1 className="font-display text-xl text-foreground">Admin</h1>
             </div>
             <div className="flex items-center gap-3">
               <Button variant="outline" size="sm" onClick={openSettings}>
                 <Settings size={16} className="mr-1" /> Site Settings
               </Button>
-              <Button onClick={handleNew} size="sm">
-                <Plus size={16} className="mr-1" /> New Project
-              </Button>
+              {adminTab === "projects" ? (
+                <Button onClick={handleNew} size="sm">
+                  <Plus size={16} className="mr-1" /> New Project
+                </Button>
+              ) : (
+                <Button onClick={handleNewPost} size="sm">
+                  <Plus size={16} className="mr-1" /> New Post
+                </Button>
+              )}
               <Button variant="ghost" size="sm" onClick={signOut}>
                 Sign Out
               </Button>
@@ -557,6 +635,25 @@ const Admin = () => {
         </nav>
 
         <div className="container mx-auto px-6 lg:px-16 py-12">
+          {/* Tabs */}
+          <div className="flex gap-4 mb-8 border-b border-border/40">
+            <button
+              onClick={() => setAdminTab("projects")}
+              className={`pb-3 font-body text-sm transition-colors border-b-2 ${adminTab === "projects" ? "border-accent text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            >
+              Projects
+            </button>
+            <button
+              onClick={() => setAdminTab("blog")}
+              className={`pb-3 font-body text-sm transition-colors border-b-2 ${adminTab === "blog" ? "border-accent text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            >
+              <FileText size={14} className="inline mr-1" />
+              Blog Posts
+            </button>
+          </div>
+
+          {adminTab === "projects" ? (
+            <>
           {isLoading ? (
             <p className="text-muted-foreground">Loading projects...</p>
           ) : !projects?.length ? (
@@ -601,6 +698,52 @@ const Admin = () => {
                 );
               })}
             </div>
+          )}
+            </>
+          ) : (
+            <>
+              {blogLoading ? (
+                <p className="text-muted-foreground">Loading posts...</p>
+              ) : !blogPosts?.length ? (
+                <div className="text-center py-24">
+                  <p className="text-muted-foreground mb-4">No blog posts yet</p>
+                  <Button onClick={handleNewPost}><Plus size={16} className="mr-1" /> Create Your First Post</Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {blogPosts.map((post) => (
+                    <div
+                      key={post.id}
+                      className="bg-card border border-border/40 rounded-xl p-6 flex items-center gap-6"
+                    >
+                      {post.image_url && (
+                        <img src={post.image_url} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3 mb-1">
+                          <h3 className="font-display text-lg text-foreground truncate">{post.title}</h3>
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${post.published ? "bg-accent/10 text-accent" : "bg-muted text-muted-foreground"}`}>
+                            {post.published ? "Published" : "Draft"}
+                          </span>
+                        </div>
+                        <p className="font-body text-sm text-muted-foreground truncate">{post.summary}</p>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <Button variant="ghost" size="icon" asChild>
+                          <Link to={`/insights/${post.slug}`} target="_blank"><Eye size={16} /></Link>
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleEditPost(post)}>
+                          <Pencil size={16} />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDeletePost(post.id)}>
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>
