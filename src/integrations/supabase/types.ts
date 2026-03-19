@@ -85,6 +85,7 @@ export type Database = {
       }
       project_images: {
         Row: {
+          caption: string
           created_at: string
           id: string
           project_id: string
@@ -93,6 +94,7 @@ export type Database = {
           visible: boolean
         }
         Insert: {
+          caption?: string
           created_at?: string
           id?: string
           project_id: string
@@ -101,6 +103,7 @@ export type Database = {
           visible?: boolean
         }
         Update: {
+          caption?: string
           created_at?: string
           id?: string
           project_id?: string
@@ -124,6 +127,7 @@ export type Database = {
           challenge: string
           comparison: Json
           component_states: Json
+          cover_caption: string
           created_at: string
           description: string
           headline: string
@@ -150,6 +154,7 @@ export type Database = {
           challenge?: string
           comparison?: Json
           component_states?: Json
+          cover_caption?: string
           created_at?: string
           description?: string
           headline?: string
@@ -176,6 +181,7 @@ export type Database = {
           challenge?: string
           comparison?: Json
           component_states?: Json
+          cover_caption?: string
           created_at?: string
           description?: string
           headline?: string
