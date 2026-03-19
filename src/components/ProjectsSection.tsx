@@ -48,7 +48,7 @@ const ProjectsSection = () => {
               >
                 <div className={`overflow-hidden rounded-2xl bg-secondary ${index % 2 === 1 ? "lg:order-2" : ""}`}>
                   <img
-                    src={project.images?.find((i) => i.visible)?.url || project.image_url}
+                    src={project.image_url || project.images?.find((i) => i.visible)?.url}
                     alt={project.title}
                     className="w-full h-80 md:h-[480px] object-cover hover:scale-105 transition-transform duration-700"
                   />
