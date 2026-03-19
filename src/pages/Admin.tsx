@@ -8,6 +8,7 @@ import {
   useAddProjectImage,
   useUpdateProjectImages,
   useDeleteProjectImage,
+  useReplaceProjectImage,
 } from "@/hooks/useProjects";
 import { useSiteSettings, useSaveSiteSettings, type NavLink, type SocialLink, type SiteSettings } from "@/hooks/useSiteSettings";
 import {
