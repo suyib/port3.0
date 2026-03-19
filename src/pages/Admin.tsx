@@ -74,6 +74,7 @@ const emptyProject: Omit<Project, "id"> = {
   takeaways: [{ label: "", value: "" }],
   outcome: "",
   stakeholders: "",
+  cover_caption: "",
   sort_order: 0,
   published: false,
 };
