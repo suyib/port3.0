@@ -51,22 +51,34 @@ const CaseStudy = () => {
       <section className="py-12">
         <div className="container mx-auto px-6 lg:px-16">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.25 }} className="flex flex-wrap gap-x-12 gap-y-4">
-            <div>
-              <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">Role</p>
-              <p className="font-body text-sm text-foreground">{project.role}</p>
-            </div>
-            <div>
-              <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">Timeline</p>
-              <p className="font-body text-sm text-foreground">{project.timeline}</p>
-            </div>
-            <div>
-              <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">Tools</p>
-              <div className="flex flex-wrap gap-2">
-                {project.tools.map((tool) =>
-                <span key={tool} className="font-body text-sm text-foreground bg-secondary px-3 py-0.5 rounded-full">{tool}</span>
-                )}
+            {project.role && (
+              <div>
+                <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">Role</p>
+                <p className="font-body text-sm text-foreground">{project.role}</p>
               </div>
-            </div>
+            )}
+            {project.timeline && (
+              <div>
+                <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">Timeline</p>
+                <p className="font-body text-sm text-foreground">{project.timeline}</p>
+              </div>
+            )}
+            {project.stakeholders && (
+              <div>
+                <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">Stakeholders</p>
+                <p className="font-body text-sm text-foreground">{project.stakeholders}</p>
+              </div>
+            )}
+            {project.tools?.length > 0 && (
+              <div>
+                <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">Tools</p>
+                <div className="flex flex-wrap gap-2">
+                  {project.tools.map((tool) =>
+                  <span key={tool} className="font-body text-sm text-foreground bg-secondary px-3 py-0.5 rounded-full">{tool}</span>
+                  )}
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
       </section>

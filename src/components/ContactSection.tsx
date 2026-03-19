@@ -27,7 +27,7 @@ const ContactSection = () => {
   const socials = settings?.social_links?.length ? settings.social_links : fallbackSocials;
 
   return (
-    <section id="contact" className="py-20">
+    <section id="contact" className="py-12">
       <div className="container mx-auto px-6 lg:px-16">
         <div className="max-w-2xl mx-auto text-center">
           <motion.div

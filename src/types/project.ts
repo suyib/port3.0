@@ -62,6 +62,7 @@ export interface Project {
   component_states: ComponentState[];
   takeaways: Takeaway[];
   outcome: string;
+  stakeholders: string;
   sort_order: number;
   published: boolean;
   images?: ProjectImage[];

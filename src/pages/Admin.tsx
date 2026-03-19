@@ -73,6 +73,7 @@ const emptyProject: Omit<Project, "id"> = {
   component_states: [{ component: "", states: [""] }],
   takeaways: [{ label: "", value: "" }],
   outcome: "",
+  stakeholders: "",
   sort_order: 0,
   published: false,
 };
@@ -783,6 +784,7 @@ const Admin = () => {
             <Field label="Category" value={editing.category || ""} onChange={(v) => updateField("category", v)} placeholder="UI/UX, Mobile, Branding" />
             <Field label="Role" value={editing.role || ""} onChange={(v) => updateField("role", v)} />
             <Field label="Timeline" value={editing.timeline || ""} onChange={(v) => updateField("timeline", v)} placeholder="8 weeks" />
+            <Field label="Stakeholders" value={(editing as any).stakeholders || ""} onChange={(v) => updateField("stakeholders", v)} placeholder="Product Manager, Engineers, etc." />
             <Field label="Sort Order" value={String(editing.sort_order ?? 0)} onChange={(v) => updateField("sort_order", parseInt(v) || 0)} type="number" />
           </div>
           <Field label="Tools (comma-separated)" value={toolInput} onChange={setToolInput} placeholder="Figma, React, Tailwind CSS" />
