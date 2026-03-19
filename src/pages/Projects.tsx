@@ -166,9 +166,7 @@ const Projects = () => {
                   <h3 className="font-display text-xl text-foreground mb-2 group-hover:text-accent transition-colors">
                     {project.title}
                   </h3>
-                  <p className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                    {project.description}
-                  </p>
+                  <div className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-2 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.description }} />
                   <div className="flex flex-wrap gap-1.5 mt-3">
                     {project.tools.slice(0, 3).map((tool) => (
                       <span

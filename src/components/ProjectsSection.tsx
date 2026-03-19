@@ -62,7 +62,7 @@ const ProjectsSection = () => {
                     ))}
                   </div>
                   <h3 className="font-display text-3xl md:text-4xl text-foreground mb-4">{project.title}</h3>
-                  <p className="font-body text-lg text-muted-foreground leading-relaxed mb-6">{project.description}</p>
+                  <div className="font-body text-lg text-muted-foreground leading-relaxed mb-6 prose prose-sm max-w-none line-clamp-3" dangerouslySetInnerHTML={{ __html: project.description }} />
                   <Link
                     to={`/project/${project.slug}`}
                     className="inline-flex items-center font-body text-sm font-medium text-foreground border-b-2 border-accent pb-1 hover:border-foreground transition-colors"
