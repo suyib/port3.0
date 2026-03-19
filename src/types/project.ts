@@ -64,6 +64,7 @@ export interface Project {
   takeaways: Takeaway[];
   outcome: string;
   stakeholders: string;
+  cover_caption: string;
   sort_order: number;
   published: boolean;
   images?: ProjectImage[];
