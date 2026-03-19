@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import RichTextEditor from "@/components/RichTextEditor";
 import {
   useProjects,
   useSaveProject,
