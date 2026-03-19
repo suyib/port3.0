@@ -40,6 +40,7 @@ export interface ProjectImage {
   url: string;
   sort_order: number;
   visible: boolean;
+  caption: string;
 }
 
 export interface Project {
@@ -63,6 +64,7 @@ export interface Project {
   takeaways: Takeaway[];
   outcome: string;
   stakeholders: string;
+  cover_caption: string;
   sort_order: number;
   published: boolean;
   images?: ProjectImage[];
