@@ -89,6 +89,7 @@ const Admin = () => {
   const addProjectImage = useAddProjectImage();
   const updateProjectImages = useUpdateProjectImages();
   const deleteProjectImage = useDeleteProjectImage();
+  const replaceProjectImage = useReplaceProjectImage();
 
   const { data: siteSettings } = useSiteSettings();
   const saveSiteSettings = useSaveSiteSettings();
