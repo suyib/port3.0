@@ -986,9 +986,9 @@ const Admin = () => {
             <Field label="Before Label" value={editing.comparison?.beforeLabel || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, beforeLabel: v })} />
             <Field label="After Label" value={editing.comparison?.afterLabel || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, afterLabel: v })} />
           </div>
-          <TextareaField label="Before Description" value={editing.comparison?.beforeDescription || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, beforeDescription: v })} rows={3} />
-          <TextareaField label="After Description" value={editing.comparison?.afterDescription || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, afterDescription: v })} rows={3} />
-          <TextareaField label="Callout" value={editing.comparison?.callout || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, callout: v })} rows={2} />
+          <RichTextEditor label="Before Description" value={editing.comparison?.beforeDescription || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, beforeDescription: v })} />
+          <RichTextEditor label="After Description" value={editing.comparison?.afterDescription || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, afterDescription: v })} />
+          <RichTextEditor label="Callout" value={editing.comparison?.callout || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, callout: v })} />
         </Section>
 
         {/* Process */}
