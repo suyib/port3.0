@@ -73,6 +73,7 @@ const emptyProject: Omit<Project, "id"> = {
   component_states: [{ component: "", states: [""] }],
   takeaways: [{ label: "", value: "" }],
   outcome: "",
+  stakeholders: "",
   sort_order: 0,
   published: false,
 };
