@@ -1,20 +1,22 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Zap, Code2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, ArrowRight, X, Zap, Code2 } from "lucide-react";
 import { useProjects, useProject } from "@/hooks/useProjects";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import NotFound from "./NotFound";
 
 const CaseStudy = () => {
   const { slug } = useParams<{slug: string;}>();
   const { data: project, isLoading } = useProject(slug || "");
   const { data: allProjects } = useProjects(true);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   if (isLoading) {
     return (
       <main className="min-h-screen bg-background flex items-center justify-center">
         <p className="text-muted-foreground animate-pulse">Loading project...</p>
       </main>);
-
   }
 
   if (!project) return <NotFound />;
@@ -23,6 +25,8 @@ const CaseStudy = () => {
   const nextProject = allProjects && allProjects.length > 1 ?
   allProjects[(currentIndex + 1) % allProjects.length] :
   null;
+
+  const visibleGalleryImages = project.images?.filter((i) => i.visible) ?? [];
 
   return (
     <main className="min-h-screen bg-background">
@@ -83,27 +87,105 @@ const CaseStudy = () => {
         </div>
       </section>
 
-      {/* Gallery Images */}
-      {(() => {
-        const visibleImages = project.images?.filter((i) => i.visible) ?? [];
-        const fallback = project.image_url ? [{ url: project.image_url, id: "fallback", caption: project.cover_caption || "" }] : [];
-        const images = visibleImages.length > 0 ? visibleImages : fallback;
-        if (images.length === 0) return null;
-        return (
-          <motion.section initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="pb-24">
-            <div className="container mx-auto px-6 lg:px-16 space-y-6">
-              {images.map((img) =>
-              <div key={img.id} className="overflow-hidden rounded-2xl">
-                  <img src={img.url} alt={project.title} loading="lazy" className="w-full h-[400px] md:h-[560px] object-contain" />
-                  {(img as any).caption && (
-                    <p className="font-body text-xs text-muted-foreground mt-2 text-center italic">{(img as any).caption}</p>
-                  )}
-                </div>
+      {/* Cover Image */}
+      {project.image_url && (
+        <motion.section initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="pb-12">
+          <div className="container mx-auto px-6 lg:px-16">
+            <div className="overflow-hidden rounded-2xl">
+              <img src={project.image_url} alt={project.title} loading="lazy" className="w-full h-[400px] md:h-[560px] object-contain" />
+              {project.cover_caption && (
+                <p className="font-body text-xs text-muted-foreground mt-2 text-center italic">{project.cover_caption}</p>
               )}
             </div>
-          </motion.section>);
+          </div>
+        </motion.section>
+      )}
 
-      })()}
+      {/* Gallery Carousel */}
+      {visibleGalleryImages.length > 0 && (
+        <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }} className="pb-24">
+          <div className="container mx-auto px-6 lg:px-16">
+            <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-6">Gallery</p>
+            <Carousel opts={{ align: "start", loop: visibleGalleryImages.length > 2 }} className="w-full">
+              <CarouselContent className="-ml-4">
+                {visibleGalleryImages.map((img, idx) => (
+                  <CarouselItem key={img.id} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+                    <button
+                      onClick={() => setLightboxIndex(idx)}
+                      className="block w-full overflow-hidden rounded-xl bg-secondary cursor-pointer group"
+                    >
+                      <img
+                        src={img.url}
+                        alt={img.caption || project.title}
+                        loading="lazy"
+                        className="w-full h-56 md:h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </button>
+                    {img.caption && (
+                      <p className="font-body text-xs text-muted-foreground mt-2 text-center italic">{img.caption}</p>
+                    )}
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              {visibleGalleryImages.length > 1 && (
+                <>
+                  <CarouselPrevious className="-left-4 md:-left-5" />
+                  <CarouselNext className="-right-4 md:-right-5" />
+                </>
+              )}
+            </Carousel>
+          </div>
+        </motion.section>
+      )}
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxIndex !== null && visibleGalleryImages[lightboxIndex] && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+            onClick={() => setLightboxIndex(null)}
+          >
+            <button
+              onClick={() => setLightboxIndex(null)}
+              className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-10"
+            >
+              <X size={28} />
+            </button>
+
+            {visibleGalleryImages.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + visibleGalleryImages.length) % visibleGalleryImages.length); }}
+                  className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors z-10"
+                >
+                  <ArrowLeft size={32} />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % visibleGalleryImages.length); }}
+                  className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors z-10"
+                >
+                  <ArrowRight size={32} />
+                </button>
+              </>
+            )}
+
+            <div className="max-w-5xl max-h-[85vh] px-12" onClick={(e) => e.stopPropagation()}>
+              <img
+                src={visibleGalleryImages[lightboxIndex].url}
+                alt={visibleGalleryImages[lightboxIndex].caption || project.title}
+                className="max-w-full max-h-[80vh] object-contain mx-auto rounded-lg"
+              />
+              {visibleGalleryImages[lightboxIndex].caption && (
+                <p className="text-white/70 text-sm text-center mt-4 italic">{visibleGalleryImages[lightboxIndex].caption}</p>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <Divider />
 
@@ -269,7 +351,6 @@ const CaseStudy = () => {
         </section>
       }
     </main>);
-
 };
 
 // Helpers
