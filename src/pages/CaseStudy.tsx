@@ -218,7 +218,7 @@ const CaseStudy = () => {
                     <span className="font-body text-[10px] tracking-[0.2em] uppercase bg-destructive/10 text-destructive px-3 py-1 rounded-full">Before</span>
                   </div>
                   <h3 className="font-display text-2xl text-foreground mb-4 mt-4">{project.comparison.beforeLabel}</h3>
-                  <p className="font-body text-muted-foreground leading-relaxed">{project.comparison.beforeDescription}</p>
+                  <div className="font-body text-muted-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.comparison.beforeDescription }} />
                 </motion.div>
                 <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="bg-card border border-accent/30 rounded-2xl p-8 relative">
                   <div className="absolute top-4 right-4">
