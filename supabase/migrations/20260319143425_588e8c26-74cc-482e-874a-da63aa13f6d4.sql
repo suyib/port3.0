@@ -1,0 +1,1 @@
+ALTER TABLE projects ADD COLUMN stakeholders text NOT NULL DEFAULT '';

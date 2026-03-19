@@ -8,7 +8,7 @@ const stats = [
 
 const AboutSection = () => {
   return (
-    <section id="about" className="py-20 bg-card">
+    <section id="about" className="py-12 bg-card">
       <div className="container mx-auto px-6 lg:px-16">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           <motion.div

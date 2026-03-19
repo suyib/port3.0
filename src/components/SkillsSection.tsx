@@ -10,7 +10,7 @@ const SkillsSection = () => {
   const devSkills = settings?.dev_skills?.length ? settings.dev_skills : fallbackDev;
 
   return (
-    <section id="skills" className="py-20 bg-primary text-primary-foreground">
+    <section id="skills" className="py-12 bg-primary text-primary-foreground">
       <div className="container mx-auto px-6 lg:px-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

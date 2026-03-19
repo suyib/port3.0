@@ -137,6 +137,7 @@ export type Database = {
           slug: string
           solution: string
           sort_order: number
+          stakeholders: string
           takeaways: Json
           tech_pivot: Json
           timeline: string
@@ -162,6 +163,7 @@ export type Database = {
           slug: string
           solution?: string
           sort_order?: number
+          stakeholders?: string
           takeaways?: Json
           tech_pivot?: Json
           timeline?: string
@@ -187,6 +189,7 @@ export type Database = {
           slug?: string
           solution?: string
           sort_order?: number
+          stakeholders?: string
           takeaways?: Json
           tech_pivot?: Json
           timeline?: string
