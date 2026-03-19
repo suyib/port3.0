@@ -327,9 +327,7 @@ const CaseStudy = () => {
             </div>
           }
           {project.outcome &&
-          <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }} className="font-body text-lg text-muted-foreground leading-relaxed">
-              {project.outcome}
-            </motion.p>
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }} className="font-body text-lg text-muted-foreground leading-relaxed prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: project.outcome }} />
           }
         </div>
       </section>
