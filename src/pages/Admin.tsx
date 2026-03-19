@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import RichTextEditor from "@/components/RichTextEditor";
 import {
   useProjects,
   useSaveProject,
@@ -590,9 +591,8 @@ const Admin = () => {
           </Section>
 
           <Section title="Content">
-            <TextareaField label="Summary" value={editingPost.summary || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, summary: v } : p)} rows={3} />
-            <TextareaField label="Content" value={editingPost.content || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, content: v } : p)} rows={12} />
-            <p className="text-xs text-muted-foreground">Use double line breaks to separate paragraphs.</p>
+            <RichTextEditor label="Summary" value={editingPost.summary || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, summary: v } : p)} />
+            <RichTextEditor label="Content" value={editingPost.content || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, content: v } : p)} />
           </Section>
 
           <div className="flex justify-end pb-12">
@@ -791,7 +791,7 @@ const Admin = () => {
             <Field label="Sort Order" value={String(editing.sort_order ?? 0)} onChange={(v) => updateField("sort_order", parseInt(v) || 0)} type="number" />
           </div>
           <Field label="Tools (comma-separated)" value={toolInput} onChange={setToolInput} placeholder="Figma, React, Tailwind CSS" />
-          <TextareaField label="Short Description" value={editing.description || ""} onChange={(v) => updateField("description", v)} rows={2} />
+          <RichTextEditor label="Short Description" value={editing.description || ""} onChange={(v) => updateField("description", v)} />
         </Section>
 
         {/* Cover Image (legacy, still used as fallback) */}
@@ -956,8 +956,8 @@ const Admin = () => {
         {/* Hero */}
         <Section title="Hero Section">
           <Field label="Headline" value={editing.headline || ""} onChange={(v) => updateField("headline", v)} placeholder="From Data Overload to Daily Clarity" />
-          <TextareaField label="The Challenge" value={editing.challenge || ""} onChange={(v) => updateField("challenge", v)} rows={3} />
-          <TextareaField label="The Solution" value={editing.solution || ""} onChange={(v) => updateField("solution", v)} rows={3} />
+          <RichTextEditor label="The Challenge" value={editing.challenge || ""} onChange={(v) => updateField("challenge", v)} />
+          <RichTextEditor label="The Solution" value={editing.solution || ""} onChange={(v) => updateField("solution", v)} />
         </Section>
 
         {/* Pain Points */}
@@ -986,9 +986,9 @@ const Admin = () => {
             <Field label="Before Label" value={editing.comparison?.beforeLabel || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, beforeLabel: v })} />
             <Field label="After Label" value={editing.comparison?.afterLabel || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, afterLabel: v })} />
           </div>
-          <TextareaField label="Before Description" value={editing.comparison?.beforeDescription || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, beforeDescription: v })} rows={3} />
-          <TextareaField label="After Description" value={editing.comparison?.afterDescription || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, afterDescription: v })} rows={3} />
-          <TextareaField label="Callout" value={editing.comparison?.callout || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, callout: v })} rows={2} />
+          <RichTextEditor label="Before Description" value={editing.comparison?.beforeDescription || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, beforeDescription: v })} />
+          <RichTextEditor label="After Description" value={editing.comparison?.afterDescription || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, afterDescription: v })} />
+          <RichTextEditor label="Callout" value={editing.comparison?.callout || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, callout: v })} />
         </Section>
 
         {/* Process */}
@@ -1006,7 +1006,7 @@ const Admin = () => {
                 </Button>
               </div>
               <Field label="Title" value={step.title} onChange={(v) => updateProcess(i, "title", v)} />
-              <TextareaField label="Description" value={step.description} onChange={(v) => updateProcess(i, "description", v)} rows={3} />
+              <RichTextEditor label="Description" value={step.description} onChange={(v) => updateProcess(i, "description", v)} />
             </div>
           ))}
           <Button variant="outline" size="sm" onClick={() => updateField("process", [...(editing.process || []), { title: "", description: "" }])}>
@@ -1017,7 +1017,7 @@ const Admin = () => {
         {/* Tech Pivot */}
         <Section title="Technical Constraint">
           <Field label="Title" value={editing.tech_pivot?.title || ""} onChange={(v) => updateField("tech_pivot", { ...editing.tech_pivot, title: v })} />
-          <TextareaField label="Description" value={editing.tech_pivot?.description || ""} onChange={(v) => updateField("tech_pivot", { ...editing.tech_pivot, description: v })} rows={4} />
+          <RichTextEditor label="Description" value={editing.tech_pivot?.description || ""} onChange={(v) => updateField("tech_pivot", { ...editing.tech_pivot, description: v })} />
         </Section>
 
         {/* Component States */}
@@ -1068,7 +1068,7 @@ const Admin = () => {
 
         {/* Outcome */}
         <Section title="Outcome">
-          <TextareaField label="Summary" value={editing.outcome || ""} onChange={(v) => updateField("outcome", v)} rows={4} />
+          <RichTextEditor label="Summary" value={editing.outcome || ""} onChange={(v) => updateField("outcome", v)} />
         </Section>
 
         <div className="flex justify-end pb-12">

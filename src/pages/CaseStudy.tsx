@@ -38,23 +38,8 @@ const CaseStudy = () => {
             <h1 className="font-display text-5xl text-foreground mb-8 md:text-5xl my-[32px]">{project.headline}</h1>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} className="grid md:grid-cols-2 gap-6">
-            <div className="bg-card border border-border/40 rounded-2xl p-8">
-              <p className="font-body text-xs tracking-[0.2em] uppercase text-destructive mb-3 font-medium">The Challenge</p>
-              <p className="font-body text-foreground leading-relaxed">{project.challenge}</p>
-            </div>
-            <div className="bg-card border border-border/40 rounded-2xl p-8">
-              <p className="font-body text-xs tracking-[0.2em] uppercase text-accent mb-3 font-medium">The Solution</p>
-              <p className="font-body text-foreground leading-relaxed">{project.solution}</p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Meta bar */}
-      <section className="py-12">
-        <div className="container mx-auto px-6 lg:px-16">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.25 }} className="flex flex-wrap gap-x-12 gap-y-4">
+          {/* Meta bar — moved above challenge/solution */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.1 }} className="flex flex-wrap gap-x-12 gap-y-4 mb-10">
             {project.role && (
               <div>
                 <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">Role</p>
@@ -83,6 +68,17 @@ const CaseStudy = () => {
                 </div>
               </div>
             )}
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} className="grid md:grid-cols-2 gap-6">
+            <div className="bg-card border border-border/40 rounded-2xl p-8">
+              <p className="font-body text-xs tracking-[0.2em] uppercase text-destructive mb-3 font-medium">The Challenge</p>
+              <div className="font-body text-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.challenge }} />
+            </div>
+            <div className="bg-card border border-border/40 rounded-2xl p-8">
+              <p className="font-body text-xs tracking-[0.2em] uppercase text-accent mb-3 font-medium">The Solution</p>
+              <div className="font-body text-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.solution }} />
+            </div>
           </motion.div>
         </div>
       </section>
@@ -222,21 +218,21 @@ const CaseStudy = () => {
                     <span className="font-body text-[10px] tracking-[0.2em] uppercase bg-destructive/10 text-destructive px-3 py-1 rounded-full">Before</span>
                   </div>
                   <h3 className="font-display text-2xl text-foreground mb-4 mt-4">{project.comparison.beforeLabel}</h3>
-                  <p className="font-body text-muted-foreground leading-relaxed">{project.comparison.beforeDescription}</p>
+                  <div className="font-body text-muted-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.comparison.beforeDescription }} />
                 </motion.div>
                 <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="bg-card border border-accent/30 rounded-2xl p-8 relative">
                   <div className="absolute top-4 right-4">
                     <span className="font-body text-[10px] tracking-[0.2em] uppercase bg-accent/10 text-accent px-3 py-1 rounded-full">After</span>
                   </div>
                   <h3 className="font-display text-2xl text-foreground mb-4 mt-4">{project.comparison.afterLabel}</h3>
-                  <p className="font-body text-muted-foreground leading-relaxed">{project.comparison.afterDescription}</p>
+                  <div className="font-body text-muted-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.comparison.afterDescription }} />
                 </motion.div>
               </div>
               {project.comparison.callout &&
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="mt-8">
                   <div className="bg-accent/5 border border-accent/20 rounded-xl px-6 py-4 flex items-start gap-3">
                     <Zap size={18} className="text-accent flex-shrink-0 mt-0.5" />
-                    <p className="font-body text-sm text-foreground leading-relaxed italic">{project.comparison.callout}</p>
+                    <div className="font-body text-sm text-foreground leading-relaxed italic prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.comparison.callout }} />
                   </div>
                 </motion.div>
             }
@@ -258,7 +254,7 @@ const CaseStudy = () => {
                     <span className="font-display text-5xl text-accent/25">{String(index + 1).padStart(2, "0")}</span>
                     <div>
                       <h3 className="font-display text-2xl text-foreground mb-3">{step.title}</h3>
-                      <p className="font-body text-muted-foreground leading-relaxed">{step.description}</p>
+                      <div className="font-body text-muted-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: step.description }} />
                     </div>
                   </motion.div>
               )}
@@ -283,7 +279,7 @@ const CaseStudy = () => {
                       <Code2 size={16} className="text-accent" />
                     </div>
                   </div>
-                  <p className="font-body text-foreground leading-relaxed mt-2">{project.tech_pivot.description}</p>
+                  <div className="font-body text-foreground leading-relaxed mt-2 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.tech_pivot.description }} />
                 </div>
               </motion.div>
             </div>
@@ -331,9 +327,7 @@ const CaseStudy = () => {
             </div>
           }
           {project.outcome &&
-          <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }} className="font-body text-lg text-muted-foreground leading-relaxed">
-              {project.outcome}
-            </motion.p>
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }} className="font-body text-lg text-muted-foreground leading-relaxed prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: project.outcome }} />
           }
         </div>
       </section>
