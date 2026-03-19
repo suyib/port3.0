@@ -40,6 +40,7 @@ export interface ProjectImage {
   url: string;
   sort_order: number;
   visible: boolean;
+  caption: string;
 }
 
 export interface Project {
