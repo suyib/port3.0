@@ -146,6 +146,27 @@ export function useUploadProjectImage() {
   });
 }
 
+export function useReplaceProjectImage() {
+  const qc = useQueryClient();
+  const uploadImage = useUploadProjectImage();
+
+  return useMutation({
+    mutationFn: async ({ imageId, file }: { imageId: string; file: File }) => {
+      const url = await uploadImage.mutateAsync(file);
+      const { error } = await supabase
+        .from("project_images")
+        .update({ url })
+        .eq("id", imageId);
+      if (error) throw error;
+      return url;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["projects"] });
+      qc.invalidateQueries({ queryKey: ["project"] });
+    },
+  });
+}
+
 export function useAddProjectImage() {
   const qc = useQueryClient();
   const uploadImage = useUploadProjectImage();
