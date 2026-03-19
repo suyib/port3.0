@@ -225,7 +225,7 @@ const CaseStudy = () => {
                     <span className="font-body text-[10px] tracking-[0.2em] uppercase bg-accent/10 text-accent px-3 py-1 rounded-full">After</span>
                   </div>
                   <h3 className="font-display text-2xl text-foreground mb-4 mt-4">{project.comparison.afterLabel}</h3>
-                  <p className="font-body text-muted-foreground leading-relaxed">{project.comparison.afterDescription}</p>
+                  <div className="font-body text-muted-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.comparison.afterDescription }} />
                 </motion.div>
               </div>
               {project.comparison.callout &&
