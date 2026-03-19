@@ -1,45 +1,31 @@
 
 
-## Add Stakeholders to Projects + Reduce Section Padding
+## Cover Image as Homepage Thumbnail + Lightbox Gallery Carousel
 
-### 1. Database Migration
+### Current State
+- **Cover Image** (`image_url`): Used as fallback on homepage cards, but homepage currently prefers the first visible gallery image
+- **Gallery Images** (`project_images` table): Displayed as stacked full-width images on the case study page, with hide/show toggle in admin
+- On the case study page, both cover and gallery images are lumped together in one section
 
-Add `stakeholders` column to `projects` table:
-```sql
-ALTER TABLE projects ADD COLUMN stakeholders text NOT NULL DEFAULT '';
-```
+### Plan
 
-### 2. Update Project Type (`src/types/project.ts`)
+#### 1. Homepage Project Cards (`src/components/ProjectsSection.tsx`)
+- Change the image source to always use `project.image_url` (cover image) as the homepage thumbnail
+- Fall back to first visible gallery image only if no cover image exists
 
-Add `stakeholders: string` to the `Project` interface.
+#### 2. Case Study Page (`src/pages/CaseStudy.tsx`)
+- **Cover image**: Render the cover image (`project.image_url`) at its current position (after meta bar), full-width with optional caption — unchanged
+- **Gallery carousel**: Replace the current stacked gallery images with a lightbox-enabled carousel:
+  - Horizontal scrollable/slidable carousel using Embla (already installed via the Carousel UI component)
+  - Show thumbnail strips; clicking any image opens a full-screen lightbox overlay
+  - Lightbox: dark overlay, large image, left/right navigation arrows, close button, caption below
+  - Only show visible gallery images (hidden ones stay hidden)
+  - Separate the cover image from gallery images — cover is standalone, gallery is the carousel below it
 
-### 3. Update Admin Basic Info (`src/pages/Admin.tsx`)
+#### 3. Admin Panel (`src/pages/Admin.tsx`)
+- No structural changes needed — the existing hide/show toggle per gallery image already works. Hidden images won't appear in the carousel.
 
-Add a "Stakeholders" text field to the Basic Info section alongside the existing fields (Role, Timeline, etc.).
-
-### 4. Update `useProjects.ts`
-
-Include `stakeholders` in the `useSaveProject` payload passthrough (it's already generic via spread, but ensure it's not stripped).
-
-### 5. Update Case Study Display (`src/pages/CaseStudy.tsx`)
-
-In the meta bar section (Role / Timeline / Tools), add a "Stakeholders" entry — but **only render it if `project.stakeholders` is non-empty**. Apply the same conditional rendering to Role, Timeline, and Tools so empty fields are hidden.
-
-### 6. Reduce Section Padding
-
-Change `py-20` to `py-12` across all main sections:
-- `src/components/AboutSection.tsx`
-- `src/components/ProjectsSection.tsx`
-- `src/components/SkillsSection.tsx`
-- `src/components/ContactSection.tsx`
-
-### Files Changed
-1. DB migration — add `stakeholders` column
-2. `src/types/project.ts` — add field
-3. `src/pages/Admin.tsx` — add Stakeholders input in Basic Info
-4. `src/pages/CaseStudy.tsx` — conditionally show meta fields + stakeholders
-5. `src/components/AboutSection.tsx` — `py-20` → `py-12`
-6. `src/components/ProjectsSection.tsx` — `py-20` → `py-12`
-7. `src/components/SkillsSection.tsx` — `py-20` → `py-12`
-8. `src/components/ContactSection.tsx` — `py-20` → `py-12`
+### Files to Change
+1. `src/components/ProjectsSection.tsx` — prioritize `image_url` for homepage cards
+2. `src/pages/CaseStudy.tsx` — split cover from gallery, add carousel + lightbox for gallery images
 
