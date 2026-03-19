@@ -20,7 +20,7 @@ const RichTextEditor = ({ value, onChange, label }: RichTextEditorProps) => {
 
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value, false);
+      editor.commands.setContent(value, { emitUpdate: false });
     }
   }, [value, editor]);
 
