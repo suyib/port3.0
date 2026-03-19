@@ -75,11 +75,7 @@ const InsightPost = () => {
             </div>
           )}
 
-          <article className="prose prose-lg max-w-none font-body text-foreground/90 leading-relaxed space-y-6">
-            {post.content.split("\n\n").map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
-          </article>
+          <article className="prose prose-lg max-w-none font-body text-foreground/90 leading-relaxed" dangerouslySetInnerHTML={{ __html: post.content }} />
         </motion.div>
       </div>
     </main>
