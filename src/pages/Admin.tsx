@@ -1006,7 +1006,7 @@ const Admin = () => {
                 </Button>
               </div>
               <Field label="Title" value={step.title} onChange={(v) => updateProcess(i, "title", v)} />
-              <TextareaField label="Description" value={step.description} onChange={(v) => updateProcess(i, "description", v)} rows={3} />
+              <RichTextEditor label="Description" value={step.description} onChange={(v) => updateProcess(i, "description", v)} />
             </div>
           ))}
           <Button variant="outline" size="sm" onClick={() => updateField("process", [...(editing.process || []), { title: "", description: "" }])}>
