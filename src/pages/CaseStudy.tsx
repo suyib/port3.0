@@ -254,7 +254,7 @@ const CaseStudy = () => {
                     <span className="font-display text-5xl text-accent/25">{String(index + 1).padStart(2, "0")}</span>
                     <div>
                       <h3 className="font-display text-2xl text-foreground mb-3">{step.title}</h3>
-                      <p className="font-body text-muted-foreground leading-relaxed">{step.description}</p>
+                      <div className="font-body text-muted-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: step.description }} />
                     </div>
                   </motion.div>
               )}
