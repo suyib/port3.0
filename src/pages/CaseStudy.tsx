@@ -279,7 +279,7 @@ const CaseStudy = () => {
                       <Code2 size={16} className="text-accent" />
                     </div>
                   </div>
-                  <p className="font-body text-foreground leading-relaxed mt-2">{project.tech_pivot.description}</p>
+                  <div className="font-body text-foreground leading-relaxed mt-2 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.tech_pivot.description }} />
                 </div>
               </motion.div>
             </div>
