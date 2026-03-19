@@ -802,7 +802,7 @@ const Admin = () => {
                 className="w-40 h-28 object-cover rounded-lg"
               />
             )}
-            <div className="flex-1">
+            <div className="flex-1 space-y-3">
               <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-body transition-colors">
                 <Upload size={16} />
                 Upload Cover
@@ -814,8 +814,14 @@ const Admin = () => {
                 />
               </label>
               {editing.image_url && (
-                <p className="text-xs text-muted-foreground mt-2 truncate max-w-sm">{editing.image_url}</p>
+                <p className="text-xs text-muted-foreground truncate max-w-sm">{editing.image_url}</p>
               )}
+              <Input
+                placeholder="Caption (optional)"
+                value={(editing as any).cover_caption || ""}
+                onChange={(e) => updateField("cover_caption", e.target.value)}
+                className="max-w-md text-sm"
+              />
             </div>
           </div>
         </Section>
