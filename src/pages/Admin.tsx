@@ -1068,7 +1068,7 @@ const Admin = () => {
 
         {/* Outcome */}
         <Section title="Outcome">
-          <TextareaField label="Summary" value={editing.outcome || ""} onChange={(v) => updateField("outcome", v)} rows={4} />
+          <RichTextEditor label="Summary" value={editing.outcome || ""} onChange={(v) => updateField("outcome", v)} />
         </Section>
 
         <div className="flex justify-end pb-12">
