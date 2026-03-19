@@ -38,23 +38,8 @@ const CaseStudy = () => {
             <h1 className="font-display text-5xl text-foreground mb-8 md:text-5xl my-[32px]">{project.headline}</h1>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} className="grid md:grid-cols-2 gap-6">
-            <div className="bg-card border border-border/40 rounded-2xl p-8">
-              <p className="font-body text-xs tracking-[0.2em] uppercase text-destructive mb-3 font-medium">The Challenge</p>
-              <p className="font-body text-foreground leading-relaxed">{project.challenge}</p>
-            </div>
-            <div className="bg-card border border-border/40 rounded-2xl p-8">
-              <p className="font-body text-xs tracking-[0.2em] uppercase text-accent mb-3 font-medium">The Solution</p>
-              <p className="font-body text-foreground leading-relaxed">{project.solution}</p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Meta bar */}
-      <section className="py-12">
-        <div className="container mx-auto px-6 lg:px-16">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.25 }} className="flex flex-wrap gap-x-12 gap-y-4">
+          {/* Meta bar — moved above challenge/solution */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.1 }} className="flex flex-wrap gap-x-12 gap-y-4 mb-10">
             {project.role && (
               <div>
                 <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-1">Role</p>
@@ -83,6 +68,17 @@ const CaseStudy = () => {
                 </div>
               </div>
             )}
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} className="grid md:grid-cols-2 gap-6">
+            <div className="bg-card border border-border/40 rounded-2xl p-8">
+              <p className="font-body text-xs tracking-[0.2em] uppercase text-destructive mb-3 font-medium">The Challenge</p>
+              <div className="font-body text-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.challenge }} />
+            </div>
+            <div className="bg-card border border-border/40 rounded-2xl p-8">
+              <p className="font-body text-xs tracking-[0.2em] uppercase text-accent mb-3 font-medium">The Solution</p>
+              <div className="font-body text-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.solution }} />
+            </div>
           </motion.div>
         </div>
       </section>
