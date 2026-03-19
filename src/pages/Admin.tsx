@@ -956,8 +956,8 @@ const Admin = () => {
         {/* Hero */}
         <Section title="Hero Section">
           <Field label="Headline" value={editing.headline || ""} onChange={(v) => updateField("headline", v)} placeholder="From Data Overload to Daily Clarity" />
-          <TextareaField label="The Challenge" value={editing.challenge || ""} onChange={(v) => updateField("challenge", v)} rows={3} />
-          <TextareaField label="The Solution" value={editing.solution || ""} onChange={(v) => updateField("solution", v)} rows={3} />
+          <RichTextEditor label="The Challenge" value={editing.challenge || ""} onChange={(v) => updateField("challenge", v)} />
+          <RichTextEditor label="The Solution" value={editing.solution || ""} onChange={(v) => updateField("solution", v)} />
         </Section>
 
         {/* Pain Points */}
