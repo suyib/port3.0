@@ -886,6 +886,19 @@ const Admin = () => {
                         <span className="text-[10px] bg-destructive/80 text-destructive-foreground px-2 py-0.5 rounded-full">Hidden</span>
                       </div>
                     )}
+                    <div className="p-2">
+                      <Input
+                        placeholder="Caption (optional)"
+                        value={img.caption || ""}
+                        onChange={(e) => {
+                          setGalleryImages((prev) =>
+                            prev.map((i) => (i.id === img.id ? { ...i, caption: e.target.value } : i))
+                          );
+                          setGalleryDirty(true);
+                        }}
+                        className="text-xs h-7"
+                      />
+                    </div>
                   </div>
                 ))}
               </div>

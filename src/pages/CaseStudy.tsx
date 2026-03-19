@@ -86,7 +86,7 @@ const CaseStudy = () => {
       {/* Gallery Images */}
       {(() => {
         const visibleImages = project.images?.filter((i) => i.visible) ?? [];
-        const fallback = project.image_url ? [{ url: project.image_url, id: "fallback" }] : [];
+        const fallback = project.image_url ? [{ url: project.image_url, id: "fallback", caption: project.cover_caption || "" }] : [];
         const images = visibleImages.length > 0 ? visibleImages : fallback;
         if (images.length === 0) return null;
         return (
@@ -95,6 +95,9 @@ const CaseStudy = () => {
               {images.map((img) =>
               <div key={img.id} className="overflow-hidden rounded-2xl">
                   <img src={img.url} alt={project.title} loading="lazy" className="w-full h-[400px] md:h-[560px] object-contain" />
+                  {(img as any).caption && (
+                    <p className="font-body text-xs text-muted-foreground mt-2 text-center italic">{(img as any).caption}</p>
+                  )}
                 </div>
               )}
             </div>

@@ -176,7 +176,7 @@ export function useUpdateProjectImages() {
       for (const img of images) {
         const { error } = await supabase
           .from("project_images")
-          .update({ sort_order: img.sort_order, visible: img.visible })
+          .update({ sort_order: img.sort_order, visible: img.visible, caption: img.caption || "" })
           .eq("id", img.id);
         if (error) throw error;
       }
