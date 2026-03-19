@@ -8,6 +8,7 @@ import {
   useAddProjectImage,
   useUpdateProjectImages,
   useDeleteProjectImage,
+  useReplaceProjectImage,
 } from "@/hooks/useProjects";
 import { useSiteSettings, useSaveSiteSettings, type NavLink, type SocialLink, type SiteSettings } from "@/hooks/useSiteSettings";
 import {
@@ -31,7 +32,7 @@ import {
 } from "@/components/ui/select";
 import {
   ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff, Upload, Save, X, GripVertical,
-  ChevronUp, ChevronDown, Settings, FileText,
+  ChevronUp, ChevronDown, Settings, FileText, RefreshCw,
 } from "lucide-react";
 import type { Project, ProjectImage, PainPoint, ProcessStep, ComponentState, Takeaway } from "@/types/project";
 import { toast } from "sonner";
@@ -88,6 +89,7 @@ const Admin = () => {
   const addProjectImage = useAddProjectImage();
   const updateProjectImages = useUpdateProjectImages();
   const deleteProjectImage = useDeleteProjectImage();
+  const replaceProjectImage = useReplaceProjectImage();
 
   const { data: siteSettings } = useSiteSettings();
   const saveSiteSettings = useSaveSiteSettings();
@@ -836,56 +838,87 @@ const Admin = () => {
                 {galleryImages.map((img, index) => (
                   <div
                     key={img.id}
-                    className={`relative rounded-lg overflow-hidden border ${
+                    className={`rounded-lg overflow-hidden border ${
                       img.visible ? "border-border/40" : "border-destructive/30 opacity-60"
                     }`}
                   >
-                    <img src={img.url} alt="" className="w-full h-32 object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-between p-2">
-                      <div className="flex gap-1">
-                        <Button
-                          variant="secondary"
-                          size="icon"
-                          className="h-7 w-7"
-                          onClick={() => moveImage(index, -1)}
-                          disabled={index === 0}
-                        >
-                          <ChevronUp size={14} />
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          size="icon"
-                          className="h-7 w-7"
-                          onClick={() => moveImage(index, 1)}
-                          disabled={index === galleryImages.length - 1}
-                        >
-                          <ChevronDown size={14} />
-                        </Button>
+                    <div className="relative">
+                      <img src={img.url} alt="" className="w-full h-32 object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-between p-2">
+                        <div className="flex gap-1">
+                          <Button
+                            variant="secondary"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={() => moveImage(index, -1)}
+                            disabled={index === 0}
+                          >
+                            <ChevronUp size={14} />
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={() => moveImage(index, 1)}
+                            disabled={index === galleryImages.length - 1}
+                          >
+                            <ChevronDown size={14} />
+                          </Button>
+                        </div>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="secondary"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={() => toggleVisibility(img.id)}
+                          >
+                            {img.visible ? <Eye size={14} /> : <EyeOff size={14} />}
+                          </Button>
+                          <label className="cursor-pointer">
+                            <Button
+                              variant="secondary"
+                              size="icon"
+                              className="h-7 w-7 pointer-events-none"
+                              tabIndex={-1}
+                            >
+                              <RefreshCw size={14} />
+                            </Button>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                try {
+                                  const newUrl = await replaceProjectImage.mutateAsync({ imageId: img.id, file });
+                                  setGalleryImages((prev) =>
+                                    prev.map((i) => (i.id === img.id ? { ...i, url: newUrl } : i))
+                                  );
+                                  toast.success("Image replaced");
+                                } catch (err: any) {
+                                  toast.error("Replace failed: " + err.message);
+                                }
+                                e.target.value = "";
+                              }}
+                            />
+                          </label>
+                          <Button
+                            variant="destructive"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={() => handleGalleryDelete(img.id)}
+                          >
+                            <Trash2 size={14} />
+                          </Button>
+                        </div>
                       </div>
-                      <div className="flex gap-1">
-                        <Button
-                          variant="secondary"
-                          size="icon"
-                          className="h-7 w-7"
-                          onClick={() => toggleVisibility(img.id)}
-                        >
-                          {img.visible ? <Eye size={14} /> : <EyeOff size={14} />}
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          className="h-7 w-7"
-                          onClick={() => handleGalleryDelete(img.id)}
-                        >
-                          <Trash2 size={14} />
-                        </Button>
-                      </div>
+                      {!img.visible && (
+                        <div className="absolute top-2 left-2">
+                          <span className="text-[10px] bg-destructive/80 text-destructive-foreground px-2 py-0.5 rounded-full">Hidden</span>
+                        </div>
+                      )}
                     </div>
-                    {!img.visible && (
-                      <div className="absolute top-2 left-2">
-                        <span className="text-[10px] bg-destructive/80 text-destructive-foreground px-2 py-0.5 rounded-full">Hidden</span>
-                      </div>
-                    )}
                     <div className="p-2">
                       <Input
                         placeholder="Caption (optional)"
