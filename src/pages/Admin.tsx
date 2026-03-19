@@ -1017,7 +1017,7 @@ const Admin = () => {
         {/* Tech Pivot */}
         <Section title="Technical Constraint">
           <Field label="Title" value={editing.tech_pivot?.title || ""} onChange={(v) => updateField("tech_pivot", { ...editing.tech_pivot, title: v })} />
-          <TextareaField label="Description" value={editing.tech_pivot?.description || ""} onChange={(v) => updateField("tech_pivot", { ...editing.tech_pivot, description: v })} rows={4} />
+          <RichTextEditor label="Description" value={editing.tech_pivot?.description || ""} onChange={(v) => updateField("tech_pivot", { ...editing.tech_pivot, description: v })} />
         </Section>
 
         {/* Component States */}
