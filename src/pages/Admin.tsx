@@ -791,7 +791,7 @@ const Admin = () => {
             <Field label="Sort Order" value={String(editing.sort_order ?? 0)} onChange={(v) => updateField("sort_order", parseInt(v) || 0)} type="number" />
           </div>
           <Field label="Tools (comma-separated)" value={toolInput} onChange={setToolInput} placeholder="Figma, React, Tailwind CSS" />
-          <TextareaField label="Short Description" value={editing.description || ""} onChange={(v) => updateField("description", v)} rows={2} />
+          <RichTextEditor label="Short Description" value={editing.description || ""} onChange={(v) => updateField("description", v)} />
         </Section>
 
         {/* Cover Image (legacy, still used as fallback) */}
