@@ -71,9 +71,7 @@ const InsightPost = () => {
           {post.summary && (
             <div className="bg-secondary/40 rounded-xl p-6 mb-10">
               <p className="font-body text-sm tracking-[0.2em] uppercase text-accent mb-2">Summary</p>
-              <p className="font-body text-lg text-foreground leading-relaxed">
-                {post.summary}
-              </p>
+              <div className="font-body text-lg text-foreground leading-relaxed prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: post.summary }} />
             </div>
           )}
 
