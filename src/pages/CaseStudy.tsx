@@ -232,7 +232,7 @@ const CaseStudy = () => {
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="mt-8">
                   <div className="bg-accent/5 border border-accent/20 rounded-xl px-6 py-4 flex items-start gap-3">
                     <Zap size={18} className="text-accent flex-shrink-0 mt-0.5" />
-                    <p className="font-body text-sm text-foreground leading-relaxed italic">{project.comparison.callout}</p>
+                    <div className="font-body text-sm text-foreground leading-relaxed italic prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.comparison.callout }} />
                   </div>
                 </motion.div>
             }
