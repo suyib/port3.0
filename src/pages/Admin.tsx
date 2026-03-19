@@ -591,9 +591,8 @@ const Admin = () => {
           </Section>
 
           <Section title="Content">
-            <TextareaField label="Summary" value={editingPost.summary || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, summary: v } : p)} rows={3} />
-            <TextareaField label="Content" value={editingPost.content || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, content: v } : p)} rows={12} />
-            <p className="text-xs text-muted-foreground">Use double line breaks to separate paragraphs.</p>
+            <RichTextEditor label="Summary" value={editingPost.summary || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, summary: v } : p)} />
+            <RichTextEditor label="Content" value={editingPost.content || ""} onChange={(v) => setEditingPost((p) => p ? { ...p, content: v } : p)} />
           </Section>
 
           <div className="flex justify-end pb-12">
