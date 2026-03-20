@@ -1,0 +1,1 @@
+ALTER TABLE public.site_settings ADD COLUMN homepage_content jsonb NOT NULL DEFAULT '{}'::jsonb;

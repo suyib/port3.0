@@ -12,6 +12,42 @@ export interface SocialLink {
   icon: string;
 }
 
+export interface HeroContent {
+  subtitle: string;
+  title: string;
+  title2: string;
+  description: string;
+  cta1_label: string;
+  cta1_href: string;
+  cta2_label: string;
+  cta2_href: string;
+  image_url: string;
+}
+
+export interface StatItem {
+  number: string;
+  label: string;
+}
+
+export interface AboutContent {
+  heading: string;
+  paragraph1: string;
+  paragraph2: string;
+  stats: StatItem[];
+}
+
+export interface ContactContent {
+  heading: string;
+  description: string;
+  cta_label: string;
+}
+
+export interface HomepageContent {
+  hero: HeroContent;
+  about: AboutContent;
+  contact: ContactContent;
+}
+
 export interface SiteSettings {
   id: string;
   nav_links: NavLink[];
@@ -20,7 +56,37 @@ export interface SiteSettings {
   social_links: SocialLink[];
   design_skills: string[];
   dev_skills: string[];
+  homepage_content: HomepageContent;
 }
+
+const DEFAULT_HOMEPAGE: HomepageContent = {
+  hero: {
+    subtitle: "suyin tung\nFull-Stack Designer",
+    title: "Calculated design.",
+    title2: "Measurable impact.",
+    description: "Full Stack Designer specializing in evidence-based systems. I transform complex user behaviors into high-conversion interfaces through rigorous testing and behavioral analytics.",
+    cta1_label: "View Work",
+    cta1_href: "#projects",
+    cta2_label: "Get in Touch",
+    cta2_href: "#contact",
+    image_url: "/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png",
+  },
+  about: {
+    heading: "Designing with purpose,\nbuilding with precision.",
+    paragraph1: "I'm a full-stack designer who thrives at the intersection of design and development. With a deep understanding of both disciplines, I create cohesive digital experiences from concept to deployment.",
+    paragraph2: "Through experience, research, and design principles, I combine strategic thinking with hands-on craftsmanship. I ensure that every pixel is intentional, and every line of code serves a purpose.",
+    stats: [
+      { number: "3+", label: "Years Experience" },
+      { number: "40+", label: "Projects Delivered" },
+      { number: "10+", label: "Happy Clients" },
+    ],
+  },
+  contact: {
+    heading: "Let's build something great together.",
+    description: "Have a project in mind? I'd love to hear about it. Drop me a line and let's make it happen.",
+    cta_label: "Get in Touch",
+  },
+};
 
 const DEFAULTS: Omit<SiteSettings, "id"> = {
   nav_links: [
@@ -38,6 +104,7 @@ const DEFAULTS: Omit<SiteSettings, "id"> = {
   ],
   design_skills: ["UI/UX Design", "Design Systems", "Prototyping", "Brand Identity", "Motion Design", "Illustration"],
   dev_skills: ["React / Next.js", "TypeScript", "Node.js", "Tailwind CSS", "PostgreSQL", "REST & GraphQL"],
+  homepage_content: DEFAULT_HOMEPAGE,
 };
 
 export function useSiteSettings() {
@@ -53,6 +120,13 @@ export function useSiteSettings() {
       if (error) throw error;
       if (!data) return { id: "", ...DEFAULTS };
 
+      const raw = (data as any).homepage_content;
+      const homepage_content: HomepageContent = {
+        hero: { ...DEFAULT_HOMEPAGE.hero, ...(raw?.hero ?? {}) },
+        about: { ...DEFAULT_HOMEPAGE.about, ...(raw?.about ?? {}), stats: raw?.about?.stats?.length ? raw.about.stats : DEFAULT_HOMEPAGE.about.stats },
+        contact: { ...DEFAULT_HOMEPAGE.contact, ...(raw?.contact ?? {}) },
+      };
+
       return {
         id: data.id,
         nav_links: (data.nav_links ?? []) as unknown as NavLink[],
@@ -61,6 +135,7 @@ export function useSiteSettings() {
         social_links: (data.social_links ?? []) as unknown as SocialLink[],
         design_skills: (data.design_skills ?? []) as unknown as string[],
         dev_skills: (data.dev_skills ?? []) as unknown as string[],
+        homepage_content,
       } as SiteSettings;
     },
   });
@@ -78,6 +153,7 @@ export function useSaveSiteSettings() {
         social_links: settings.social_links as any,
         design_skills: settings.design_skills as any,
         dev_skills: settings.dev_skills as any,
+        homepage_content: settings.homepage_content as any,
         updated_at: new Date().toISOString(),
       };
 
@@ -100,4 +176,4 @@ export function useSaveSiteSettings() {
   });
 }
 
-export { DEFAULTS as SITE_SETTINGS_DEFAULTS };
+export { DEFAULTS as SITE_SETTINGS_DEFAULTS, DEFAULT_HOMEPAGE };

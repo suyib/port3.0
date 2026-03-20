@@ -211,6 +211,7 @@ export type Database = {
           dev_skills: Json
           footer_left: string
           footer_right: string
+          homepage_content: Json
           id: string
           nav_links: Json
           social_links: Json
@@ -221,6 +222,7 @@ export type Database = {
           dev_skills?: Json
           footer_left?: string
           footer_right?: string
+          homepage_content?: Json
           id?: string
           nav_links?: Json
           social_links?: Json
@@ -231,6 +233,7 @@ export type Database = {
           dev_skills?: Json
           footer_left?: string
           footer_right?: string
+          homepage_content?: Json
           id?: string
           nav_links?: Json
           social_links?: Json
