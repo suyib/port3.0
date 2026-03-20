@@ -524,6 +524,65 @@ const Admin = () => {
             </div>
           </Section>
 
+          {/* Homepage — Hero Section */}
+          <Section title="Homepage — Hero">
+            <Field label="Subtitle (use \n for line break)" value={settingsForm.homepage_content.hero.subtitle} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, subtitle: v } } })} placeholder="suyin tung\nFull-Stack Designer" />
+            <Field label="Title (line 1)" value={settingsForm.homepage_content.hero.title} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, title: v } } })} placeholder="Calculated design." />
+            <Field label="Title (line 2)" value={settingsForm.homepage_content.hero.title2} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, title2: v } } })} placeholder="Measurable impact." />
+            <TextareaField label="Description" value={settingsForm.homepage_content.hero.description} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, description: v } } })} rows={3} />
+            <div className="grid grid-cols-2 gap-4">
+              <Field label="CTA 1 Label" value={settingsForm.homepage_content.hero.cta1_label} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, cta1_label: v } } })} placeholder="View Work" />
+              <Field label="CTA 1 Link" value={settingsForm.homepage_content.hero.cta1_href} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, cta1_href: v } } })} placeholder="#projects" />
+              <Field label="CTA 2 Label" value={settingsForm.homepage_content.hero.cta2_label} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, cta2_label: v } } })} placeholder="Get in Touch" />
+              <Field label="CTA 2 Link" value={settingsForm.homepage_content.hero.cta2_href} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, cta2_href: v } } })} placeholder="#contact" />
+            </div>
+            <Field label="Hero Image URL" value={settingsForm.homepage_content.hero.image_url} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, image_url: v } } })} placeholder="/lovable-uploads/..." />
+          </Section>
+
+          {/* Homepage — About Section */}
+          <Section title="Homepage — About">
+            <TextareaField label="Heading (use \n for line break)" value={settingsForm.homepage_content.about.heading} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, about: { ...settingsForm.homepage_content.about, heading: v } } })} rows={2} />
+            <TextareaField label="Paragraph 1" value={settingsForm.homepage_content.about.paragraph1} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, about: { ...settingsForm.homepage_content.about, paragraph1: v } } })} rows={3} />
+            <TextareaField label="Paragraph 2" value={settingsForm.homepage_content.about.paragraph2} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, about: { ...settingsForm.homepage_content.about, paragraph2: v } } })} rows={3} />
+            <div className="space-y-3">
+              <label className="font-body text-xs text-muted-foreground">Stats</label>
+              {settingsForm.homepage_content.about.stats.map((stat, i) => (
+                <div key={i} className="grid grid-cols-[100px_1fr_auto] gap-3 items-end">
+                  <Field label="Number" value={stat.number} onChange={(v) => {
+                    const stats = [...settingsForm.homepage_content.about.stats];
+                    stats[i] = { ...stats[i], number: v };
+                    setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, about: { ...settingsForm.homepage_content.about, stats } } });
+                  }} placeholder="3+" />
+                  <Field label="Label" value={stat.label} onChange={(v) => {
+                    const stats = [...settingsForm.homepage_content.about.stats];
+                    stats[i] = { ...stats[i], label: v };
+                    setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, about: { ...settingsForm.homepage_content.about, stats } } });
+                  }} placeholder="Years Experience" />
+                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => {
+                    const stats = [...settingsForm.homepage_content.about.stats];
+                    stats.splice(i, 1);
+                    setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, about: { ...settingsForm.homepage_content.about, stats } } });
+                  }}>
+                    <X size={14} />
+                  </Button>
+                </div>
+              ))}
+              <Button variant="outline" size="sm" onClick={() => {
+                const stats = [...settingsForm.homepage_content.about.stats, { number: "", label: "" }];
+                setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, about: { ...settingsForm.homepage_content.about, stats } } });
+              }}>
+                <Plus size={14} className="mr-1" /> Add Stat
+              </Button>
+            </div>
+          </Section>
+
+          {/* Homepage — Contact Section */}
+          <Section title="Homepage — Contact">
+            <Field label="Heading" value={settingsForm.homepage_content.contact.heading} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, contact: { ...settingsForm.homepage_content.contact, heading: v } } })} placeholder="Let's build something great together." />
+            <TextareaField label="Description" value={settingsForm.homepage_content.contact.description} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, contact: { ...settingsForm.homepage_content.contact, description: v } } })} rows={2} />
+            <Field label="CTA Button Label" value={settingsForm.homepage_content.contact.cta_label} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, contact: { ...settingsForm.homepage_content.contact, cta_label: v } } })} placeholder="Get in Touch" />
+          </Section>
+
           <div className="flex justify-end pb-12">
             <Button onClick={handleSaveSettings} size="lg" disabled={saveSiteSettings.isPending}>
               <Save size={16} className="mr-2" />
