@@ -1,31 +1,25 @@
 
 
-## Fix Rich Text Rendering Across All Pages
-
-### Problem
-1. `@tailwindcss/typography` plugin is not registered in `tailwind.config.ts`, so `prose` classes on the Case Study page do nothing — bold, spacing, lists don't render
-2. Homepage (`ProjectsSection.tsx`) and Projects listing (`Projects.tsx`) render `project.description` as plain text, showing raw `<p>` and `<strong>` tags
+## Scroll to Top + Back to Top Button
 
 ### Changes
 
-**1. `tailwind.config.ts`** — Add typography plugin
-```ts
-plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
-```
+**1. `src/App.tsx`** — Add `ScrollToTop` component
+- Import `useLocation` and `useEffect`
+- Create `ScrollToTop` component that calls `window.scrollTo(0, 0)` on pathname change
+- Render it inside `<BrowserRouter>` before `<Navbar />`
 
-**2. `src/components/ProjectsSection.tsx` (line 65)** — Render description as HTML
-```tsx
-<div className="font-body text-lg text-muted-foreground leading-relaxed mb-6 prose prose-sm max-w-none line-clamp-3"
-     dangerouslySetInnerHTML={{ __html: project.description }} />
-```
+**2. `src/components/BackToTop.tsx`** — New component
+- Floating rounded button fixed to bottom-right corner
+- Uses `ChevronUp` icon from lucide-react
+- Shows/hides based on scroll position (appears after scrolling ~300px)
+- Smooth scroll to top on click
+- Responsive positioning: `bottom-4 right-4` on mobile, `bottom-8 right-8` on desktop
+- Subtle fade-in/out animation with framer-motion
 
-**3. `src/pages/Projects.tsx` (lines 169-171)** — Same fix
-```tsx
-<div className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-2 prose prose-sm max-w-none"
-     dangerouslySetInnerHTML={{ __html: project.description }} />
-```
+**3. `src/App.tsx`** — Render `<BackToTop />` alongside routes
 
-### Result
-- Case Study page: challenge, solution, and all other rich text fields will render formatting correctly
-- Homepage + Projects page: descriptions display as formatted text instead of raw HTML tags
+### Files
+1. `src/App.tsx` — ScrollToTop + BackToTop integration
+2. `src/components/BackToTop.tsx` — new floating button component
 
