@@ -25,6 +25,11 @@ const ContactSection = () => {
   const { data: settings } = useSiteSettings();
   const { data: posts } = useBlogPosts();
   const socials = settings?.social_links?.length ? settings.social_links : fallbackSocials;
+  const contact = settings?.homepage_content?.contact;
+
+  const heading = contact?.heading ?? "Let's build something great together.";
+  const description = contact?.description ?? "Have a project in mind? I'd love to hear about it. Drop me a line and let's make it happen.";
+  const ctaLabel = contact?.cta_label ?? "Get in Touch";
 
   return (
     <section id="contact" className="py-12">
@@ -38,17 +43,17 @@ const ContactSection = () => {
           >
             <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">Contact</p>
             <h2 className="font-display text-4xl md:text-6xl text-foreground mb-6">
-              Let's build something great together.
+              {heading}
             </h2>
             <p className="font-body text-lg text-muted-foreground mb-10 leading-relaxed">
-              Have a project in mind? I'd love to hear about it. Drop me a line and let's make it happen.
+              {description}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 to="/contact"
                 className="inline-flex items-center px-10 py-5 rounded-full bg-accent text-accent-foreground font-body font-medium text-base tracking-wide hover:opacity-90 transition-opacity"
               >
-                Get in Touch
+                {ctaLabel}
               </Link>
               {posts && posts.length > 0 && (
                 <Link
