@@ -181,11 +181,7 @@ const Admin = () => {
   if (!session) return <Navigate to="/login" replace />;
 
   const openSettings = () => {
-    if (siteSettings) {
-      setSettingsForm({ ...siteSettings });
-    }
-    setShowSettings(true);
-    setSkillInput({ design: "", dev: "" });
+    navigate("/admin/settings");
   };
 
   const handleSaveSettings = async () => {
