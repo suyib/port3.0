@@ -794,7 +794,7 @@ const Admin = () => {
               Projects
             </button>
             <button
-              onClick={() => setAdminTab("blog")}
+              onClick={() => navigate("/admin/blog")}
               className={`pb-3 font-body text-sm transition-colors border-b-2 ${adminTab === "blog" ? "border-accent text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
             >
               <FileText size={14} className="inline mr-1" />
