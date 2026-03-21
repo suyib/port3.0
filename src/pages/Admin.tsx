@@ -83,6 +83,14 @@ const emptyProject: Omit<Project, "id"> = {
 
 const Admin = () => {
   const { session, loading: authLoading, signOut } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Derive view from URL
+  const pathParts = location.pathname.replace("/admin", "").split("/").filter(Boolean);
+  const viewMode = pathParts[0] || "projects"; // "projects" | "blog" | "settings" | "edit" | "blog-edit"
+  const viewParam = pathParts[1]; // id or "new"
+
   const { data: projects, isLoading } = useProjects(false);
   const saveProject = useSaveProject();
   const deleteProject = useDeleteProject();
@@ -101,7 +109,6 @@ const Admin = () => {
   const deleteBlogPost = useDeleteBlogPost();
   const uploadBlogImage = useUploadBlogImage();
 
-  const [adminTab, setAdminTab] = useState<"projects" | "blog">("projects");
   const [editing, setEditing] = useState<(Partial<Project> & { slug: string; title: string }) | null>(null);
   const [toolInput, setToolInput] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -113,9 +120,62 @@ const Admin = () => {
   const [blogImageFile, setBlogImageFile] = useState<File | null>(null);
 
   // Site settings editing state
-  const [showSettings, setShowSettings] = useState(false);
   const [settingsForm, setSettingsForm] = useState<SiteSettings | null>(null);
   const [skillInput, setSkillInput] = useState({ design: "", dev: "" });
+
+  // Sync URL → editing state for projects
+  useEffect(() => {
+    if (viewMode === "edit" && projects) {
+      if (viewParam === "new") {
+        if (!editing || editing.id) {
+          setEditing({ ...emptyProject } as any);
+          setToolInput("");
+          setGalleryImages([]);
+          setGalleryDirty(false);
+        }
+      } else if (viewParam) {
+        const project = projects.find((p) => p.id === viewParam);
+        if (project && editing?.id !== project.id) {
+          setEditing({ ...project });
+          setToolInput(project.tools.join(", "));
+          setGalleryImages(project.images ?? []);
+          setGalleryDirty(false);
+        }
+      }
+    } else if (viewMode !== "edit") {
+      if (editing) setEditing(null);
+    }
+  }, [viewMode, viewParam, projects]);
+
+  // Sync URL → editing state for blog
+  useEffect(() => {
+    if (viewMode === "blog-edit" && blogPosts) {
+      if (viewParam === "new") {
+        if (!editingPost || (editingPost as any).id) {
+          setEditingPost({ slug: "", title: "", image_url: "", summary: "", content: "", published: false });
+          setBlogImageFile(null);
+        }
+      } else if (viewParam) {
+        const post = blogPosts.find((p) => p.id === viewParam);
+        if (post && (editingPost as any)?.id !== post.id) {
+          setEditingPost({ ...post });
+          setBlogImageFile(null);
+        }
+      }
+    } else if (viewMode !== "blog-edit") {
+      if (editingPost) setEditingPost(null);
+    }
+  }, [viewMode, viewParam, blogPosts]);
+
+  // Sync URL → settings state
+  useEffect(() => {
+    if (viewMode === "settings" && siteSettings && !settingsForm) {
+      setSettingsForm({ ...siteSettings });
+      setSkillInput({ design: "", dev: "" });
+    } else if (viewMode !== "settings" && settingsForm) {
+      setSettingsForm(null);
+    }
+  }, [viewMode, siteSettings]);
 
   if (authLoading) return null;
   if (!session) return <Navigate to="/login" replace />;
