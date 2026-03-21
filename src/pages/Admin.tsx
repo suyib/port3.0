@@ -19,7 +19,7 @@ import {
   useUploadBlogImage,
   type BlogPost,
 } from "@/hooks/useBlogPosts";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
