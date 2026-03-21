@@ -244,10 +244,7 @@ const Admin = () => {
   };
 
   const handleNew = () => {
-    setEditing({ ...emptyProject } as any);
-    setToolInput("");
-    setGalleryImages([]);
-    setGalleryDirty(false);
+    navigate("/admin/edit/new");
   };
 
   const handleEdit = (project: Project) => {
