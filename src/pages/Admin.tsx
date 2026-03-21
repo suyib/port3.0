@@ -283,7 +283,7 @@ const Admin = () => {
       }
 
       toast.success(editing.id ? "Project updated" : "Project created");
-      setEditing(null);
+      navigate("/admin");
       setImageFile(null);
       setGalleryImages([]);
       setGalleryDirty(false);
