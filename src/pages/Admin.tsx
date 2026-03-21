@@ -351,8 +351,7 @@ const Admin = () => {
   };
 
   const handleEditPost = (post: BlogPost) => {
-    setEditingPost({ ...post });
-    setBlogImageFile(null);
+    navigate(`/admin/blog-edit/${post.id}`);
   };
 
   const handleDeletePost = async (id: string) => {
