@@ -788,7 +788,7 @@ const Admin = () => {
           {/* Tabs */}
           <div className="flex gap-4 mb-8 border-b border-border/40">
             <button
-              onClick={() => setAdminTab("projects")}
+              onClick={() => navigate("/admin")}
               className={`pb-3 font-body text-sm transition-colors border-b-2 ${adminTab === "projects" ? "border-accent text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
             >
               Projects
