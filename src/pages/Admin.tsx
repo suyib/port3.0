@@ -347,8 +347,7 @@ const Admin = () => {
 
   // Blog handlers
   const handleNewPost = () => {
-    setEditingPost({ slug: "", title: "", image_url: "", summary: "", content: "", published: false });
-    setBlogImageFile(null);
+    navigate("/admin/blog-edit/new");
   };
 
   const handleEditPost = (post: BlogPost) => {
