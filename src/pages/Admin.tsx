@@ -189,7 +189,7 @@ const Admin = () => {
     try {
       await saveSiteSettings.mutateAsync(settingsForm);
       toast.success("Site settings saved");
-      setShowSettings(false);
+      navigate("/admin");
     } catch (e: any) {
       toast.error("Failed to save settings: " + e.message);
     }
