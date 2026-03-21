@@ -248,10 +248,7 @@ const Admin = () => {
   };
 
   const handleEdit = (project: Project) => {
-    setEditing({ ...project });
-    setToolInput(project.tools.join(", "));
-    setGalleryImages(project.images ?? []);
-    setGalleryDirty(false);
+    navigate(`/admin/edit/${project.id}`);
   };
 
   const handleDelete = async (id: string) => {
