@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import RichTextEditor from "@/components/RichTextEditor";
 import {
@@ -19,7 +19,7 @@ import {
   useUploadBlogImage,
   type BlogPost,
 } from "@/hooks/useBlogPosts";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -83,6 +83,14 @@ const emptyProject: Omit<Project, "id"> = {
 
 const Admin = () => {
   const { session, loading: authLoading, signOut } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Derive view from URL
+  const pathParts = location.pathname.replace("/admin", "").split("/").filter(Boolean);
+  const viewMode = pathParts[0] || "projects"; // "projects" | "blog" | "settings" | "edit" | "blog-edit"
+  const viewParam = pathParts[1]; // id or "new"
+
   const { data: projects, isLoading } = useProjects(false);
   const saveProject = useSaveProject();
   const deleteProject = useDeleteProject();
@@ -101,7 +109,6 @@ const Admin = () => {
   const deleteBlogPost = useDeleteBlogPost();
   const uploadBlogImage = useUploadBlogImage();
 
-  const [adminTab, setAdminTab] = useState<"projects" | "blog">("projects");
   const [editing, setEditing] = useState<(Partial<Project> & { slug: string; title: string }) | null>(null);
   const [toolInput, setToolInput] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -113,19 +120,68 @@ const Admin = () => {
   const [blogImageFile, setBlogImageFile] = useState<File | null>(null);
 
   // Site settings editing state
-  const [showSettings, setShowSettings] = useState(false);
   const [settingsForm, setSettingsForm] = useState<SiteSettings | null>(null);
   const [skillInput, setSkillInput] = useState({ design: "", dev: "" });
+
+  // Sync URL → editing state for projects
+  useEffect(() => {
+    if (viewMode === "edit" && projects) {
+      if (viewParam === "new") {
+        if (!editing || editing.id) {
+          setEditing({ ...emptyProject } as any);
+          setToolInput("");
+          setGalleryImages([]);
+          setGalleryDirty(false);
+        }
+      } else if (viewParam) {
+        const project = projects.find((p) => p.id === viewParam);
+        if (project && editing?.id !== project.id) {
+          setEditing({ ...project });
+          setToolInput(project.tools.join(", "));
+          setGalleryImages(project.images ?? []);
+          setGalleryDirty(false);
+        }
+      }
+    } else if (viewMode !== "edit") {
+      if (editing) setEditing(null);
+    }
+  }, [viewMode, viewParam, projects]);
+
+  // Sync URL → editing state for blog
+  useEffect(() => {
+    if (viewMode === "blog-edit" && blogPosts) {
+      if (viewParam === "new") {
+        if (!editingPost || (editingPost as any).id) {
+          setEditingPost({ slug: "", title: "", image_url: "", summary: "", content: "", published: false });
+          setBlogImageFile(null);
+        }
+      } else if (viewParam) {
+        const post = blogPosts.find((p) => p.id === viewParam);
+        if (post && (editingPost as any)?.id !== post.id) {
+          setEditingPost({ ...post });
+          setBlogImageFile(null);
+        }
+      }
+    } else if (viewMode !== "blog-edit") {
+      if (editingPost) setEditingPost(null);
+    }
+  }, [viewMode, viewParam, blogPosts]);
+
+  // Sync URL → settings state
+  useEffect(() => {
+    if (viewMode === "settings" && siteSettings && !settingsForm) {
+      setSettingsForm({ ...siteSettings });
+      setSkillInput({ design: "", dev: "" });
+    } else if (viewMode !== "settings" && settingsForm) {
+      setSettingsForm(null);
+    }
+  }, [viewMode, siteSettings]);
 
   if (authLoading) return null;
   if (!session) return <Navigate to="/login" replace />;
 
   const openSettings = () => {
-    if (siteSettings) {
-      setSettingsForm({ ...siteSettings });
-    }
-    setShowSettings(true);
-    setSkillInput({ design: "", dev: "" });
+    navigate("/admin/settings");
   };
 
   const handleSaveSettings = async () => {
@@ -133,7 +189,7 @@ const Admin = () => {
     try {
       await saveSiteSettings.mutateAsync(settingsForm);
       toast.success("Site settings saved");
-      setShowSettings(false);
+      navigate("/admin");
     } catch (e: any) {
       toast.error("Failed to save settings: " + e.message);
     }
@@ -188,17 +244,11 @@ const Admin = () => {
   };
 
   const handleNew = () => {
-    setEditing({ ...emptyProject } as any);
-    setToolInput("");
-    setGalleryImages([]);
-    setGalleryDirty(false);
+    navigate("/admin/edit/new");
   };
 
   const handleEdit = (project: Project) => {
-    setEditing({ ...project });
-    setToolInput(project.tools.join(", "));
-    setGalleryImages(project.images ?? []);
-    setGalleryDirty(false);
+    navigate(`/admin/edit/${project.id}`);
   };
 
   const handleDelete = async (id: string) => {
@@ -233,7 +283,7 @@ const Admin = () => {
       }
 
       toast.success(editing.id ? "Project updated" : "Project created");
-      setEditing(null);
+      navigate("/admin");
       setImageFile(null);
       setGalleryImages([]);
       setGalleryDirty(false);
@@ -297,13 +347,11 @@ const Admin = () => {
 
   // Blog handlers
   const handleNewPost = () => {
-    setEditingPost({ slug: "", title: "", image_url: "", summary: "", content: "", published: false });
-    setBlogImageFile(null);
+    navigate("/admin/blog-edit/new");
   };
 
   const handleEditPost = (post: BlogPost) => {
-    setEditingPost({ ...post });
-    setBlogImageFile(null);
+    navigate(`/admin/blog-edit/${post.id}`);
   };
 
   const handleDeletePost = async (id: string) => {
@@ -333,7 +381,7 @@ const Admin = () => {
         image_url: imageUrl,
       } as any);
       toast.success(editingPost.id ? "Post updated" : "Post created");
-      setEditingPost(null);
+      navigate("/admin/blog");
       setBlogImageFile(null);
     } catch (e: any) {
       toast.error("Save failed: " + e.message);
@@ -377,12 +425,12 @@ const Admin = () => {
   };
 
   // Site Settings view
-  if (showSettings && settingsForm) {
+  if (viewMode === "settings" && settingsForm) {
     return (
       <main className="min-h-screen bg-background">
         <nav className="border-b border-border/40 bg-background/80 backdrop-blur-md sticky top-0 z-50">
           <div className="container mx-auto px-6 lg:px-16 py-4 flex items-center justify-between">
-            <button onClick={() => setShowSettings(false)} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={() => navigate("/admin")} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft size={16} /> Back to List
             </button>
             <Button onClick={handleSaveSettings} disabled={saveSiteSettings.isPending}>
@@ -638,7 +686,7 @@ const Admin = () => {
       <main className="min-h-screen bg-background">
         <nav className="border-b border-border/40 bg-background/80 backdrop-blur-md sticky top-0 z-50">
           <div className="container mx-auto px-6 lg:px-16 py-4 flex items-center justify-between">
-            <button onClick={() => setEditingPost(null)} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={() => navigate("/admin/blog")} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft size={16} /> Back to List
             </button>
             <div className="flex items-center gap-3">
@@ -704,6 +752,7 @@ const Admin = () => {
   }
 
   // List view
+  const adminTab = viewMode === "blog" ? "blog" : "projects";
   if (!editing) {
     return (
       <main className="min-h-screen bg-background">
@@ -739,13 +788,13 @@ const Admin = () => {
           {/* Tabs */}
           <div className="flex gap-4 mb-8 border-b border-border/40">
             <button
-              onClick={() => setAdminTab("projects")}
+              onClick={() => navigate("/admin")}
               className={`pb-3 font-body text-sm transition-colors border-b-2 ${adminTab === "projects" ? "border-accent text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
             >
               Projects
             </button>
             <button
-              onClick={() => setAdminTab("blog")}
+              onClick={() => navigate("/admin/blog")}
               className={`pb-3 font-body text-sm transition-colors border-b-2 ${adminTab === "blog" ? "border-accent text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
             >
               <FileText size={14} className="inline mr-1" />
@@ -869,7 +918,7 @@ const Admin = () => {
     <main className="min-h-screen bg-background">
       <nav className="border-b border-border/40 bg-background/80 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 lg:px-16 py-4 flex items-center justify-between">
-          <button onClick={() => setEditing(null)} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={() => navigate("/admin")} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft size={16} /> Back to List
           </button>
           <div className="flex items-center gap-3">
