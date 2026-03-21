@@ -752,6 +752,7 @@ const Admin = () => {
   }
 
   // List view
+  const adminTab = viewMode === "blog" ? "blog" : "projects";
   if (!editing) {
     return (
       <main className="min-h-screen bg-background">
