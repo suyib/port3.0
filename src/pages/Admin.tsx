@@ -381,7 +381,7 @@ const Admin = () => {
         image_url: imageUrl,
       } as any);
       toast.success(editingPost.id ? "Post updated" : "Post created");
-      setEditingPost(null);
+      navigate("/admin/blog");
       setBlogImageFile(null);
     } catch (e: any) {
       toast.error("Save failed: " + e.message);
