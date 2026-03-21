@@ -536,7 +536,45 @@ const Admin = () => {
               <Field label="CTA 2 Label" value={settingsForm.homepage_content.hero.cta2_label} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, cta2_label: v } } })} placeholder="Get in Touch" />
               <Field label="CTA 2 Link" value={settingsForm.homepage_content.hero.cta2_href} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, cta2_href: v } } })} placeholder="#contact" />
             </div>
-            <Field label="Hero Image URL" value={settingsForm.homepage_content.hero.image_url} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, image_url: v } } })} placeholder="/lovable-uploads/..." />
+            <div className="space-y-3">
+              <label className="font-body text-xs text-muted-foreground">Hero Image</label>
+              {settingsForm.homepage_content.hero.image_url && (
+                <div className="space-y-1">
+                  <img
+                    src={settingsForm.homepage_content.hero.image_url}
+                    alt="Hero preview"
+                    className="w-40 h-40 object-cover rounded-lg"
+                    onLoad={(e) => {
+                      const img = e.currentTarget;
+                      const label = document.getElementById("hero-img-dims");
+                      if (label) label.textContent = `${img.naturalWidth} × ${img.naturalHeight}px`;
+                    }}
+                  />
+                  <p id="hero-img-dims" className="font-body text-xs text-muted-foreground" />
+                </div>
+              )}
+              <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-body transition-colors">
+                <Upload size={16} />
+                Upload Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    try {
+                      const url = await uploadImage.mutateAsync(file);
+                      setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, image_url: url } } });
+                      toast.success("Hero image uploaded");
+                    } catch {
+                      toast.error("Upload failed");
+                    }
+                  }}
+                />
+              </label>
+              <Field label="Or paste URL" value={settingsForm.homepage_content.hero.image_url} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, image_url: v } } })} placeholder="/lovable-uploads/..." />
+            </div>
           </Section>
 
           {/* Homepage — About Section */}
@@ -747,8 +785,21 @@ const Admin = () => {
                       <p className="font-body text-sm text-muted-foreground truncate">{project.category}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title={project.published ? "Unpublish" : "Publish"}
+                        onClick={async () => {
+                          try {
+                            await saveProject.mutateAsync({ ...project, published: !project.published } as any);
+                            toast.success(project.published ? "Project hidden" : "Project published");
+                          } catch { toast.error("Failed to update"); }
+                        }}
+                      >
+                        {project.published ? <Eye size={16} /> : <EyeOff size={16} />}
+                      </Button>
                       <Button variant="ghost" size="icon" asChild>
-                        <Link to={`/project/${project.slug}`} target="_blank"><Eye size={16} /></Link>
+                        <Link to={`/project/${project.slug}`} target="_blank"><Eye size={16} className="text-muted-foreground" /></Link>
                       </Button>
                       <Button variant="ghost" size="icon" onClick={() => handleEdit(project)}>
                         <Pencil size={16} />
@@ -857,11 +908,19 @@ const Admin = () => {
         <Section title="Cover Image">
           <div className="flex items-start gap-6">
             {(editing.image_url || imageFile) && (
-              <img
-                src={imageFile ? URL.createObjectURL(imageFile) : editing.image_url}
-                alt="Preview"
-                className="w-40 h-28 object-cover rounded-lg"
-              />
+              <div className="space-y-1">
+                <img
+                  src={imageFile ? URL.createObjectURL(imageFile) : editing.image_url}
+                  alt="Preview"
+                  className="w-40 h-28 object-cover rounded-lg"
+                  onLoad={(e) => {
+                    const img = e.currentTarget;
+                    const label = document.getElementById("cover-img-dims");
+                    if (label) label.textContent = `${img.naturalWidth} × ${img.naturalHeight}px`;
+                  }}
+                />
+                <p id="cover-img-dims" className="font-body text-xs text-muted-foreground" />
+              </div>
             )}
             <div className="flex-1 space-y-3">
               <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-body transition-colors">
