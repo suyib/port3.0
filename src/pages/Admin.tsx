@@ -785,8 +785,21 @@ const Admin = () => {
                       <p className="font-body text-sm text-muted-foreground truncate">{project.category}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title={project.published ? "Unpublish" : "Publish"}
+                        onClick={async () => {
+                          try {
+                            await saveProject.mutateAsync({ ...project, published: !project.published } as any);
+                            toast.success(project.published ? "Project hidden" : "Project published");
+                          } catch { toast.error("Failed to update"); }
+                        }}
+                      >
+                        {project.published ? <Eye size={16} /> : <EyeOff size={16} />}
+                      </Button>
                       <Button variant="ghost" size="icon" asChild>
-                        <Link to={`/project/${project.slug}`} target="_blank"><Eye size={16} /></Link>
+                        <Link to={`/project/${project.slug}`} target="_blank"><Eye size={16} className="text-muted-foreground" /></Link>
                       </Button>
                       <Button variant="ghost" size="icon" onClick={() => handleEdit(project)}>
                         <Pencil size={16} />
