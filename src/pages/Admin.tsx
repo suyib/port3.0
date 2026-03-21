@@ -908,11 +908,19 @@ const Admin = () => {
         <Section title="Cover Image">
           <div className="flex items-start gap-6">
             {(editing.image_url || imageFile) && (
-              <img
-                src={imageFile ? URL.createObjectURL(imageFile) : editing.image_url}
-                alt="Preview"
-                className="w-40 h-28 object-cover rounded-lg"
-              />
+              <div className="space-y-1">
+                <img
+                  src={imageFile ? URL.createObjectURL(imageFile) : editing.image_url}
+                  alt="Preview"
+                  className="w-40 h-28 object-cover rounded-lg"
+                  onLoad={(e) => {
+                    const img = e.currentTarget;
+                    const label = document.getElementById("cover-img-dims");
+                    if (label) label.textContent = `${img.naturalWidth} × ${img.naturalHeight}px`;
+                  }}
+                />
+                <p id="cover-img-dims" className="font-body text-xs text-muted-foreground" />
+              </div>
             )}
             <div className="flex-1 space-y-3">
               <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-body transition-colors">
