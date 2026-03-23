@@ -847,8 +847,8 @@ const Admin = () => {
                       >
                         {project.published ? <Eye size={16} /> : <EyeOff size={16} />}
                       </Button>
-                      <Button variant="ghost" size="icon" asChild>
-                        <Link to={`/project/${project.slug}`} target="_blank"><Eye size={16} className="text-muted-foreground" /></Link>
+                      <Button variant="ghost" size="icon" asChild title="Preview">
+                        <Link to={`/project/${project.slug}`} target="_blank"><ExternalLink size={16} className="text-muted-foreground" /></Link>
                       </Button>
                       <Button variant="ghost" size="icon" onClick={() => handleEdit(project)}>
                         <Pencil size={16} />
