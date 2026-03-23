@@ -669,6 +669,61 @@ const Admin = () => {
             <Field label="CTA Button Label" value={settingsForm.homepage_content.contact.cta_label} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, contact: { ...settingsForm.homepage_content.contact, cta_label: v } } })} placeholder="Get in Touch" />
           </Section>
 
+          {/* Site Styles */}
+          <Section title="Site Styles">
+            <p className="font-body text-xs text-muted-foreground mb-4">Customize your site's theme colors (HSL values) and fonts.</p>
+            
+            <h4 className="font-display text-sm font-semibold mb-3">Colors</h4>
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              {(Object.keys(settingsForm.site_styles.colors) as Array<keyof SiteStyles["colors"]>).map((colorKey) => (
+                <div key={colorKey} className="space-y-1">
+                  <label className="font-body text-xs text-muted-foreground capitalize">{colorKey}</label>
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-8 h-8 rounded border border-border flex-shrink-0"
+                      style={{ backgroundColor: `hsl(${settingsForm.site_styles.colors[colorKey]})` }}
+                    />
+                    <Input
+                      value={settingsForm.site_styles.colors[colorKey]}
+                      onChange={(e) => setSettingsForm({
+                        ...settingsForm,
+                        site_styles: {
+                          ...settingsForm.site_styles,
+                          colors: { ...settingsForm.site_styles.colors, [colorKey]: e.target.value },
+                        },
+                      })}
+                      placeholder="H S% L%"
+                      className="font-mono text-xs"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <h4 className="font-display text-sm font-semibold mb-3">Fonts</h4>
+            <div className="grid md:grid-cols-2 gap-4">
+              <Field
+                label="Display Font"
+                value={settingsForm.site_styles.fonts.display}
+                onChange={(v) => setSettingsForm({
+                  ...settingsForm,
+                  site_styles: { ...settingsForm.site_styles, fonts: { ...settingsForm.site_styles.fonts, display: v } },
+                })}
+                placeholder="Outfit"
+              />
+              <Field
+                label="Body Font"
+                value={settingsForm.site_styles.fonts.body}
+                onChange={(v) => setSettingsForm({
+                  ...settingsForm,
+                  site_styles: { ...settingsForm.site_styles, fonts: { ...settingsForm.site_styles.fonts, body: v } },
+                })}
+                placeholder="Instrument Sans"
+              />
+            </div>
+            <p className="font-body text-xs text-muted-foreground mt-2">Use Google Fonts names. Make sure the font is imported in your stylesheet.</p>
+          </Section>
+
           <div className="flex justify-end pb-12">
             <Button onClick={handleSaveSettings} size="lg" disabled={saveSiteSettings.isPending}>
               <Save size={16} className="mr-2" />
