@@ -48,6 +48,21 @@ export interface HomepageContent {
   contact: ContactContent;
 }
 
+export interface SiteStyles {
+  colors: {
+    background: string;
+    foreground: string;
+    primary: string;
+    accent: string;
+    secondary: string;
+    muted: string;
+  };
+  fonts: {
+    display: string;
+    body: string;
+  };
+}
+
 export interface SiteSettings {
   id: string;
   nav_links: NavLink[];
@@ -57,6 +72,7 @@ export interface SiteSettings {
   design_skills: string[];
   dev_skills: string[];
   homepage_content: HomepageContent;
+  site_styles: SiteStyles;
 }
 
 const DEFAULT_HOMEPAGE: HomepageContent = {
