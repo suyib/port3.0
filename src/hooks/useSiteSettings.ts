@@ -104,6 +104,21 @@ const DEFAULT_HOMEPAGE: HomepageContent = {
   },
 };
 
+const DEFAULT_STYLES: SiteStyles = {
+  colors: {
+    background: "30 22% 97%",
+    foreground: "225 13% 12%",
+    primary: "225 13% 12%",
+    accent: "350 15% 59%",
+    secondary: "350 15% 88%",
+    muted: "350 12% 92%",
+  },
+  fonts: {
+    display: "Outfit",
+    body: "Instrument Sans",
+  },
+};
+
 const DEFAULTS: Omit<SiteSettings, "id"> = {
   nav_links: [
     { label: "About", href: "#about" },
@@ -121,6 +136,7 @@ const DEFAULTS: Omit<SiteSettings, "id"> = {
   design_skills: ["UI/UX Design", "Design Systems", "Prototyping", "Brand Identity", "Motion Design", "Illustration"],
   dev_skills: ["React / Next.js", "TypeScript", "Node.js", "Tailwind CSS", "PostgreSQL", "REST & GraphQL"],
   homepage_content: DEFAULT_HOMEPAGE,
+  site_styles: DEFAULT_STYLES,
 };
 
 export function useSiteSettings() {
