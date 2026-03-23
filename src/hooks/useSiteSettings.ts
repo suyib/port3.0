@@ -48,6 +48,21 @@ export interface HomepageContent {
   contact: ContactContent;
 }
 
+export interface SiteStyles {
+  colors: {
+    background: string;
+    foreground: string;
+    primary: string;
+    accent: string;
+    secondary: string;
+    muted: string;
+  };
+  fonts: {
+    display: string;
+    body: string;
+  };
+}
+
 export interface SiteSettings {
   id: string;
   nav_links: NavLink[];
@@ -57,6 +72,7 @@ export interface SiteSettings {
   design_skills: string[];
   dev_skills: string[];
   homepage_content: HomepageContent;
+  site_styles: SiteStyles;
 }
 
 const DEFAULT_HOMEPAGE: HomepageContent = {
@@ -88,6 +104,21 @@ const DEFAULT_HOMEPAGE: HomepageContent = {
   },
 };
 
+const DEFAULT_STYLES: SiteStyles = {
+  colors: {
+    background: "30 22% 97%",
+    foreground: "225 13% 12%",
+    primary: "225 13% 12%",
+    accent: "350 15% 59%",
+    secondary: "350 15% 88%",
+    muted: "350 12% 92%",
+  },
+  fonts: {
+    display: "Outfit",
+    body: "Instrument Sans",
+  },
+};
+
 const DEFAULTS: Omit<SiteSettings, "id"> = {
   nav_links: [
     { label: "About", href: "#about" },
@@ -105,6 +136,7 @@ const DEFAULTS: Omit<SiteSettings, "id"> = {
   design_skills: ["UI/UX Design", "Design Systems", "Prototyping", "Brand Identity", "Motion Design", "Illustration"],
   dev_skills: ["React / Next.js", "TypeScript", "Node.js", "Tailwind CSS", "PostgreSQL", "REST & GraphQL"],
   homepage_content: DEFAULT_HOMEPAGE,
+  site_styles: DEFAULT_STYLES,
 };
 
 export function useSiteSettings() {
@@ -127,6 +159,12 @@ export function useSiteSettings() {
         contact: { ...DEFAULT_HOMEPAGE.contact, ...(raw?.contact ?? {}) },
       };
 
+      const rawStyles = (data as any).site_styles;
+      const site_styles: SiteStyles = {
+        colors: { ...DEFAULT_STYLES.colors, ...(rawStyles?.colors ?? {}) },
+        fonts: { ...DEFAULT_STYLES.fonts, ...(rawStyles?.fonts ?? {}) },
+      };
+
       return {
         id: data.id,
         nav_links: (data.nav_links ?? []) as unknown as NavLink[],
@@ -136,6 +174,7 @@ export function useSiteSettings() {
         design_skills: (data.design_skills ?? []) as unknown as string[],
         dev_skills: (data.dev_skills ?? []) as unknown as string[],
         homepage_content,
+        site_styles,
       } as SiteSettings;
     },
   });
@@ -154,6 +193,7 @@ export function useSaveSiteSettings() {
         design_skills: settings.design_skills as any,
         dev_skills: settings.dev_skills as any,
         homepage_content: settings.homepage_content as any,
+        site_styles: settings.site_styles as any,
         updated_at: new Date().toISOString(),
       };
 

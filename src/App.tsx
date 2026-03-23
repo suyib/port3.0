@@ -15,6 +15,7 @@ import Admin from "./pages/Admin.tsx";
 import Navbar from "./components/Navbar.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import BackToTop from "./components/BackToTop.tsx";
+import StyleProvider from "./components/StyleProvider.tsx";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <StyleProvider />
         <Navbar />
         <Routes>
           <Route path="/" element={<Index />} />
