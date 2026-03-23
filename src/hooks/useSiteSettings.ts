@@ -60,6 +60,8 @@ export interface SiteStyles {
   fonts: {
     display: string;
     body: string;
+    display_url: string;
+    body_url: string;
   };
 }
 
@@ -116,6 +118,8 @@ const DEFAULT_STYLES: SiteStyles = {
   fonts: {
     display: "Outfit",
     body: "Instrument Sans",
+    display_url: "",
+    body_url: "",
   },
 };
 

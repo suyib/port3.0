@@ -702,26 +702,62 @@ const Admin = () => {
 
             <h4 className="font-display text-sm font-semibold mb-3">Fonts</h4>
             <div className="grid md:grid-cols-2 gap-4">
-              <Field
-                label="Display Font"
-                value={settingsForm.site_styles.fonts.display}
-                onChange={(v) => setSettingsForm({
-                  ...settingsForm,
-                  site_styles: { ...settingsForm.site_styles, fonts: { ...settingsForm.site_styles.fonts, display: v } },
-                })}
-                placeholder="Outfit"
-              />
-              <Field
-                label="Body Font"
-                value={settingsForm.site_styles.fonts.body}
-                onChange={(v) => setSettingsForm({
-                  ...settingsForm,
-                  site_styles: { ...settingsForm.site_styles, fonts: { ...settingsForm.site_styles.fonts, body: v } },
-                })}
-                placeholder="Instrument Sans"
-              />
+              <div className="space-y-2">
+                <Field
+                  label="Display Font"
+                  value={settingsForm.site_styles.fonts.display}
+                  onChange={(v) => setSettingsForm({
+                    ...settingsForm,
+                    site_styles: { ...settingsForm.site_styles, fonts: { ...settingsForm.site_styles.fonts, display: v } },
+                  })}
+                  placeholder="Outfit"
+                />
+                <Field
+                  label="Google Fonts URL (Display)"
+                  value={settingsForm.site_styles.fonts.display_url || ""}
+                  onChange={(v) => setSettingsForm({
+                    ...settingsForm,
+                    site_styles: { ...settingsForm.site_styles, fonts: { ...settingsForm.site_styles.fonts, display_url: v } },
+                  })}
+                  placeholder="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap"
+                />
+              </div>
+              <div className="space-y-2">
+                <Field
+                  label="Body Font"
+                  value={settingsForm.site_styles.fonts.body}
+                  onChange={(v) => setSettingsForm({
+                    ...settingsForm,
+                    site_styles: { ...settingsForm.site_styles, fonts: { ...settingsForm.site_styles.fonts, body: v } },
+                  })}
+                  placeholder="Instrument Sans"
+                />
+                <Field
+                  label="Google Fonts URL (Body)"
+                  value={settingsForm.site_styles.fonts.body_url || ""}
+                  onChange={(v) => setSettingsForm({
+                    ...settingsForm,
+                    site_styles: { ...settingsForm.site_styles, fonts: { ...settingsForm.site_styles.fonts, body_url: v } },
+                  })}
+                  placeholder="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap"
+                />
+              </div>
             </div>
-            <p className="font-body text-xs text-muted-foreground mt-2">Use Google Fonts names. Make sure the font is imported in your stylesheet.</p>
+            <p className="font-body text-xs text-muted-foreground mt-2">Paste the full Google Fonts embed URL for each font.</p>
+
+            {/* Font Preview */}
+            <div className="mt-4 rounded-lg border border-border bg-background p-6 space-y-3">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Font Preview</p>
+              <p style={{ fontFamily: `'${settingsForm.site_styles.fonts.display}', sans-serif`, fontSize: "2.5rem", fontWeight: 700, lineHeight: 1.2 }}>
+                This is a header
+              </p>
+              <p style={{ fontFamily: `'${settingsForm.site_styles.fonts.display}', sans-serif`, fontSize: "1.25rem", fontWeight: 600, lineHeight: 1.4 }}>
+                This is a subheader
+              </p>
+              <p style={{ fontFamily: `'${settingsForm.site_styles.fonts.body}', sans-serif`, fontSize: "1rem", fontWeight: 400, lineHeight: 1.6 }}>
+                This is body text. The quick brown fox jumps over the lazy dog.
+              </p>
+            </div>
           </Section>
 
           <div className="flex justify-end pb-12">
