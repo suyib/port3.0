@@ -118,6 +118,8 @@ const DEFAULT_STYLES: SiteStyles = {
   fonts: {
     display: "Outfit",
     body: "Instrument Sans",
+    display_url: "",
+    body_url: "",
   },
 };
 

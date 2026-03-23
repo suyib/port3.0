@@ -23,6 +23,18 @@ export default function StyleProvider() {
       root.style.setProperty("--font-body", `'${fonts.body}', sans-serif`);
     }
 
+    // Inject Google Fonts links
+    const links: HTMLLinkElement[] = [];
+    [fonts.display_url, fonts.body_url].forEach((url) => {
+      if (url) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = url;
+        document.head.appendChild(link);
+        links.push(link);
+      }
+    });
+
     return () => {
       root.style.removeProperty("--background");
       root.style.removeProperty("--foreground");
@@ -32,6 +44,7 @@ export default function StyleProvider() {
       root.style.removeProperty("--muted");
       root.style.removeProperty("--font-display");
       root.style.removeProperty("--font-body");
+      links.forEach((l) => l.remove());
     };
   }, [settings?.site_styles]);
 
