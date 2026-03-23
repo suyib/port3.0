@@ -1,0 +1,1 @@
+ALTER TABLE public.site_settings ADD COLUMN site_styles jsonb NOT NULL DEFAULT '{}'::jsonb;
