@@ -60,6 +60,8 @@ export interface SiteStyles {
   fonts: {
     display: string;
     body: string;
+    display_url: string;
+    body_url: string;
   };
 }
 
