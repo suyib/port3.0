@@ -193,6 +193,7 @@ export function useSaveSiteSettings() {
         design_skills: settings.design_skills as any,
         dev_skills: settings.dev_skills as any,
         homepage_content: settings.homepage_content as any,
+        site_styles: settings.site_styles as any,
         updated_at: new Date().toISOString(),
       };
 
