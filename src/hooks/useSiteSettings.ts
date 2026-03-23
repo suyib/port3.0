@@ -159,6 +159,12 @@ export function useSiteSettings() {
         contact: { ...DEFAULT_HOMEPAGE.contact, ...(raw?.contact ?? {}) },
       };
 
+      const rawStyles = (data as any).site_styles;
+      const site_styles: SiteStyles = {
+        colors: { ...DEFAULT_STYLES.colors, ...(rawStyles?.colors ?? {}) },
+        fonts: { ...DEFAULT_STYLES.fonts, ...(rawStyles?.fonts ?? {}) },
+      };
+
       return {
         id: data.id,
         nav_links: (data.nav_links ?? []) as unknown as NavLink[],
@@ -168,6 +174,7 @@ export function useSiteSettings() {
         design_skills: (data.design_skills ?? []) as unknown as string[],
         dev_skills: (data.dev_skills ?? []) as unknown as string[],
         homepage_content,
+        site_styles,
       } as SiteSettings;
     },
   });
