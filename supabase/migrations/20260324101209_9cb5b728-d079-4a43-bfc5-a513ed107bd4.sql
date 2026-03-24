@@ -1,0 +1,1 @@
+ALTER TABLE public.projects ADD COLUMN meta_description text NOT NULL DEFAULT '';
