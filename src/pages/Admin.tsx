@@ -1141,6 +1141,7 @@ const Admin = () => {
           </div>
           <Field label="Tools (comma-separated)" value={toolInput} onChange={setToolInput} placeholder="Figma, React, Tailwind CSS" />
           <RichTextEditor label="Short Description" value={editing.description || ""} onChange={(v) => updateField("description", v)} />
+          <RichTextEditor label="Meta Description (shown on case study page under metadata)" value={editing.meta_description || ""} onChange={(v) => updateField("meta_description", v)} />
         </Section>
 
         {/* Cover Image (legacy, still used as fallback) */}
