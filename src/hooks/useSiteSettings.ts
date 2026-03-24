@@ -22,6 +22,8 @@ export interface HeroContent {
   cta2_label: string;
   cta2_href: string;
   image_url: string;
+  logo_url: string;
+  favicon_url: string;
 }
 
 export interface StatItem {
