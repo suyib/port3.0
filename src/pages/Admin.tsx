@@ -77,6 +77,7 @@ const emptyProject: Omit<Project, "id"> = {
   outcome: "",
   stakeholders: "",
   cover_caption: "",
+  meta_description: "",
   sort_order: 0,
   published: false,
 };
@@ -426,6 +427,9 @@ const Admin = () => {
 
   // Site Settings view
   if (viewMode === "settings" && settingsForm) {
+    const updateHero = (field: string, value: string) =>
+      setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, [field]: value } } });
+
     return (
       <main className="min-h-screen bg-background">
         <nav className="border-b border-border/40 bg-background/80 backdrop-blur-md sticky top-0 z-50">
@@ -441,7 +445,79 @@ const Admin = () => {
         </nav>
 
         <div className="container mx-auto px-6 lg:px-16 py-12 max-w-4xl space-y-12">
-          {/* Navigation Links */}
+
+          {/* 1. Branding */}
+          <Section title="Branding">
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="space-y-3">
+                <label className="font-body text-xs text-muted-foreground">Logo</label>
+                {settingsForm.homepage_content.hero.logo_url && (
+                  <div className="space-y-1">
+                    <img
+                      src={settingsForm.homepage_content.hero.logo_url}
+                      alt="Logo preview"
+                      className="h-12 w-auto object-contain rounded bg-secondary p-2"
+                      onLoad={(e) => {
+                        const img = e.currentTarget;
+                        const el = document.getElementById("logo-dims");
+                        if (el) el.textContent = `${img.naturalWidth} × ${img.naturalHeight}px`;
+                      }}
+                    />
+                    <p id="logo-dims" className="font-body text-xs text-muted-foreground" />
+                  </div>
+                )}
+                <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-body transition-colors">
+                  <Upload size={16} />
+                  Upload Logo
+                  <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    try {
+                      const url = await uploadImage.mutateAsync(file);
+                      updateHero("logo_url", url);
+                      toast.success("Logo uploaded");
+                    } catch { toast.error("Upload failed"); }
+                  }} />
+                </label>
+                <Field label="Or paste URL" value={settingsForm.homepage_content.hero.logo_url || ""} onChange={(v) => updateHero("logo_url", v)} placeholder="https://..." />
+              </div>
+
+              <div className="space-y-3">
+                <label className="font-body text-xs text-muted-foreground">Favicon (recommended: 32×32 or 64×64)</label>
+                {settingsForm.homepage_content.hero.favicon_url && (
+                  <div className="space-y-1">
+                    <img
+                      src={settingsForm.homepage_content.hero.favicon_url}
+                      alt="Favicon preview"
+                      className="h-10 w-10 object-contain rounded bg-secondary p-1"
+                      onLoad={(e) => {
+                        const img = e.currentTarget;
+                        const el = document.getElementById("favicon-dims");
+                        if (el) el.textContent = `${img.naturalWidth} × ${img.naturalHeight}px`;
+                      }}
+                    />
+                    <p id="favicon-dims" className="font-body text-xs text-muted-foreground" />
+                  </div>
+                )}
+                <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-body transition-colors">
+                  <Upload size={16} />
+                  Upload Favicon
+                  <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    try {
+                      const url = await uploadImage.mutateAsync(file);
+                      updateHero("favicon_url", url);
+                      toast.success("Favicon uploaded");
+                    } catch { toast.error("Upload failed"); }
+                  }} />
+                </label>
+                <Field label="Or paste URL" value={settingsForm.homepage_content.hero.favicon_url || ""} onChange={(v) => updateHero("favicon_url", v)} placeholder="https://..." />
+              </div>
+            </div>
+          </Section>
+
+          {/* 2. Navigation Links */}
           <Section title="Navigation Links">
             <div className="space-y-3">
               {settingsForm.nav_links.map((link, i) => (
@@ -459,130 +535,17 @@ const Admin = () => {
             </Button>
           </Section>
 
-          {/* Footer */}
-          <Section title="Footer">
-            <Field label="Left Text" value={settingsForm.footer_left} onChange={(v) => setSettingsForm({ ...settingsForm, footer_left: v })} placeholder="© 2026 ST." />
-            <Field label="Right Text" value={settingsForm.footer_right} onChange={(v) => setSettingsForm({ ...settingsForm, footer_right: v })} placeholder="Portfolio ver 3.0" />
-          </Section>
-
-          {/* Social Links */}
-          <Section title="Social Links">
-            <div className="space-y-4">
-              {settingsForm.social_links.map((social, i) => (
-                <div key={i} className="grid grid-cols-[120px_1fr_1fr_auto] gap-3 items-end">
-                  <div className="space-y-1">
-                    <label className="font-body text-xs text-muted-foreground">Icon</label>
-                    <Select value={social.icon} onValueChange={(v) => updateSocialLink(i, "icon", v)}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {ICON_OPTIONS.map((opt) => (
-                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Field label="Label" value={social.label} onChange={(v) => updateSocialLink(i, "label", v)} placeholder="GitHub" />
-                  <Field label="URL" value={social.url} onChange={(v) => updateSocialLink(i, "url", v)} placeholder="https://github.com/..." />
-                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => removeSocialLink(i)}>
-                    <X size={14} />
-                  </Button>
-                </div>
-              ))}
-            </div>
-            <Button variant="outline" size="sm" onClick={addSocialLink}>
-              <Plus size={14} className="mr-1" /> Add Social Link
-            </Button>
-          </Section>
-
-          {/* Capabilities — Design */}
-          <Section title="Capabilities — Design">
-            <div className="flex flex-wrap gap-2">
-              {settingsForm.design_skills.map((skill, i) => (
-                <span key={i} className="inline-flex items-center gap-1.5 bg-secondary text-secondary-foreground px-3 py-1.5 rounded-full text-sm font-body">
-                  {skill}
-                  <button onClick={() => removeSkill("design_skills", i)} className="text-muted-foreground hover:text-foreground">
-                    <X size={12} />
-                  </button>
-                </span>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <Input
-                value={skillInput.design}
-                onChange={(e) => setSkillInput((p) => ({ ...p, design: e.target.value }))}
-                placeholder="Add a design skill..."
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    addSkill("design_skills", skillInput.design);
-                    setSkillInput((p) => ({ ...p, design: "" }));
-                  }
-                }}
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  addSkill("design_skills", skillInput.design);
-                  setSkillInput((p) => ({ ...p, design: "" }));
-                }}
-              >
-                Add
-              </Button>
-            </div>
-          </Section>
-
-          {/* Capabilities — Development */}
-          <Section title="Capabilities — Development">
-            <div className="flex flex-wrap gap-2">
-              {settingsForm.dev_skills.map((skill, i) => (
-                <span key={i} className="inline-flex items-center gap-1.5 bg-secondary text-secondary-foreground px-3 py-1.5 rounded-full text-sm font-body">
-                  {skill}
-                  <button onClick={() => removeSkill("dev_skills", i)} className="text-muted-foreground hover:text-foreground">
-                    <X size={12} />
-                  </button>
-                </span>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <Input
-                value={skillInput.dev}
-                onChange={(e) => setSkillInput((p) => ({ ...p, dev: e.target.value }))}
-                placeholder="Add a dev skill..."
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    addSkill("dev_skills", skillInput.dev);
-                    setSkillInput((p) => ({ ...p, dev: "" }));
-                  }
-                }}
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  addSkill("dev_skills", skillInput.dev);
-                  setSkillInput((p) => ({ ...p, dev: "" }));
-                }}
-              >
-                Add
-              </Button>
-            </div>
-          </Section>
-
-          {/* Homepage — Hero Section */}
+          {/* 3. Homepage — Hero */}
           <Section title="Homepage — Hero">
-            <Field label="Subtitle (use \n for line break)" value={settingsForm.homepage_content.hero.subtitle} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, subtitle: v } } })} placeholder="suyin tung\nFull-Stack Designer" />
-            <Field label="Title (line 1)" value={settingsForm.homepage_content.hero.title} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, title: v } } })} placeholder="Calculated design." />
-            <Field label="Title (line 2)" value={settingsForm.homepage_content.hero.title2} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, title2: v } } })} placeholder="Measurable impact." />
-            <TextareaField label="Description" value={settingsForm.homepage_content.hero.description} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, description: v } } })} rows={3} />
+            <Field label="Subtitle (use \n for line break)" value={settingsForm.homepage_content.hero.subtitle} onChange={(v) => updateHero("subtitle", v)} placeholder="suyin tung\nFull-Stack Designer" />
+            <Field label="Title (line 1)" value={settingsForm.homepage_content.hero.title} onChange={(v) => updateHero("title", v)} placeholder="Calculated design." />
+            <Field label="Title (line 2)" value={settingsForm.homepage_content.hero.title2} onChange={(v) => updateHero("title2", v)} placeholder="Measurable impact." />
+            <TextareaField label="Description" value={settingsForm.homepage_content.hero.description} onChange={(v) => updateHero("description", v)} rows={3} />
             <div className="grid grid-cols-2 gap-4">
-              <Field label="CTA 1 Label" value={settingsForm.homepage_content.hero.cta1_label} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, cta1_label: v } } })} placeholder="View Work" />
-              <Field label="CTA 1 Link" value={settingsForm.homepage_content.hero.cta1_href} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, cta1_href: v } } })} placeholder="#projects" />
-              <Field label="CTA 2 Label" value={settingsForm.homepage_content.hero.cta2_label} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, cta2_label: v } } })} placeholder="Get in Touch" />
-              <Field label="CTA 2 Link" value={settingsForm.homepage_content.hero.cta2_href} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, cta2_href: v } } })} placeholder="#contact" />
+              <Field label="CTA 1 Label" value={settingsForm.homepage_content.hero.cta1_label} onChange={(v) => updateHero("cta1_label", v)} placeholder="View Work" />
+              <Field label="CTA 1 Link" value={settingsForm.homepage_content.hero.cta1_href} onChange={(v) => updateHero("cta1_href", v)} placeholder="#projects" />
+              <Field label="CTA 2 Label" value={settingsForm.homepage_content.hero.cta2_label} onChange={(v) => updateHero("cta2_label", v)} placeholder="Get in Touch" />
+              <Field label="CTA 2 Link" value={settingsForm.homepage_content.hero.cta2_href} onChange={(v) => updateHero("cta2_href", v)} placeholder="#contact" />
             </div>
             <div className="space-y-3">
               <label className="font-body text-xs text-muted-foreground">Hero Image</label>
@@ -613,7 +576,7 @@ const Admin = () => {
                     if (!file) return;
                     try {
                       const url = await uploadImage.mutateAsync(file);
-                      setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, image_url: url } } });
+                      updateHero("image_url", url);
                       toast.success("Hero image uploaded");
                     } catch {
                       toast.error("Upload failed");
@@ -621,11 +584,11 @@ const Admin = () => {
                   }}
                 />
               </label>
-              <Field label="Or paste URL" value={settingsForm.homepage_content.hero.image_url} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, hero: { ...settingsForm.homepage_content.hero, image_url: v } } })} placeholder="/lovable-uploads/..." />
+              <Field label="Or paste URL" value={settingsForm.homepage_content.hero.image_url} onChange={(v) => updateHero("image_url", v)} placeholder="/lovable-uploads/..." />
             </div>
           </Section>
 
-          {/* Homepage — About Section */}
+          {/* 4. Homepage — About */}
           <Section title="Homepage — About">
             <TextareaField label="Heading (use \n for line break)" value={settingsForm.homepage_content.about.heading} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, about: { ...settingsForm.homepage_content.about, heading: v } } })} rows={2} />
             <TextareaField label="Paragraph 1" value={settingsForm.homepage_content.about.paragraph1} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, about: { ...settingsForm.homepage_content.about, paragraph1: v } } })} rows={3} />
@@ -662,14 +625,113 @@ const Admin = () => {
             </div>
           </Section>
 
-          {/* Homepage — Contact Section */}
+          {/* 5. Capabilities — Design */}
+          <Section title="Capabilities — Design">
+            <div className="flex flex-wrap gap-2">
+              {settingsForm.design_skills.map((skill, i) => (
+                <span key={i} className="inline-flex items-center gap-1.5 bg-secondary text-secondary-foreground px-3 py-1.5 rounded-full text-sm font-body">
+                  {skill}
+                  <button onClick={() => removeSkill("design_skills", i)} className="text-muted-foreground hover:text-foreground">
+                    <X size={12} />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Input
+                value={skillInput.design}
+                onChange={(e) => setSkillInput((p) => ({ ...p, design: e.target.value }))}
+                placeholder="Add a design skill..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addSkill("design_skills", skillInput.design);
+                    setSkillInput((p) => ({ ...p, design: "" }));
+                  }
+                }}
+              />
+              <Button variant="outline" size="sm" onClick={() => { addSkill("design_skills", skillInput.design); setSkillInput((p) => ({ ...p, design: "" })); }}>
+                Add
+              </Button>
+            </div>
+          </Section>
+
+          {/* 6. Capabilities — Development */}
+          <Section title="Capabilities — Development">
+            <div className="flex flex-wrap gap-2">
+              {settingsForm.dev_skills.map((skill, i) => (
+                <span key={i} className="inline-flex items-center gap-1.5 bg-secondary text-secondary-foreground px-3 py-1.5 rounded-full text-sm font-body">
+                  {skill}
+                  <button onClick={() => removeSkill("dev_skills", i)} className="text-muted-foreground hover:text-foreground">
+                    <X size={12} />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Input
+                value={skillInput.dev}
+                onChange={(e) => setSkillInput((p) => ({ ...p, dev: e.target.value }))}
+                placeholder="Add a dev skill..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addSkill("dev_skills", skillInput.dev);
+                    setSkillInput((p) => ({ ...p, dev: "" }));
+                  }
+                }}
+              />
+              <Button variant="outline" size="sm" onClick={() => { addSkill("dev_skills", skillInput.dev); setSkillInput((p) => ({ ...p, dev: "" })); }}>
+                Add
+              </Button>
+            </div>
+          </Section>
+
+          {/* 7. Homepage — Contact */}
           <Section title="Homepage — Contact">
             <Field label="Heading" value={settingsForm.homepage_content.contact.heading} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, contact: { ...settingsForm.homepage_content.contact, heading: v } } })} placeholder="Let's build something great together." />
             <TextareaField label="Description" value={settingsForm.homepage_content.contact.description} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, contact: { ...settingsForm.homepage_content.contact, description: v } } })} rows={2} />
             <Field label="CTA Button Label" value={settingsForm.homepage_content.contact.cta_label} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, contact: { ...settingsForm.homepage_content.contact, cta_label: v } } })} placeholder="Get in Touch" />
           </Section>
 
-          {/* Site Styles */}
+          {/* 8. Social Links */}
+          <Section title="Social Links">
+            <div className="space-y-4">
+              {settingsForm.social_links.map((social, i) => (
+                <div key={i} className="grid grid-cols-[120px_1fr_1fr_auto] gap-3 items-end">
+                  <div className="space-y-1">
+                    <label className="font-body text-xs text-muted-foreground">Icon</label>
+                    <Select value={social.icon} onValueChange={(v) => updateSocialLink(i, "icon", v)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ICON_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Field label="Label" value={social.label} onChange={(v) => updateSocialLink(i, "label", v)} placeholder="GitHub" />
+                  <Field label="URL" value={social.url} onChange={(v) => updateSocialLink(i, "url", v)} placeholder="https://github.com/..." />
+                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => removeSocialLink(i)}>
+                    <X size={14} />
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <Button variant="outline" size="sm" onClick={addSocialLink}>
+              <Plus size={14} className="mr-1" /> Add Social Link
+            </Button>
+          </Section>
+
+          {/* 9. Footer */}
+          <Section title="Footer">
+            <Field label="Left Text" value={settingsForm.footer_left} onChange={(v) => setSettingsForm({ ...settingsForm, footer_left: v })} placeholder="© 2026 ST." />
+            <Field label="Right Text" value={settingsForm.footer_right} onChange={(v) => setSettingsForm({ ...settingsForm, footer_right: v })} placeholder="Portfolio ver 3.0" />
+          </Section>
+
+          {/* 10. Site Styles */}
           <Section title="Site Styles">
             <p className="font-body text-xs text-muted-foreground mb-4">Customize your site's theme colors (HSL values) and fonts.</p>
             
@@ -911,7 +973,44 @@ const Admin = () => {
                     key={project.id}
                     className="bg-card border border-border/40 rounded-xl p-6 flex items-center gap-6"
                   >
-                    <GripVertical size={18} className="text-muted-foreground/40" />
+                    <div className="flex flex-col gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        disabled={!projects || projects.indexOf(project) === 0}
+                        onClick={async () => {
+                          if (!projects) return;
+                          const idx = projects.indexOf(project);
+                          const prev = projects[idx - 1];
+                          try {
+                            await saveProject.mutateAsync({ ...project, sort_order: prev.sort_order } as any);
+                            await saveProject.mutateAsync({ ...prev, sort_order: project.sort_order } as any);
+                            toast.success("Reordered");
+                          } catch { toast.error("Failed to reorder"); }
+                        }}
+                      >
+                        <ChevronUp size={14} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        disabled={!projects || projects.indexOf(project) === projects.length - 1}
+                        onClick={async () => {
+                          if (!projects) return;
+                          const idx = projects.indexOf(project);
+                          const next = projects[idx + 1];
+                          try {
+                            await saveProject.mutateAsync({ ...project, sort_order: next.sort_order } as any);
+                            await saveProject.mutateAsync({ ...next, sort_order: project.sort_order } as any);
+                            toast.success("Reordered");
+                          } catch { toast.error("Failed to reorder"); }
+                        }}
+                      >
+                        <ChevronDown size={14} />
+                      </Button>
+                    </div>
                     {thumb && (
                       <img src={thumb} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
                     )}
@@ -1042,6 +1141,7 @@ const Admin = () => {
           </div>
           <Field label="Tools (comma-separated)" value={toolInput} onChange={setToolInput} placeholder="Figma, React, Tailwind CSS" />
           <RichTextEditor label="Short Description" value={editing.description || ""} onChange={(v) => updateField("description", v)} />
+          <RichTextEditor label="Meta Description (shown on case study page under metadata)" value={editing.meta_description || ""} onChange={(v) => updateField("meta_description", v)} />
         </Section>
 
         {/* Cover Image (legacy, still used as fallback) */}

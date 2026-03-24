@@ -133,6 +133,7 @@ export type Database = {
           headline: string
           id: string
           image_url: string
+          meta_description: string
           outcome: string
           pain_points: Json
           process: Json
@@ -160,6 +161,7 @@ export type Database = {
           headline?: string
           id?: string
           image_url?: string
+          meta_description?: string
           outcome?: string
           pain_points?: Json
           process?: Json
@@ -187,6 +189,7 @@ export type Database = {
           headline?: string
           id?: string
           image_url?: string
+          meta_description?: string
           outcome?: string
           pain_points?: Json
           process?: Json

@@ -19,7 +19,11 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-6 lg:px-16 flex items-center justify-between h-16">
         <Link to="/" className="font-display text-xl text-foreground">
-          ST<span className="text-accent">.</span>
+          {settings?.homepage_content?.hero?.logo_url ? (
+            <img src={settings.homepage_content.hero.logo_url} alt="Logo" className="h-8 w-auto" />
+          ) : (
+            <>ST<span className="text-accent">.</span></>
+          )}
         </Link>
 
         {/* Desktop */}

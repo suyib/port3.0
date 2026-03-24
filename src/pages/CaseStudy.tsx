@@ -70,6 +70,12 @@ const CaseStudy = () => {
             )}
           </motion.div>
 
+          {project.meta_description && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.12 }} className="mb-10">
+              <div className="font-body text-muted-foreground leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.meta_description }} />
+            </motion.div>
+          )}
+
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} className="grid md:grid-cols-2 gap-6">
             <div className="bg-card border border-border/40 rounded-2xl p-8">
               <p className="font-body text-xs tracking-[0.2em] uppercase text-destructive mb-3 font-medium">The Challenge</p>

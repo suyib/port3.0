@@ -35,6 +35,19 @@ export default function StyleProvider() {
       }
     });
 
+    // Dynamic favicon
+    const faviconUrl = settings.homepage_content?.hero?.favicon_url;
+    let oldFavicon: HTMLLinkElement | null = null;
+    if (faviconUrl) {
+      oldFavicon = document.querySelector("link[rel*='icon']");
+      const faviconLink = document.createElement("link");
+      faviconLink.rel = "icon";
+      faviconLink.href = faviconUrl;
+      if (oldFavicon) oldFavicon.remove();
+      document.head.appendChild(faviconLink);
+      links.push(faviconLink);
+    }
+
     return () => {
       root.style.removeProperty("--background");
       root.style.removeProperty("--foreground");
@@ -46,7 +59,7 @@ export default function StyleProvider() {
       root.style.removeProperty("--font-body");
       links.forEach((l) => l.remove());
     };
-  }, [settings?.site_styles]);
+  }, [settings?.site_styles, settings?.homepage_content]);
 
   return null;
 }
