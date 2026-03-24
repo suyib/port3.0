@@ -973,7 +973,44 @@ const Admin = () => {
                     key={project.id}
                     className="bg-card border border-border/40 rounded-xl p-6 flex items-center gap-6"
                   >
-                    <GripVertical size={18} className="text-muted-foreground/40" />
+                    <div className="flex flex-col gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        disabled={!projects || projects.indexOf(project) === 0}
+                        onClick={async () => {
+                          if (!projects) return;
+                          const idx = projects.indexOf(project);
+                          const prev = projects[idx - 1];
+                          try {
+                            await saveProject.mutateAsync({ ...project, sort_order: prev.sort_order } as any);
+                            await saveProject.mutateAsync({ ...prev, sort_order: project.sort_order } as any);
+                            toast.success("Reordered");
+                          } catch { toast.error("Failed to reorder"); }
+                        }}
+                      >
+                        <ChevronUp size={14} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        disabled={!projects || projects.indexOf(project) === projects.length - 1}
+                        onClick={async () => {
+                          if (!projects) return;
+                          const idx = projects.indexOf(project);
+                          const next = projects[idx + 1];
+                          try {
+                            await saveProject.mutateAsync({ ...project, sort_order: next.sort_order } as any);
+                            await saveProject.mutateAsync({ ...next, sort_order: project.sort_order } as any);
+                            toast.success("Reordered");
+                          } catch { toast.error("Failed to reorder"); }
+                        }}
+                      >
+                        <ChevronDown size={14} />
+                      </Button>
+                    </div>
                     {thumb && (
                       <img src={thumb} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
                     )}
