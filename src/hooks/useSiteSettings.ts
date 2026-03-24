@@ -90,6 +90,8 @@ const DEFAULT_HOMEPAGE: HomepageContent = {
     cta2_label: "Get in Touch",
     cta2_href: "#contact",
     image_url: "/lovable-uploads/e6c9fa77-da6d-4a96-8ea1-800188eab996.png",
+    logo_url: "",
+    favicon_url: "",
   },
   about: {
     heading: "Designing with purpose,\nbuilding with precision.",

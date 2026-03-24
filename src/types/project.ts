@@ -65,6 +65,7 @@ export interface Project {
   outcome: string;
   stakeholders: string;
   cover_caption: string;
+  meta_description: string;
   sort_order: number;
   published: boolean;
   images?: ProjectImage[];
