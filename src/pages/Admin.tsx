@@ -77,6 +77,7 @@ const emptyProject: Omit<Project, "id"> = {
   outcome: "",
   stakeholders: "",
   cover_caption: "",
+  meta_description: "",
   sort_order: 0,
   published: false,
 };
