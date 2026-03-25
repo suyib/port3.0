@@ -925,11 +925,11 @@ const Admin = () => {
                 <Button onClick={handleNew} size="sm">
                   <Plus size={16} className="mr-1" /> New Project
                 </Button>
-              ) : (
+              ) : adminTab === "blog" ? (
                 <Button onClick={handleNewPost} size="sm">
                   <Plus size={16} className="mr-1" /> New Post
                 </Button>
-              )}
+              ) : null}
               <Button variant="ghost" size="sm" onClick={signOut}>
                 Sign Out
               </Button>
