@@ -29,52 +29,64 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-const contactSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100),
-  company: z.string().trim().min(1, "Company is required").max(100),
-  project_type: z.string().min(1, "Please select a project type"),
-  goal: z.string().trim().min(1, "Please describe your goal").max(5000),
-  timeline: z.string().max(200).optional().default(""),
-  budget_range: z.string().max(200).optional().default(""),
-});
-
-type ContactFormValues = z.infer<typeof contactSchema>;
-
-const PROJECT_TYPES = [
-  "UX Design",
-  "UI Design",
-  "Branding",
-  "Development",
-  "Other",
-];
+import { useSiteSettings, DEFAULT_HOMEPAGE } from "@/hooks/useSiteSettings";
 
 const ContactPage = () => {
   const [submitted, setSubmitted] = useState(false);
+  const { data: settings } = useSiteSettings();
 
-  const form = useForm<ContactFormValues>({
-    resolver: zodResolver(contactSchema),
-    defaultValues: {
-      name: "",
-      company: "",
-      project_type: "",
-      goal: "",
-      timeline: "",
-      budget_range: "",
-    },
+  const cp = settings?.homepage_content?.contact_page ?? DEFAULT_HOMEPAGE.contact_page;
+  const visibleQuestions = cp.questions.filter((q) => q.visible);
+
+  // Build dynamic zod schema from visible questions
+  const schemaShape: Record<string, z.ZodTypeAny> = {};
+  visibleQuestions.forEach((q) => {
+    if (q.required) {
+      schemaShape[q.id] = z.string().trim().min(1, `${q.label} is required`).max(5000);
+    } else {
+      schemaShape[q.id] = z.string().max(5000).optional().default("");
+    }
+  });
+  const contactSchema = z.object(schemaShape);
+
+  const defaultValues: Record<string, string> = {};
+  visibleQuestions.forEach((q) => {
+    defaultValues[q.id] = "";
   });
 
-  const onSubmit = async (values: ContactFormValues) => {
+  const form = useForm({
+    resolver: zodResolver(contactSchema),
+    defaultValues,
+  });
+
+  const onSubmit = async (values: Record<string, any>) => {
     try {
       const { error } = await supabase.from("contact_submissions").insert({
-        name: values.name,
-        company: values.company,
-        project_type: values.project_type,
-        goal: values.goal,
+        name: values.name || "",
+        company: values.company || "",
+        project_type: values.project_type || "",
+        goal: values.goal || "",
         timeline: values.timeline || "",
         budget_range: values.budget_range || "",
       });
       if (error) throw error;
+
+      // If auto email enabled and owner email set, invoke the email function
+      if (cp.auto_email_enabled && cp.owner_email) {
+        try {
+          await supabase.functions.invoke("send-transactional-email", {
+            body: {
+              templateName: "contact-form-confirmation",
+              recipientEmail: cp.owner_email,
+              idempotencyKey: `contact-${Date.now()}`,
+              templateData: { name: values.name, goal: values.goal },
+            },
+          });
+        } catch {
+          // silently fail — email infra may not be set up yet
+        }
+      }
+
       toast.success("Message sent! I'll get back to you soon.");
       setSubmitted(true);
     } catch (e: any) {
@@ -117,122 +129,135 @@ const ContactPage = () => {
         >
           <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">Contact</p>
           <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">
-            Let's work together
+            {cp.heading}
           </h1>
           <p className="font-body text-lg text-muted-foreground mb-12">
-            Tell me about your project and I'll get back to you within 48 hours.
+            {cp.subheading}
           </p>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="grid md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-body text-sm text-foreground">Name *</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="company"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-body text-sm text-foreground">Company *</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your company" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              {/* Render questions dynamically — group text fields in pairs */}
+              {(() => {
+                const elements: React.ReactNode[] = [];
+                let i = 0;
+                while (i < visibleQuestions.length) {
+                  const q = visibleQuestions[i];
 
-              <FormField
-                control={form.control}
-                name="project_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex items-center gap-2">
-                      <FormLabel className="font-body text-sm text-foreground">Project Type *</FormLabel>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <HelpCircle size={14} className="text-muted-foreground cursor-help" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="text-sm">If unsure, pick Other and elaborate in the text field</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a project type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {PROJECT_TYPES.map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="goal"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-body text-sm text-foreground">Project Goal *</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Tell me about your project, goals, and any specific requirements..."
-                        rows={6}
-                        {...field}
+                  // For text fields, try to pair with the next text field
+                  if (q.type === "text" && i + 1 < visibleQuestions.length && visibleQuestions[i + 1].type === "text") {
+                    const q2 = visibleQuestions[i + 1];
+                    elements.push(
+                      <div key={`pair-${q.id}`} className="grid md:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name={q.id}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="font-body text-sm text-foreground">{q.label}{q.required ? " *" : ""}</FormLabel>
+                              <FormControl>
+                                <Input placeholder={q.placeholder} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={q2.id}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="font-body text-sm text-foreground">{q2.label}{q2.required ? " *" : ""}</FormLabel>
+                              <FormControl>
+                                <Input placeholder={q2.placeholder} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    );
+                    i += 2;
+                  } else if (q.type === "select") {
+                    elements.push(
+                      <FormField
+                        key={q.id}
+                        control={form.control}
+                        name={q.id}
+                        render={({ field }) => (
+                          <FormItem>
+                            <div className="flex items-center gap-2">
+                              <FormLabel className="font-body text-sm text-foreground">{q.label}{q.required ? " *" : ""}</FormLabel>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <HelpCircle size={14} className="text-muted-foreground cursor-help" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="text-sm">If unsure, pick Other and elaborate below</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={q.placeholder} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {cp.project_types.map((type) => (
+                                  <SelectItem key={type} value={type}>
+                                    {type}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="timeline"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-body text-sm text-foreground">Timeline</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g. 2-3 months" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="budget_range"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-body text-sm text-foreground">Budget Range</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g. $5,000 - $10,000" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
+                    );
+                    i++;
+                  } else if (q.type === "textarea") {
+                    elements.push(
+                      <FormField
+                        key={q.id}
+                        control={form.control}
+                        name={q.id}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="font-body text-sm text-foreground">{q.label}{q.required ? " *" : ""}</FormLabel>
+                            <FormControl>
+                              <Textarea placeholder={q.placeholder} rows={6} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    );
+                    i++;
+                  } else {
+                    // Single text field (no pair available)
+                    elements.push(
+                      <FormField
+                        key={q.id}
+                        control={form.control}
+                        name={q.id}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="font-body text-sm text-foreground">{q.label}{q.required ? " *" : ""}</FormLabel>
+                            <FormControl>
+                              <Input placeholder={q.placeholder} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    );
+                    i++;
+                  }
+                }
+                return elements;
+              })()}
 
               <Button
                 type="submit"

@@ -44,10 +44,29 @@ export interface ContactContent {
   cta_label: string;
 }
 
+export interface ContactQuestion {
+  id: string;
+  label: string;
+  placeholder: string;
+  type: "text" | "textarea" | "select";
+  required: boolean;
+  visible: boolean;
+}
+
+export interface ContactPageConfig {
+  heading: string;
+  subheading: string;
+  owner_email: string;
+  auto_email_enabled: boolean;
+  project_types: string[];
+  questions: ContactQuestion[];
+}
+
 export interface HomepageContent {
   hero: HeroContent;
   about: AboutContent;
   contact: ContactContent;
+  contact_page: ContactPageConfig;
 }
 
 export interface SiteStyles {
@@ -108,6 +127,21 @@ const DEFAULT_HOMEPAGE: HomepageContent = {
     description: "Have a project in mind? I'd love to hear about it. Drop me a line and let's make it happen.",
     cta_label: "Get in Touch",
   },
+  contact_page: {
+    heading: "Let's work together",
+    subheading: "Tell me about your project and I'll get back to you within 48 hours.",
+    owner_email: "",
+    auto_email_enabled: false,
+    project_types: ["UX Design", "UI Design", "Branding", "Development", "Other"],
+    questions: [
+      { id: "name", label: "Name", placeholder: "Your name", type: "text", required: true, visible: true },
+      { id: "company", label: "Company", placeholder: "Your company", type: "text", required: true, visible: true },
+      { id: "project_type", label: "Project Type", placeholder: "Select a project type", type: "select", required: true, visible: true },
+      { id: "goal", label: "Project Goal", placeholder: "Tell me about your project, goals, and any specific requirements...", type: "textarea", required: true, visible: true },
+      { id: "timeline", label: "Timeline", placeholder: "e.g. 2-3 months", type: "text", required: false, visible: true },
+      { id: "budget_range", label: "Budget Range", placeholder: "e.g. $5,000 - $10,000", type: "text", required: false, visible: true },
+    ],
+  },
 };
 
 const DEFAULT_STYLES: SiteStyles = {
@@ -165,6 +199,7 @@ export function useSiteSettings() {
         hero: { ...DEFAULT_HOMEPAGE.hero, ...(raw?.hero ?? {}) },
         about: { ...DEFAULT_HOMEPAGE.about, ...(raw?.about ?? {}), stats: raw?.about?.stats?.length ? raw.about.stats : DEFAULT_HOMEPAGE.about.stats },
         contact: { ...DEFAULT_HOMEPAGE.contact, ...(raw?.contact ?? {}) },
+        contact_page: { ...DEFAULT_HOMEPAGE.contact_page, ...(raw?.contact_page ?? {}), questions: raw?.contact_page?.questions?.length ? raw.contact_page.questions : DEFAULT_HOMEPAGE.contact_page.questions, project_types: raw?.contact_page?.project_types?.length ? raw.contact_page.project_types : DEFAULT_HOMEPAGE.contact_page.project_types },
       };
 
       const rawStyles = (data as any).site_styles;
