@@ -1,55 +1,61 @@
 
 
-## Fix Sorting, Add Logo/Favicon Upload, Add Meta Description, Reorder Settings
+## Add "Contact" Admin Tab
 
-### 1. Fix project drag-to-sort in list view
+### Overview
 
-Replace the decorative `GripVertical` icon (line 914) with `ChevronUp`/`ChevronDown` buttons that swap `sort_order` between adjacent projects and save immediately via `saveProject.mutateAsync`.
+Add a third tab ("Contact") to the admin panel that lets you manage the contact page: header/subheading text, your email address, automated email toggle, project type dropdown options, and the ability to add/hide form questions.
 
-**File:** `src/pages/Admin.tsx`
+### Data Model
 
-### 2. Logo + Favicon upload in Admin Settings
-
-Store `logo_url` and `favicon_url` inside the existing `homepage_content` JSONB (no migration needed).
-
-- `src/hooks/useSiteSettings.ts` — Add `logo_url` and `favicon_url` to `HeroContent` interface with empty string defaults
-- `src/pages/Admin.tsx` — Add a "Branding" section with upload widgets + dimension previews for both logo and favicon
-- `src/components/Navbar.tsx` — Render `<img>` from `logo_url` instead of hardcoded "ST." when set
-- `src/components/StyleProvider.tsx` — Dynamically inject `<link rel="icon">` from `favicon_url`
-
-### 3. Add meta description rich text editor for case studies
-
-**Database migration:** Add `meta_description text NOT NULL DEFAULT ''` to `projects` table.
-
-- `src/types/project.ts` — Add `meta_description: string` to `Project` interface
-- `src/pages/Admin.tsx` — Add a `RichTextEditor` labeled "Meta Description" below Role/Timeline/Stakeholders/Tools in the Basic Info section
-- `src/pages/CaseStudy.tsx` — Render `meta_description` HTML between the meta bar and challenge/solution cards
-- `src/hooks/useProjects.ts` — Include `meta_description` in `rowToProject`
-
-### 4. Reorder Site Settings to follow page order
-
-Current order is scattered. Reorganize to match the actual page flow:
+Store all contact page configuration in the existing `site_settings.homepage_content` JSONB under a new `contact_page` key (no migration needed):
 
 ```text
-1. Branding (Logo + Favicon)         — NEW, site-wide
-2. Navigation Links                  — appears in Navbar (top of page)
-3. Homepage — Hero                   — first section
-4. Homepage — About                  — second section
-5. Capabilities — Design             — third section (Skills)
-6. Capabilities — Development        — third section (Skills)
-7. Homepage — Contact                — fourth section
-8. Social Links                      — appears in Contact + Footer
-9. Footer                            — bottom of page
-10. Site Styles (Colors + Fonts)     — global theme, last
+contact_page: {
+  heading: string              // "Let's work together"
+  subheading: string           // "Tell me about your project..."
+  owner_email: string          // your email for receiving queries
+  auto_email_enabled: boolean  // toggle automated confirmation email
+  project_types: string[]      // ["UX Design", "UI Design", ...]
+  questions: [                 // configurable form fields
+    { id: string, label: string, placeholder: string, type: "text"|"textarea"|"select", required: boolean, visible: boolean }
+  ]
+}
 ```
 
+Default questions will mirror the current hardcoded fields (Name, Company, Project Type, Project Goal, Timeline, Budget Range).
+
+### Changes
+
+**1. `src/hooks/useSiteSettings.ts`**
+- Add `ContactPageConfig` interface with the fields above
+- Add `contact_page` to `HomepageContent` interface
+- Add defaults matching the current hardcoded Contact.tsx values
+
+**2. `src/pages/Admin.tsx`**
+- Update `adminTab` derivation: `viewMode === "blog" ? "blog" : viewMode === "contact" ? "contact" : "projects"`
+- Add a third tab button navigating to `/admin/contact`
+- Add the Contact tab content panel with:
+  - **Header & Subheading**: two text inputs for the page heading and description
+  - **Email Settings**: an input for your email address + a toggle switch for automated confirmation emails
+  - **Project Types**: an editable list (add/remove items) for the dropdown options
+  - **Form Questions**: a list of question cards, each with label, placeholder, type selector, required toggle, and a visibility (show/hide) toggle. Add/remove question buttons.
+- Wire the "New" button in the nav to hide when on the contact tab
+- Save via existing `handleSaveSettings`
+
+**3. `src/pages/Contact.tsx`**
+- Import `useSiteSettings` and read `contact_page` config
+- Replace hardcoded heading, subheading, and `PROJECT_TYPES` array with settings values
+- Dynamically render visible questions from the settings config
+- After form submission, if `auto_email_enabled` and `owner_email` are set, invoke a `send-transactional-email` edge function (or show a placeholder until email infra is wired)
+
+**4. Automated Email (lightweight approach)**
+- For now, store the owner email and toggle in settings
+- The actual email sending will require email domain setup (a follow-up step) — the admin UI will show the toggle and email input immediately, with a note that email sending requires domain configuration
+- On form submit, if enabled, call `supabase.functions.invoke('send-transactional-email', ...)` with the submission data
+
 ### Files to Change
-1. **Migration** — Add `meta_description` column to `projects`
-2. `src/types/project.ts` — Add `meta_description` field
-3. `src/hooks/useSiteSettings.ts` — Add `logo_url`, `favicon_url` to `HeroContent`
-4. `src/hooks/useProjects.ts` — Map `meta_description` in `rowToProject`
-5. `src/components/StyleProvider.tsx` — Dynamic favicon injection
-6. `src/components/Navbar.tsx` — Render logo image
-7. `src/pages/Admin.tsx` — Sort buttons, branding section, meta description editor, reorder settings sections
-8. `src/pages/CaseStudy.tsx` — Render meta description
+1. `src/hooks/useSiteSettings.ts` — add `ContactPageConfig` interface and defaults
+2. `src/pages/Admin.tsx` — add Contact tab UI with all management controls
+3. `src/pages/Contact.tsx` — read settings and render dynamically
 
