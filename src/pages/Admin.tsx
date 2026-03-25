@@ -170,10 +170,10 @@ const Admin = () => {
 
   // Sync URL → settings state
   useEffect(() => {
-    if (viewMode === "settings" && siteSettings && !settingsForm) {
+    if ((viewMode === "settings" || viewMode === "contact") && siteSettings && !settingsForm) {
       setSettingsForm({ ...siteSettings });
       setSkillInput({ design: "", dev: "" });
-    } else if (viewMode !== "settings" && settingsForm) {
+    } else if (viewMode !== "settings" && viewMode !== "contact" && settingsForm) {
       setSettingsForm(null);
     }
   }, [viewMode, siteSettings]);
