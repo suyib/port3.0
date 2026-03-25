@@ -11,7 +11,7 @@ import {
   useDeleteProjectImage,
   useReplaceProjectImage,
 } from "@/hooks/useProjects";
-import { useSiteSettings, useSaveSiteSettings, type NavLink, type SocialLink, type SiteSettings, type SiteStyles, type HomepageContent, type StatItem, DEFAULT_HOMEPAGE } from "@/hooks/useSiteSettings";
+import { useSiteSettings, useSaveSiteSettings, type NavLink, type SocialLink, type SiteSettings, type SiteStyles, type HomepageContent, type StatItem, type ContactPageConfig, type ContactQuestion, DEFAULT_HOMEPAGE } from "@/hooks/useSiteSettings";
 import {
   useBlogPosts,
   useSaveBlogPost,
