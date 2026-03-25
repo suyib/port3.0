@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/select";
 import {
   ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff, Upload, Save, X, GripVertical,
-  ChevronUp, ChevronDown, Settings, FileText, RefreshCw, ExternalLink, Palette,
+  ChevronUp, ChevronDown, Settings, FileText, RefreshCw, ExternalLink, Palette, Mail,
 } from "lucide-react";
 import type { Project, ProjectImage, PainPoint, ProcessStep, ComponentState, Takeaway } from "@/types/project";
 import { toast } from "sonner";
