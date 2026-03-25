@@ -953,6 +953,13 @@ const Admin = () => {
               <FileText size={14} className="inline mr-1" />
               Blog Posts
             </button>
+            <button
+              onClick={() => navigate("/admin/contact")}
+              className={`pb-3 font-body text-sm transition-colors border-b-2 ${adminTab === "contact" ? "border-accent text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            >
+              <Mail size={14} className="inline mr-1" />
+              Contact
+            </button>
           </div>
 
           {adminTab === "projects" ? (
