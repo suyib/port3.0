@@ -1060,7 +1060,7 @@ const Admin = () => {
             </div>
           )}
             </>
-          ) : (
+          ) : adminTab === "blog" ? (
             <>
               {blogLoading ? (
                 <p className="text-muted-foreground">Loading posts...</p>
@@ -1104,6 +1104,9 @@ const Admin = () => {
                 </div>
               )}
             </>
+          ) : (
+            /* Contact tab */
+            <ContactAdminTab settingsForm={settingsForm} setSettingsForm={setSettingsForm} siteSettings={siteSettings} saveSiteSettings={saveSiteSettings} />
           )}
         </div>
       </main>
