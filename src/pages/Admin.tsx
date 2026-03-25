@@ -1480,4 +1480,188 @@ const TextareaField = ({
   </div>
 );
 
+// Contact Admin Tab component
+const ContactAdminTab = ({ settingsForm, setSettingsForm, siteSettings, saveSiteSettings }: {
+  settingsForm: SiteSettings | null;
+  setSettingsForm: (s: SiteSettings | null) => void;
+  siteSettings: SiteSettings | undefined;
+  saveSiteSettings: any;
+}) => {
+  const [typeInput, setTypeInput] = useState("");
+
+  // Initialize settings if not loaded yet
+  if (!settingsForm) {
+    if (siteSettings) {
+      setSettingsForm({ ...siteSettings });
+    }
+    return <p className="text-muted-foreground">Loading settings...</p>;
+  }
+
+  const cp = settingsForm.homepage_content.contact_page;
+
+  const updateContactPage = (updates: Partial<ContactPageConfig>) => {
+    setSettingsForm({
+      ...settingsForm,
+      homepage_content: {
+        ...settingsForm.homepage_content,
+        contact_page: { ...cp, ...updates },
+      },
+    });
+  };
+
+  const updateQuestion = (id: string, updates: Partial<ContactQuestion>) => {
+    const questions = cp.questions.map((q) => (q.id === id ? { ...q, ...updates } : q));
+    updateContactPage({ questions });
+  };
+
+  const addQuestion = () => {
+    const newQ: ContactQuestion = {
+      id: `custom_${Date.now()}`,
+      label: "New Question",
+      placeholder: "",
+      type: "text",
+      required: false,
+      visible: true,
+    };
+    updateContactPage({ questions: [...cp.questions, newQ] });
+  };
+
+  const removeQuestion = (id: string) => {
+    updateContactPage({ questions: cp.questions.filter((q) => q.id !== id) });
+  };
+
+  const handleSave = async () => {
+    try {
+      await saveSiteSettings.mutateAsync(settingsForm);
+      toast.success("Contact settings saved");
+    } catch (e: any) {
+      toast.error("Failed to save: " + e.message);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl space-y-12">
+      {/* Header & Subheading */}
+      <Section title="Page Header">
+        <Field label="Heading" value={cp.heading} onChange={(v) => updateContactPage({ heading: v })} placeholder="Let's work together" />
+        <Field label="Subheading" value={cp.subheading} onChange={(v) => updateContactPage({ subheading: v })} placeholder="Tell me about your project..." />
+      </Section>
+
+      {/* Email Settings */}
+      <Section title="Email Settings">
+        <Field label="Your Email (queries sent here)" value={cp.owner_email} onChange={(v) => updateContactPage({ owner_email: v })} placeholder="you@example.com" type="email" />
+        <div className="flex items-center gap-3">
+          <Switch
+            checked={cp.auto_email_enabled}
+            onCheckedChange={(v) => updateContactPage({ auto_email_enabled: v })}
+          />
+          <label className="font-body text-sm text-foreground">Send automated confirmation email to submitter</label>
+        </div>
+        {cp.auto_email_enabled && !cp.owner_email && (
+          <p className="font-body text-xs text-amber-600">⚠ Enter your email above for automated emails to work.</p>
+        )}
+        {cp.auto_email_enabled && (
+          <p className="font-body text-xs text-muted-foreground">Email sending requires domain configuration. Set this up in your backend email settings.</p>
+        )}
+      </Section>
+
+      {/* Project Types */}
+      <Section title="Project Types (Dropdown Options)">
+        <div className="flex flex-wrap gap-2">
+          {cp.project_types.map((type, i) => (
+            <span key={i} className="inline-flex items-center gap-1.5 bg-secondary text-secondary-foreground px-3 py-1.5 rounded-full text-sm font-body">
+              {type}
+              <button onClick={() => updateContactPage({ project_types: cp.project_types.filter((_, j) => j !== i) })} className="text-muted-foreground hover:text-foreground">
+                <X size={12} />
+              </button>
+            </span>
+          ))}
+        </div>
+        <div className="flex gap-2">
+          <Input
+            value={typeInput}
+            onChange={(e) => setTypeInput(e.target.value)}
+            placeholder="Add a project type..."
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && typeInput.trim()) {
+                e.preventDefault();
+                updateContactPage({ project_types: [...cp.project_types, typeInput.trim()] });
+                setTypeInput("");
+              }
+            }}
+          />
+          <Button variant="outline" size="sm" onClick={() => {
+            if (typeInput.trim()) {
+              updateContactPage({ project_types: [...cp.project_types, typeInput.trim()] });
+              setTypeInput("");
+            }
+          }}>
+            Add
+          </Button>
+        </div>
+      </Section>
+
+      {/* Form Questions */}
+      <Section title="Form Questions">
+        <div className="space-y-4">
+          {cp.questions.map((q) => (
+            <div key={q.id} className="bg-card border border-border/40 rounded-xl p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Switch
+                    checked={q.visible}
+                    onCheckedChange={(v) => updateQuestion(q.id, { visible: v })}
+                  />
+                  <span className="font-body text-sm text-foreground">{q.visible ? "Visible" : "Hidden"}</span>
+                </div>
+                {q.id.startsWith("custom_") && (
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => removeQuestion(q.id)}>
+                    <Trash2 size={14} />
+                  </Button>
+                )}
+              </div>
+              <div className="grid md:grid-cols-2 gap-3">
+                <Field label="Label" value={q.label} onChange={(v) => updateQuestion(q.id, { label: v })} />
+                <Field label="Placeholder" value={q.placeholder} onChange={(v) => updateQuestion(q.id, { placeholder: v })} />
+              </div>
+              <div className="grid md:grid-cols-2 gap-3 items-end">
+                <div className="space-y-1">
+                  <label className="font-body text-xs text-muted-foreground">Field Type</label>
+                  <Select value={q.type} onValueChange={(v) => updateQuestion(q.id, { type: v as "text" | "textarea" | "select" })}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="text">Text</SelectItem>
+                      <SelectItem value="textarea">Textarea</SelectItem>
+                      <SelectItem value="select">Dropdown</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center gap-3 pb-1">
+                  <Switch
+                    checked={q.required}
+                    onCheckedChange={(v) => updateQuestion(q.id, { required: v })}
+                  />
+                  <span className="font-body text-sm text-foreground">Required</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <Button variant="outline" size="sm" onClick={addQuestion}>
+          <Plus size={14} className="mr-1" /> Add Question
+        </Button>
+      </Section>
+
+      <div className="flex justify-end pb-12">
+        <Button onClick={handleSave} size="lg" disabled={saveSiteSettings.isPending}>
+          <Save size={16} className="mr-2" />
+          {saveSiteSettings.isPending ? "Saving..." : "Save Contact Settings"}
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 export default Admin;
