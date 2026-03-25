@@ -44,6 +44,24 @@ export interface ContactContent {
   cta_label: string;
 }
 
+export interface ContactQuestion {
+  id: string;
+  label: string;
+  placeholder: string;
+  type: "text" | "textarea" | "select";
+  required: boolean;
+  visible: boolean;
+}
+
+export interface ContactPageConfig {
+  heading: string;
+  subheading: string;
+  owner_email: string;
+  auto_email_enabled: boolean;
+  project_types: string[];
+  questions: ContactQuestion[];
+}
+
 export interface HomepageContent {
   hero: HeroContent;
   about: AboutContent;
