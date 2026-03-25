@@ -66,6 +66,7 @@ export interface HomepageContent {
   hero: HeroContent;
   about: AboutContent;
   contact: ContactContent;
+  contact_page: ContactPageConfig;
 }
 
 export interface SiteStyles {
