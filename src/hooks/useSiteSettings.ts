@@ -199,6 +199,7 @@ export function useSiteSettings() {
         hero: { ...DEFAULT_HOMEPAGE.hero, ...(raw?.hero ?? {}) },
         about: { ...DEFAULT_HOMEPAGE.about, ...(raw?.about ?? {}), stats: raw?.about?.stats?.length ? raw.about.stats : DEFAULT_HOMEPAGE.about.stats },
         contact: { ...DEFAULT_HOMEPAGE.contact, ...(raw?.contact ?? {}) },
+        contact_page: { ...DEFAULT_HOMEPAGE.contact_page, ...(raw?.contact_page ?? {}), questions: raw?.contact_page?.questions?.length ? raw.contact_page.questions : DEFAULT_HOMEPAGE.contact_page.questions, project_types: raw?.contact_page?.project_types?.length ? raw.contact_page.project_types : DEFAULT_HOMEPAGE.contact_page.project_types },
       };
 
       const rawStyles = (data as any).site_styles;
