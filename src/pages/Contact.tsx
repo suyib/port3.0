@@ -64,6 +64,8 @@ const ContactPage = () => {
       const { error } = await supabase.from("contact_submissions").insert({
         name: values.name || "",
         company: values.company || "",
+        email: values.email || "",
+        phone: values.phone || "",
         project_type: values.project_type || "",
         goal: values.goal || "",
         timeline: values.timeline || "",
