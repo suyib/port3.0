@@ -1550,6 +1550,7 @@ const ContactAdminTab = ({ settingsForm, setSettingsForm, siteSettings, saveSite
       {/* Email Settings */}
       <Section title="Email Settings">
         <Field label="Your Email (queries sent here)" value={cp.owner_email} onChange={(v) => updateContactPage({ owner_email: v })} placeholder="you@example.com" type="email" />
+        <Field label="From Email (sender address)" value={cp.from_email || ""} onChange={(v) => updateContactPage({ from_email: v })} placeholder="contact@suyin.uk" type="email" />
         <div className="flex items-center gap-3">
           <Switch
             checked={cp.auto_email_enabled}
@@ -1561,7 +1562,7 @@ const ContactAdminTab = ({ settingsForm, setSettingsForm, siteSettings, saveSite
           <p className="font-body text-xs text-amber-600">⚠ Enter your email above for automated emails to work.</p>
         )}
         {cp.auto_email_enabled && (
-          <p className="font-body text-xs text-muted-foreground">Email sending requires domain configuration. Set this up in your backend email settings.</p>
+          <p className="font-body text-xs text-muted-foreground">Emails sent via Resend using the "From Email" address above. Ensure your domain is verified in Resend.</p>
         )}
       </Section>
 
