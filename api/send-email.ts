@@ -27,7 +27,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const {
     name,
+    email,
     company,
+    phone,
     project_type,
     goal,
     timeline,
