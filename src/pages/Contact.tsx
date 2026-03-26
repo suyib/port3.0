@@ -81,7 +81,9 @@ const ContactPage = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               name: values.name || "",
+              email: values.email || "",
               company: values.company || "",
+              phone: values.phone || "",
               project_type: values.project_type || "",
               goal: values.goal || "",
               timeline: values.timeline || "",
