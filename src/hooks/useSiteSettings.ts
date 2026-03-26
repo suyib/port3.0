@@ -57,6 +57,7 @@ export interface ContactPageConfig {
   heading: string;
   subheading: string;
   owner_email: string;
+  from_email: string;
   auto_email_enabled: boolean;
   project_types: string[];
   questions: ContactQuestion[];
