@@ -27,7 +27,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const {
     name,
+    email,
     company,
+    phone,
     project_type,
     goal,
     timeline,
@@ -53,7 +55,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       html: `
         <h2>New Contact Form Submission</h2>
         <p><strong>Name:</strong> ${name || "N/A"}</p>
+        <p><strong>Email:</strong> ${email || "N/A"}</p>
         <p><strong>Company:</strong> ${company || "N/A"}</p>
+        <p><strong>Phone:</strong> ${phone || "N/A"}</p>
         <p><strong>Project Type:</strong> ${project_type || "N/A"}</p>
         <p><strong>Goal:</strong> ${goal || "N/A"}</p>
         <p><strong>Timeline:</strong> ${timeline || "N/A"}</p>

@@ -55,9 +55,11 @@ export type Database = {
           budget_range: string
           company: string
           created_at: string
+          email: string
           goal: string
           id: string
           name: string
+          phone: string
           project_type: string
           timeline: string
         }
@@ -65,9 +67,11 @@ export type Database = {
           budget_range?: string
           company: string
           created_at?: string
+          email?: string
           goal?: string
           id?: string
           name: string
+          phone?: string
           project_type: string
           timeline?: string
         }
@@ -75,9 +79,11 @@ export type Database = {
           budget_range?: string
           company?: string
           created_at?: string
+          email?: string
           goal?: string
           id?: string
           name?: string
+          phone?: string
           project_type?: string
           timeline?: string
         }

@@ -138,6 +138,8 @@ const DEFAULT_HOMEPAGE: HomepageContent = {
     questions: [
       { id: "name", label: "Name", placeholder: "Your name", type: "text", required: true, visible: true },
       { id: "company", label: "Company", placeholder: "Your company", type: "text", required: true, visible: true },
+      { id: "email", label: "Email", placeholder: "your@email.com", type: "text", required: true, visible: true },
+      { id: "phone", label: "Phone Number", placeholder: "+1 (555) 123-4567", type: "text", required: false, visible: true },
       { id: "project_type", label: "Project Type", placeholder: "Select a project type", type: "select", required: true, visible: true },
       { id: "goal", label: "Project Goal", placeholder: "Tell me about your project, goals, and any specific requirements...", type: "textarea", required: true, visible: true },
       { id: "timeline", label: "Timeline", placeholder: "e.g. 2-3 months", type: "text", required: false, visible: true },

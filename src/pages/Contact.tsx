@@ -64,6 +64,8 @@ const ContactPage = () => {
       const { error } = await supabase.from("contact_submissions").insert({
         name: values.name || "",
         company: values.company || "",
+        email: values.email || "",
+        phone: values.phone || "",
         project_type: values.project_type || "",
         goal: values.goal || "",
         timeline: values.timeline || "",
@@ -79,7 +81,9 @@ const ContactPage = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               name: values.name || "",
+              email: values.email || "",
               company: values.company || "",
+              phone: values.phone || "",
               project_type: values.project_type || "",
               goal: values.goal || "",
               timeline: values.timeline || "",
