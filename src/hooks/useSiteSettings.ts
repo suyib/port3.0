@@ -57,6 +57,7 @@ export interface ContactPageConfig {
   heading: string;
   subheading: string;
   owner_email: string;
+  from_email: string;
   auto_email_enabled: boolean;
   project_types: string[];
   questions: ContactQuestion[];
@@ -131,6 +132,7 @@ const DEFAULT_HOMEPAGE: HomepageContent = {
     heading: "Let's work together",
     subheading: "Tell me about your project and I'll get back to you within 48 hours.",
     owner_email: "",
+    from_email: "contact@suyin.uk",
     auto_email_enabled: false,
     project_types: ["UX Design", "UI Design", "Branding", "Development", "Other"],
     questions: [

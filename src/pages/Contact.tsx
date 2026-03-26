@@ -71,19 +71,30 @@ const ContactPage = () => {
       });
       if (error) throw error;
 
-      // If auto email enabled and owner email set, invoke the email function
+      // Send email via Resend serverless function
       if (cp.auto_email_enabled && cp.owner_email) {
         try {
-          await supabase.functions.invoke("send-transactional-email", {
-            body: {
-              templateName: "contact-form-confirmation",
-              recipientEmail: cp.owner_email,
-              idempotencyKey: `contact-${Date.now()}`,
-              templateData: { name: values.name, goal: values.goal },
-            },
+          const emailRes = await fetch("/api/send-email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: values.name || "",
+              company: values.company || "",
+              project_type: values.project_type || "",
+              goal: values.goal || "",
+              timeline: values.timeline || "",
+              budget_range: values.budget_range || "",
+              owner_email: cp.owner_email,
+              from_email: cp.from_email || "contact@suyin.uk",
+              auto_email_enabled: cp.auto_email_enabled,
+            }),
           });
+          if (!emailRes.ok) {
+            const err = await emailRes.json();
+            console.error("Email send failed:", err);
+          }
         } catch {
-          // silently fail — email infra may not be set up yet
+          // silently fail if email endpoint is unavailable
         }
       }
 
