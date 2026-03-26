@@ -1,0 +1,1 @@
+ALTER TABLE public.contact_submissions ADD COLUMN email text NOT NULL DEFAULT '', ADD COLUMN phone text NOT NULL DEFAULT '';
