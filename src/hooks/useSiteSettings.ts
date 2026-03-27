@@ -203,7 +203,26 @@ export function useSiteSettings() {
         hero: { ...DEFAULT_HOMEPAGE.hero, ...(raw?.hero ?? {}) },
         about: { ...DEFAULT_HOMEPAGE.about, ...(raw?.about ?? {}), stats: raw?.about?.stats?.length ? raw.about.stats : DEFAULT_HOMEPAGE.about.stats },
         contact: { ...DEFAULT_HOMEPAGE.contact, ...(raw?.contact ?? {}) },
-        contact_page: { ...DEFAULT_HOMEPAGE.contact_page, ...(raw?.contact_page ?? {}), questions: raw?.contact_page?.questions?.length ? raw.contact_page.questions : DEFAULT_HOMEPAGE.contact_page.questions, project_types: raw?.contact_page?.project_types?.length ? raw.contact_page.project_types : DEFAULT_HOMEPAGE.contact_page.project_types },
+        contact_page: {
+          ...DEFAULT_HOMEPAGE.contact_page,
+          ...(raw?.contact_page ?? {}),
+          questions: (() => {
+            const saved = raw?.contact_page?.questions;
+            if (!saved?.length) return DEFAULT_HOMEPAGE.contact_page.questions;
+            const savedIds = new Set(saved.map((q: any) => q.id));
+            const missing = DEFAULT_HOMEPAGE.contact_page.questions.filter(
+              dq => !savedIds.has(dq.id)
+            );
+            if (!missing.length) return saved;
+            const result = [...saved];
+            const companyIdx = result.findIndex((q: any) => q.id === "company");
+            result.splice(companyIdx >= 0 ? companyIdx + 1 : result.length, 0, ...missing);
+            return result;
+          })(),
+          project_types: raw?.contact_page?.project_types?.length
+            ? raw.contact_page.project_types
+            : DEFAULT_HOMEPAGE.contact_page.project_types,
+        },
       };
 
       const rawStyles = (data as any).site_styles;

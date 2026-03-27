@@ -65,6 +65,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `,
     });
 
+    // Send confirmation to customer if enabled
+    if (auto_email_enabled && email) {
+      await resend.emails.send({
+        from: sender,
+        to: email,
+        subject: "Thanks for reaching out!",
+        html: `
+          <h2>We received your message</h2>
+          <p>Hi ${name || "there"},</p>
+          <p>Thanks for getting in touch! I've received your inquiry and will get back to you within 48 hours.</p>
+          <p>Best regards</p>
+        `,
+      });
+    }
+
     Object.entries(corsHeaders).forEach(([k, v]) => res.setHeader(k, v));
     return res.status(200).json({ success: true });
   } catch (error: any) {
