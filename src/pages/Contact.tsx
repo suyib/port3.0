@@ -73,10 +73,10 @@ const ContactPage = () => {
       });
       if (error) throw error;
 
-      // Send email via Resend serverless function
-      if (cp.auto_email_enabled && cp.owner_email) {
+      // Always send query to owner's inbox
+      if (cp.owner_email) {
         try {
-          const emailRes = await fetch("/api/send-email", {
+          await fetch("/api/send-email", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -93,10 +93,6 @@ const ContactPage = () => {
               auto_email_enabled: cp.auto_email_enabled,
             }),
           });
-          if (!emailRes.ok) {
-            const err = await emailRes.json();
-            console.error("Email send failed:", err);
-          }
         } catch {
           // silently fail if email endpoint is unavailable
         }
