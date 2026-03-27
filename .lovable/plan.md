@@ -1,61 +1,101 @@
 
 
-## Add "Contact" Admin Tab
+## Fix Missing Fields + Reroute Email
 
-### Overview
-
-Add a third tab ("Contact") to the admin panel that lets you manage the contact page: header/subheading text, your email address, automated email toggle, project type dropdown options, and the ability to add/hide form questions.
-
-### Data Model
-
-Store all contact page configuration in the existing `site_settings.homepage_content` JSONB under a new `contact_page` key (no migration needed):
-
-```text
-contact_page: {
-  heading: string              // "Let's work together"
-  subheading: string           // "Tell me about your project..."
-  owner_email: string          // your email for receiving queries
-  auto_email_enabled: boolean  // toggle automated confirmation email
-  project_types: string[]      // ["UX Design", "UI Design", ...]
-  questions: [                 // configurable form fields
-    { id: string, label: string, placeholder: string, type: "text"|"textarea"|"select", required: boolean, visible: boolean }
-  ]
-}
-```
-
-Default questions will mirror the current hardcoded fields (Name, Company, Project Type, Project Goal, Timeline, Budget Range).
+### Problem
+1. **Email and Phone fields don't appear** — your saved `site_settings` in the database has an older `questions` array (from before email/phone were added). The merge logic uses saved questions as-is, so new defaults never show up.
+2. **Email routing is backwards** — currently emails only send when `auto_email_enabled` is on, and only to `owner_email`. You want: the customer's query always goes to your inbox, and optionally an auto-confirmation goes to the customer.
 
 ### Changes
 
-**1. `src/hooks/useSiteSettings.ts`**
-- Add `ContactPageConfig` interface with the fields above
-- Add `contact_page` to `HomepageContent` interface
-- Add defaults matching the current hardcoded Contact.tsx values
+**1. `src/hooks/useSiteSettings.ts` — Smart question merging (line 206)**
 
-**2. `src/pages/Admin.tsx`**
-- Update `adminTab` derivation: `viewMode === "blog" ? "blog" : viewMode === "contact" ? "contact" : "projects"`
-- Add a third tab button navigating to `/admin/contact`
-- Add the Contact tab content panel with:
-  - **Header & Subheading**: two text inputs for the page heading and description
-  - **Email Settings**: an input for your email address + a toggle switch for automated confirmation emails
-  - **Project Types**: an editable list (add/remove items) for the dropdown options
-  - **Form Questions**: a list of question cards, each with label, placeholder, type selector, required toggle, and a visibility (show/hide) toggle. Add/remove question buttons.
-- Wire the "New" button in the nav to hide when on the contact tab
-- Save via existing `handleSaveSettings`
+Replace the flat merge with logic that checks for missing default question IDs in the saved array and inserts them (after "company"). This ensures email and phone fields appear even if your DB settings were saved before they existed.
 
-**3. `src/pages/Contact.tsx`**
-- Import `useSiteSettings` and read `contact_page` config
-- Replace hardcoded heading, subheading, and `PROJECT_TYPES` array with settings values
-- Dynamically render visible questions from the settings config
-- After form submission, if `auto_email_enabled` and `owner_email` are set, invoke a `send-transactional-email` edge function (or show a placeholder until email infra is wired)
+**2. `src/pages/Contact.tsx` — Fix email routing (lines 76–103)**
 
-**4. Automated Email (lightweight approach)**
-- For now, store the owner email and toggle in settings
-- The actual email sending will require email domain setup (a follow-up step) — the admin UI will show the toggle and email input immediately, with a note that email sending requires domain configuration
-- On form submit, if enabled, call `supabase.functions.invoke('send-transactional-email', ...)` with the submission data
+- **Always** send the form data to `owner_email` (when set) — remove the `auto_email_enabled` gate for the owner notification
+- When `auto_email_enabled` is true AND the submitter provided an email, send a separate confirmation email to the customer
+- Pass a `send_confirmation` flag to the API
 
-### Files to Change
-1. `src/hooks/useSiteSettings.ts` — add `ContactPageConfig` interface and defaults
-2. `src/pages/Admin.tsx` — add Contact tab UI with all management controls
-3. `src/pages/Contact.tsx` — read settings and render dynamically
+**3. `api/send-email.ts` — Two emails: owner notification + customer confirmation**
+
+- Always send the detailed submission to `owner_email` (this is how queries reach your inbox)
+- When `auto_email_enabled` is true and `email` is provided, send a second email to the customer confirming receipt
+- The confirmation uses `from_email` as sender and contains a brief "Thanks, we received your message" body
+
+### File-by-file detail
+
+**`src/hooks/useSiteSettings.ts`** line 206 — replace single-line merge:
+```typescript
+contact_page: {
+  ...DEFAULT_HOMEPAGE.contact_page,
+  ...(raw?.contact_page ?? {}),
+  questions: (() => {
+    const saved = raw?.contact_page?.questions;
+    if (!saved?.length) return DEFAULT_HOMEPAGE.contact_page.questions;
+    const savedIds = new Set(saved.map(q => q.id));
+    const missing = DEFAULT_HOMEPAGE.contact_page.questions.filter(
+      dq => !savedIds.has(dq.id)
+    );
+    if (!missing.length) return saved;
+    const result = [...saved];
+    const companyIdx = result.findIndex(q => q.id === "company");
+    result.splice(companyIdx >= 0 ? companyIdx + 1 : result.length, 0, ...missing);
+    return result;
+  })(),
+  project_types: raw?.contact_page?.project_types?.length
+    ? raw.contact_page.project_types
+    : DEFAULT_HOMEPAGE.contact_page.project_types,
+},
+```
+
+**`src/pages/Contact.tsx`** lines 76–103 — change email call:
+```typescript
+// Always send query to owner's inbox
+if (cp.owner_email) {
+  try {
+    await fetch("/api/send-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: values.name || "",
+        email: values.email || "",
+        company: values.company || "",
+        phone: values.phone || "",
+        project_type: values.project_type || "",
+        goal: values.goal || "",
+        timeline: values.timeline || "",
+        budget_range: values.budget_range || "",
+        owner_email: cp.owner_email,
+        from_email: cp.from_email || "contact@suyin.uk",
+        auto_email_enabled: cp.auto_email_enabled,
+      }),
+    });
+  } catch {}
+}
+```
+
+**`api/send-email.ts`** — add customer confirmation after owner email:
+```typescript
+// After sending to owner, send confirmation to customer
+if (auto_email_enabled && email) {
+  await resend.emails.send({
+    from: sender,
+    to: email,
+    subject: "Thanks for reaching out!",
+    html: `
+      <h2>We received your message</h2>
+      <p>Hi ${name || "there"},</p>
+      <p>Thanks for getting in touch! I've received your inquiry and will get back to you within 48 hours.</p>
+      <p>Best regards</p>
+    `,
+  });
+}
+```
+
+### Files to change
+1. `src/hooks/useSiteSettings.ts` — smart merge for missing question IDs
+2. `src/pages/Contact.tsx` — always send to owner; remove `auto_email_enabled` gate
+3. `api/send-email.ts` — add customer confirmation email
 
