@@ -66,19 +66,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     // Send confirmation to customer if enabled
-    if (auto_email_enabled && email) {
-      await resend.emails.send({
-        from: sender,
-        to: email,
-        subject: "Thanks for reaching out!",
-        html: `
-          <h2>We received your message</h2>
-          <p>Hi ${name || "there"},</p>
-          <p>Thanks for getting in touch! I've received your inquiry and will get back to you within 48 hours.</p>
-          <p>Best regards</p>
-        `,
-      });
-    }
+        if (auto_email_enabled && email) {
+          await resend.emails.send({
+            from: sender,
+            to: email,
+            subject: "Thanks for reaching out!",
+            html: `
+              <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
+                <h2>We received your message</h2>
+                <p>Hi ${name || "there"},</p>
+                <p>Thanks for getting in touch! I aim to get back to you within 48 hours.</p>
+                <p>If your request is urgent for whatever reason, please don't hesitate to send me a follow-up email after this.</p>
+                <p>Best regards,<br><strong>Suyin</strong></p>
+                
+                <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+                
+                <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; font-size: 14px;">
+                  <h3 style="margin-top: 0;">Submission Summary:</h3>
+                  <p><strong>Project Type:</strong> ${project_type || "N/A"}</p>
+                  <p><strong>Goal:</strong> ${goal || "N/A"}</p>
+                  <p><strong>Timeline:</strong> ${timeline || "N/A"}</p>
+                  <p><strong>Budget Range:</strong> ${budget_range || "N/A"}</p>
+                </div>
+              </div>
+            `,
+          });
+        }
 
     Object.entries(corsHeaders).forEach(([k, v]) => res.setHeader(k, v));
     return res.status(200).json({ success: true });
