@@ -73,9 +73,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             subject: "Thanks for reaching out!",
             html: `
               <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
-                <h2>We received your message</h2>
+                <h2>I've got your request!</h2>
                 <p>Hi ${name || "there"},</p>
-                <p>Thanks for getting in touch! I aim to get back to you within 48 hours.</p>
+                <p>Thanks for getting in touch. I aim to get back to you within 48 hours.</p>
                 <p>If your request is urgent for whatever reason, please don't hesitate to send me a follow-up email after this.</p>
                 <p>Best regards,<br><strong>Suyin</strong></p>
                 
