@@ -149,11 +149,11 @@ const Projects = () => {
                   to={`/project/${project.slug}`}
                   className="group block"
                 >
-                  <div className="overflow-hidden rounded-2xl bg-secondary mb-4 aspect-[4/3] max-h-[350px]">
+                  <div className="overflow-hidden rounded-2xl bg-secondary mb-4 aspect-[4/3] max-h-[350px] flex items-center justify-center">
                     <img
                       src={project.images?.find((i) => i.visible)?.url || project.image_url}
                       alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
                   <div className="flex flex-wrap gap-1.5 mb-2">
