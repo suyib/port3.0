@@ -120,7 +120,7 @@ const Projects = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="animate-pulse">
-                <div className="bg-secondary rounded-2xl aspect-[3/4] mb-4" />
+                <div className="bg-secondary rounded-2xl aspect-[4/3] max-h-[350px] mb-4" />
                 <div className="h-3 bg-secondary rounded w-1/3 mb-3" />
                 <div className="h-5 bg-secondary rounded w-2/3 mb-2" />
                 <div className="h-12 bg-secondary rounded" />
