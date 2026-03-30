@@ -149,7 +149,7 @@ const Projects = () => {
                   to={`/project/${project.slug}`}
                   className="group block"
                 >
-                  <div className="overflow-hidden rounded-2xl bg-secondary mb-4 aspect-[4/3] max-h-[350px] flex items-center justify-center">
+                  <div className="overflow-hidden rounded-2xl bg-secondary mb-4 aspect-[4/3]">
                     <img
                       src={project.images?.find((i) => i.visible)?.url || project.image_url}
                       alt={project.title}
