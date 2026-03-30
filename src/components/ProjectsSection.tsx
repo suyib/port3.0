@@ -37,7 +37,7 @@ const ProjectsSection = () => {
           <p className="font-body text-muted-foreground text-center py-12">No projects published yet.</p>
         ) : (
           <div className="space-y-24">
-            {projects.map((project, index) => (
+            {projects.slice(0, 4).map((project, index) => (
               <motion.div
                 key={project.id}
                 initial={{ opacity: 0, y: 50 }}
