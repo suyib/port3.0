@@ -153,7 +153,7 @@ const Projects = () => {
                     <img
                       src={project.images?.find((i) => i.visible)?.url || project.image_url}
                       alt={project.title}
-                      className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-700"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
                   <div className="flex flex-wrap gap-1.5 mb-2">
