@@ -182,6 +182,7 @@ const DEFAULTS: Omit<SiteSettings, "id"> = {
   ],
   design_skills: ["UI/UX Design", "Design Systems", "Prototyping", "Brand Identity", "Motion Design", "Illustration"],
   dev_skills: ["React / Next.js", "TypeScript", "Node.js", "Tailwind CSS", "PostgreSQL", "REST & GraphQL"],
+  other_skills: [],
   homepage_content: DEFAULT_HOMEPAGE,
   site_styles: DEFAULT_STYLES,
 };
