@@ -122,7 +122,7 @@ const Admin = () => {
 
   // Site settings editing state
   const [settingsForm, setSettingsForm] = useState<SiteSettings | null>(null);
-  const [skillInput, setSkillInput] = useState({ design: "", dev: "" });
+  const [skillInput, setSkillInput] = useState({ design: "", dev: "", other: "" });
 
   // Sync URL → editing state for projects
   useEffect(() => {
