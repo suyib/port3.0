@@ -223,6 +223,7 @@ export type Database = {
           homepage_content: Json
           id: string
           nav_links: Json
+          other_skills: Json
           site_styles: Json
           social_links: Json
           updated_at: string
@@ -235,6 +236,7 @@ export type Database = {
           homepage_content?: Json
           id?: string
           nav_links?: Json
+          other_skills?: Json
           site_styles?: Json
           social_links?: Json
           updated_at?: string
@@ -247,6 +249,7 @@ export type Database = {
           homepage_content?: Json
           id?: string
           nav_links?: Json
+          other_skills?: Json
           site_styles?: Json
           social_links?: Json
           updated_at?: string

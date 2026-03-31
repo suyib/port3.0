@@ -687,6 +687,38 @@ const Admin = () => {
             </div>
           </Section>
 
+          {/* 6b. Capabilities — Other */}
+          <Section title="Capabilities — Other">
+            <div className="flex flex-wrap gap-2">
+              {settingsForm.other_skills.map((skill, i) => (
+                <span key={i} className="inline-flex items-center gap-1.5 bg-secondary text-secondary-foreground px-3 py-1.5 rounded-full text-sm font-body">
+                  {skill}
+                  <button onClick={() => removeSkill("other_skills", i)} className="text-muted-foreground hover:text-foreground">
+                    <X size={12} />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Input
+                value={skillInput.other}
+                onChange={(e) => setSkillInput((p) => ({ ...p, other: e.target.value }))}
+                placeholder="Add another skill..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addSkill("other_skills", skillInput.other);
+                    setSkillInput((p) => ({ ...p, other: "" }));
+                  }
+                }}
+              />
+              <Button variant="outline" size="sm" onClick={() => { addSkill("other_skills", skillInput.other); setSkillInput((p) => ({ ...p, other: "" })); }}>
+                Add
+              </Button>
+            </div>
+            <p className="font-body text-xs text-muted-foreground">This column is hidden on the site when empty.</p>
+          </Section>
+
           {/* 7. Homepage — Contact */}
           <Section title="Homepage — Contact">
             <Field label="Heading" value={settingsForm.homepage_content.contact.heading} onChange={(v) => setSettingsForm({ ...settingsForm, homepage_content: { ...settingsForm.homepage_content, contact: { ...settingsForm.homepage_content.contact, heading: v } } })} placeholder="Let's build something great together." />

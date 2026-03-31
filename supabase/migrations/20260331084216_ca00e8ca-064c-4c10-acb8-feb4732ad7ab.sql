@@ -1,0 +1,1 @@
+ALTER TABLE site_settings ADD COLUMN other_skills jsonb NOT NULL DEFAULT '[]'::jsonb;

@@ -8,6 +8,9 @@ const SkillsSection = () => {
   const { data: settings } = useSiteSettings();
   const designSkills = settings?.design_skills?.length ? settings.design_skills : fallbackDesign;
   const devSkills = settings?.dev_skills?.length ? settings.dev_skills : fallbackDev;
+  const otherSkills = settings?.other_skills?.length ? settings.other_skills : [];
+
+  const hasOther = otherSkills.length > 0;
 
   return (
     <section id="skills" className="py-12 bg-primary text-primary-foreground">
@@ -23,7 +26,7 @@ const SkillsSection = () => {
           <h2 className="font-display text-4xl md:text-5xl">What I bring to the table.</h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-16">
+        <div className={`grid ${hasOther ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-16`}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -57,6 +60,25 @@ const SkillsSection = () => {
               ))}
             </div>
           </motion.div>
+
+          {hasOther && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <h3 className="font-display text-2xl mb-8">Other</h3>
+              <div className="space-y-4">
+                {otherSkills.map((skill) => (
+                  <div key={skill} className="flex items-center justify-between py-3 border-b border-primary-foreground/20">
+                    <span className="font-body">{skill}</span>
+                    <span className="w-2 h-2 rounded-full bg-accent" />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
         </div>
       </div>
     </section>
