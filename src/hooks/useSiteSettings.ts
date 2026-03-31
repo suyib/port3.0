@@ -241,6 +241,7 @@ export function useSiteSettings() {
         social_links: (data.social_links ?? []) as unknown as SocialLink[],
         design_skills: (data.design_skills ?? []) as unknown as string[],
         dev_skills: (data.dev_skills ?? []) as unknown as string[],
+        other_skills: ((data as any).other_skills ?? []) as unknown as string[],
         homepage_content,
         site_styles,
       } as SiteSettings;
