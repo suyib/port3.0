@@ -233,11 +233,11 @@ const Admin = () => {
   };
 
   // Skills helpers
-  const addSkill = (type: "design_skills" | "dev_skills", value: string) => {
+  const addSkill = (type: "design_skills" | "dev_skills" | "other_skills", value: string) => {
     if (!settingsForm || !value.trim()) return;
     setSettingsForm({ ...settingsForm, [type]: [...settingsForm[type], value.trim()] });
   };
-  const removeSkill = (type: "design_skills" | "dev_skills", i: number) => {
+  const removeSkill = (type: "design_skills" | "dev_skills" | "other_skills", i: number) => {
     if (!settingsForm) return;
     const arr = [...settingsForm[type]];
     arr.splice(i, 1);
