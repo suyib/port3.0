@@ -172,7 +172,7 @@ const Admin = () => {
   useEffect(() => {
     if ((viewMode === "settings" || viewMode === "contact") && siteSettings && !settingsForm) {
       setSettingsForm({ ...siteSettings });
-      setSkillInput({ design: "", dev: "" });
+      setSkillInput({ design: "", dev: "", other: "" });
     } else if (viewMode !== "settings" && viewMode !== "contact" && settingsForm) {
       setSettingsForm(null);
     }
