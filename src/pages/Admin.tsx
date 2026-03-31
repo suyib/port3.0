@@ -122,7 +122,7 @@ const Admin = () => {
 
   // Site settings editing state
   const [settingsForm, setSettingsForm] = useState<SiteSettings | null>(null);
-  const [skillInput, setSkillInput] = useState({ design: "", dev: "" });
+  const [skillInput, setSkillInput] = useState({ design: "", dev: "", other: "" });
 
   // Sync URL → editing state for projects
   useEffect(() => {
@@ -172,7 +172,7 @@ const Admin = () => {
   useEffect(() => {
     if ((viewMode === "settings" || viewMode === "contact") && siteSettings && !settingsForm) {
       setSettingsForm({ ...siteSettings });
-      setSkillInput({ design: "", dev: "" });
+      setSkillInput({ design: "", dev: "", other: "" });
     } else if (viewMode !== "settings" && viewMode !== "contact" && settingsForm) {
       setSettingsForm(null);
     }
@@ -233,11 +233,11 @@ const Admin = () => {
   };
 
   // Skills helpers
-  const addSkill = (type: "design_skills" | "dev_skills", value: string) => {
+  const addSkill = (type: "design_skills" | "dev_skills" | "other_skills", value: string) => {
     if (!settingsForm || !value.trim()) return;
     setSettingsForm({ ...settingsForm, [type]: [...settingsForm[type], value.trim()] });
   };
-  const removeSkill = (type: "design_skills" | "dev_skills", i: number) => {
+  const removeSkill = (type: "design_skills" | "dev_skills" | "other_skills", i: number) => {
     if (!settingsForm) return;
     const arr = [...settingsForm[type]];
     arr.splice(i, 1);
@@ -685,6 +685,38 @@ const Admin = () => {
                 Add
               </Button>
             </div>
+          </Section>
+
+          {/* 6b. Capabilities — Other */}
+          <Section title="Capabilities — Other">
+            <div className="flex flex-wrap gap-2">
+              {settingsForm.other_skills.map((skill, i) => (
+                <span key={i} className="inline-flex items-center gap-1.5 bg-secondary text-secondary-foreground px-3 py-1.5 rounded-full text-sm font-body">
+                  {skill}
+                  <button onClick={() => removeSkill("other_skills", i)} className="text-muted-foreground hover:text-foreground">
+                    <X size={12} />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Input
+                value={skillInput.other}
+                onChange={(e) => setSkillInput((p) => ({ ...p, other: e.target.value }))}
+                placeholder="Add another skill..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addSkill("other_skills", skillInput.other);
+                    setSkillInput((p) => ({ ...p, other: "" }));
+                  }
+                }}
+              />
+              <Button variant="outline" size="sm" onClick={() => { addSkill("other_skills", skillInput.other); setSkillInput((p) => ({ ...p, other: "" })); }}>
+                Add
+              </Button>
+            </div>
+            <p className="font-body text-xs text-muted-foreground">This column is hidden on the site when empty.</p>
           </Section>
 
           {/* 7. Homepage — Contact */}

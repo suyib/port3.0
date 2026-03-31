@@ -95,6 +95,7 @@ export interface SiteSettings {
   social_links: SocialLink[];
   design_skills: string[];
   dev_skills: string[];
+  other_skills: string[];
   homepage_content: HomepageContent;
   site_styles: SiteStyles;
 }
@@ -181,6 +182,7 @@ const DEFAULTS: Omit<SiteSettings, "id"> = {
   ],
   design_skills: ["UI/UX Design", "Design Systems", "Prototyping", "Brand Identity", "Motion Design", "Illustration"],
   dev_skills: ["React / Next.js", "TypeScript", "Node.js", "Tailwind CSS", "PostgreSQL", "REST & GraphQL"],
+  other_skills: [],
   homepage_content: DEFAULT_HOMEPAGE,
   site_styles: DEFAULT_STYLES,
 };
@@ -239,6 +241,7 @@ export function useSiteSettings() {
         social_links: (data.social_links ?? []) as unknown as SocialLink[],
         design_skills: (data.design_skills ?? []) as unknown as string[],
         dev_skills: (data.dev_skills ?? []) as unknown as string[],
+        other_skills: ((data as any).other_skills ?? []) as unknown as string[],
         homepage_content,
         site_styles,
       } as SiteSettings;
@@ -258,6 +261,7 @@ export function useSaveSiteSettings() {
         social_links: settings.social_links as any,
         design_skills: settings.design_skills as any,
         dev_skills: settings.dev_skills as any,
+        other_skills: settings.other_skills as any,
         homepage_content: settings.homepage_content as any,
         site_styles: settings.site_styles as any,
         updated_at: new Date().toISOString(),
