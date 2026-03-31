@@ -95,6 +95,7 @@ export interface SiteSettings {
   social_links: SocialLink[];
   design_skills: string[];
   dev_skills: string[];
+  other_skills: string[];
   homepage_content: HomepageContent;
   site_styles: SiteStyles;
 }
