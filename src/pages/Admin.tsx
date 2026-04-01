@@ -373,6 +373,7 @@ const Admin = () => {
 
   const updateField = (field: string, value: any) => {
     setEditing((prev) => (prev ? { ...prev, [field]: value } : prev));
+    setIsDirty(true);
   };
 
   // Blog handlers
