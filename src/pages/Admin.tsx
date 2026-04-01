@@ -1571,6 +1571,38 @@ const Admin = () => {
           </Button>
         </div>
       </div>
+
+      {/* Unsaved Changes Dialog */}
+      <AlertDialog open={blocker.state === "blocked"}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. Would you like to save before leaving?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => blocker.reset?.()}>Cancel</AlertDialogCancel>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDirty(false);
+                blocker.proceed?.();
+              }}
+            >
+              Discard
+            </Button>
+            <AlertDialogAction
+              onClick={async () => {
+                await handleSave();
+                blocker.proceed?.();
+              }}
+            >
+              Save & Exit
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </main>
   );
 };
