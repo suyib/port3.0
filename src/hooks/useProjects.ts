@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Project, ProjectImage } from "@/types/project";
+import type { Project, ProjectImage, Iteration } from "@/types/project";
 import type { Json } from "@/integrations/supabase/types";
 
 function rowToProject(row: any, images?: ProjectImage[]): Project {
