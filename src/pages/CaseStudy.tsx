@@ -27,6 +27,14 @@ const CaseStudy = () => {
   null;
 
   const visibleGalleryImages = project.images?.filter((i) => i.visible) ?? [];
+  const iterationImages = (project.iterations ?? []).map((iter, i) => ({
+    url: iter.url,
+    caption: iter.caption || `Iteration ${i + 1}`,
+  }));
+  const allLightboxImages = [
+    ...visibleGalleryImages.map((img) => ({ url: img.url, caption: img.caption || project.title })),
+    ...iterationImages,
+  ];
 
   return (
     <main className="min-h-screen bg-background">
