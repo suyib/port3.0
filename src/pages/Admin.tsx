@@ -126,6 +126,27 @@ const Admin = () => {
   const [settingsForm, setSettingsForm] = useState<SiteSettings | null>(null);
   const [skillInput, setSkillInput] = useState({ design: "", dev: "", other: "" });
 
+  // Dirty tracking for unsaved changes
+  const [isDirty, setIsDirty] = useState(false);
+  const originalEditingRef = useRef<string>("");
+
+  // Mark dirty whenever editing state changes
+  const wrappedSetEditing = useCallback((val: typeof editing | ((prev: typeof editing) => typeof editing)) => {
+    setEditing((prev) => {
+      const next = typeof val === "function" ? val(prev) : val;
+      if (next && originalEditingRef.current && JSON.stringify(next) !== originalEditingRef.current) {
+        setIsDirty(true);
+      }
+      return next;
+    });
+  }, []);
+
+  // Navigation blocker
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      isDirty && viewMode === "edit" && currentLocation.pathname !== nextLocation.pathname
+  );
+
   // Sync URL → editing state for projects
   useEffect(() => {
     if (viewMode === "edit" && projects) {
