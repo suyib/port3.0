@@ -338,25 +338,6 @@ const CaseStudy = () => {
         </div>
       </section>
 
-      {/* NEXT PROJECT */}
-      {nextProject &&
-      <section className="py-24 bg-card">
-          <div className="container mx-auto px-6 lg:px-16 text-center">
-            <p className="font-body text-sm tracking-[0.3em] uppercase text-muted-foreground mb-4">Next Project</p>
-            <Link to={`/project/${nextProject.slug}`} className="inline-flex items-center gap-3 font-display text-4xl md:text-5xl text-foreground hover:text-accent transition-colors">
-              {nextProject.title}
-              <ArrowRight size={32} className="opacity-50" />
-            </Link>
-          </div>
-        </section>
-      }
-    </main>);
-};
-
-// Helpers
-const Divider = () =>
-<div className="container mx-auto px-6 lg:px-16"><div className="border-t border-border/40" /></div>;
-
       {/* 8. ITERATIONS */}
       {project.iterations?.length > 0 && (
         <>
@@ -395,6 +376,21 @@ const Divider = () =>
           </section>
         </>
       )}
+
+      {/* NEXT PROJECT */}
+      {nextProject &&
+      <section className="py-24 bg-card">
+          <div className="container mx-auto px-6 lg:px-16 text-center">
+            <p className="font-body text-sm tracking-[0.3em] uppercase text-muted-foreground mb-4">Next Project</p>
+            <Link to={`/project/${nextProject.slug}`} className="inline-flex items-center gap-3 font-display text-4xl md:text-5xl text-foreground hover:text-accent transition-colors">
+              {nextProject.title}
+              <ArrowRight size={32} className="opacity-50" />
+            </Link>
+          </div>
+        </section>
+      }
+    </main>);
+};
 
 
 const SectionHeader = ({ label, title, subtitle }: {label: string;title: string;subtitle?: string;}) =>
