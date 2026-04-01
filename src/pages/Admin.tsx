@@ -1422,7 +1422,69 @@ const Admin = () => {
           <RichTextEditor label="Callout" value={editing.comparison?.callout || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, callout: v })} />
         </Section>
 
-        {/* Process */}
+        {/* Iterations */}
+        <Section title="Iterations">
+          {!editing.id ? (
+            <p className="text-sm text-muted-foreground">Save the project first, then add iteration images.</p>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {(editing.iterations || []).map((iter: Iteration, i: number) => (
+                  <div key={i} className="rounded-lg overflow-hidden border border-border/40">
+                    <img src={iter.url} alt="" className="w-full h-32 object-cover" />
+                    <div className="p-2 space-y-2">
+                      <Input
+                        placeholder="Caption (optional)"
+                        value={iter.caption || ""}
+                        onChange={(e) => {
+                          const iters = [...(editing.iterations || [])];
+                          iters[i] = { ...iters[i], caption: e.target.value };
+                          updateField("iterations", iters);
+                        }}
+                        className="text-xs h-7"
+                      />
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="w-full h-7 text-xs"
+                        onClick={() => {
+                          const iters = [...(editing.iterations || [])];
+                          iters.splice(i, 1);
+                          updateField("iterations", iters);
+                        }}
+                      >
+                        <Trash2 size={12} className="mr-1" /> Remove
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-body transition-colors">
+                <Plus size={16} />
+                Add Iteration Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    try {
+                      const url = await uploadImage.mutateAsync(file);
+                      updateField("iterations", [...(editing.iterations || []), { url, caption: "" }]);
+                      toast.success("Iteration image added");
+                    } catch (err: any) {
+                      toast.error("Upload failed: " + err.message);
+                    }
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+            </>
+          )}
+        </Section>
+
+
         <Section title="Process Steps">
           {(editing.process || []).map((step: ProcessStep, i: number) => (
             <div key={i} className="space-y-2 bg-secondary/30 rounded-lg p-4">
