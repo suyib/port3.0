@@ -12,6 +12,7 @@ function rowToProject(row: any, images?: ProjectImage[]): Project {
     tech_pivot: (row.tech_pivot ?? {}) as Project["tech_pivot"],
     component_states: (row.component_states ?? []) as Project["component_states"],
     takeaways: (row.takeaways ?? []) as Project["takeaways"],
+    iterations: (row.iterations ?? []) as Iteration[],
     images,
   };
 }
