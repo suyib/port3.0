@@ -1,0 +1,1 @@
+ALTER TABLE projects ADD COLUMN iterations jsonb NOT NULL DEFAULT '[]'::jsonb;

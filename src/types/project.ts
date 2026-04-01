@@ -34,6 +34,11 @@ export interface Takeaway {
   value: string;
 }
 
+export interface Iteration {
+  url: string;
+  caption: string;
+}
+
 export interface ProjectImage {
   id: string;
   project_id: string;
