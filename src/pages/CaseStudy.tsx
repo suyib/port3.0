@@ -150,7 +150,7 @@ const CaseStudy = () => {
 
       {/* Lightbox */}
       <AnimatePresence>
-        {lightboxIndex !== null && visibleGalleryImages[lightboxIndex] && (
+        {lightboxIndex !== null && allLightboxImages[lightboxIndex] && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -166,16 +166,16 @@ const CaseStudy = () => {
               <X size={28} />
             </button>
 
-            {visibleGalleryImages.length > 1 && (
+            {allLightboxImages.length > 1 && (
               <>
                 <button
-                  onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + visibleGalleryImages.length) % visibleGalleryImages.length); }}
+                  onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + allLightboxImages.length) % allLightboxImages.length); }}
                   className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors z-10"
                 >
                   <ArrowLeft size={32} />
                 </button>
                 <button
-                  onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % visibleGalleryImages.length); }}
+                  onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % allLightboxImages.length); }}
                   className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors z-10"
                 >
                   <ArrowRight size={32} />
@@ -185,12 +185,12 @@ const CaseStudy = () => {
 
             <div className="max-w-5xl max-h-[85vh] px-12" onClick={(e) => e.stopPropagation()}>
               <img
-                src={visibleGalleryImages[lightboxIndex].url}
-                alt={visibleGalleryImages[lightboxIndex].caption || project.title}
+                src={allLightboxImages[lightboxIndex].url}
+                alt={allLightboxImages[lightboxIndex].caption || project.title}
                 className="max-w-full max-h-[80vh] object-contain mx-auto rounded-lg"
               />
-              {visibleGalleryImages[lightboxIndex].caption && (
-                <p className="text-white/70 text-sm text-center mt-4 italic">{visibleGalleryImages[lightboxIndex].caption}</p>
+              {allLightboxImages[lightboxIndex].caption && (
+                <p className="text-white/70 text-sm text-center mt-4 italic">{allLightboxImages[lightboxIndex].caption}</p>
               )}
             </div>
           </motion.div>
