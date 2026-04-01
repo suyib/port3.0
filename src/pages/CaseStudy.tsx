@@ -357,6 +357,45 @@ const CaseStudy = () => {
 const Divider = () =>
 <div className="container mx-auto px-6 lg:px-16"><div className="border-t border-border/40" /></div>;
 
+      {/* 8. ITERATIONS */}
+      {project.iterations?.length > 0 && (
+        <>
+          <Divider />
+          <section className="py-24">
+            <div className="container mx-auto px-6 lg:px-16">
+              <SectionHeader label="Iterations" title="Design Evolution" />
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                {project.iterations.map((iter, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: i * 0.08 }}
+                    className="bg-card border border-border/40 rounded-2xl overflow-hidden"
+                  >
+                    <button
+                      className="block w-full cursor-pointer group"
+                      onClick={() => setLightboxIndex(visibleGalleryImages.length + i)}
+                    >
+                      <img
+                        src={iter.url}
+                        alt={iter.caption || `Iteration ${i + 1}`}
+                        loading="lazy"
+                        className="w-full h-48 md:h-56 object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </button>
+                    {iter.caption && (
+                      <p className="font-body text-xs text-muted-foreground text-center italic p-3">{iter.caption}</p>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
 
 const SectionHeader = ({ label, title, subtitle }: {label: string;title: string;subtitle?: string;}) =>
 <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-14">

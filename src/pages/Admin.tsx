@@ -80,6 +80,7 @@ const emptyProject: Omit<Project, "id"> = {
   meta_description: "",
   sort_order: 0,
   published: false,
+  iterations: [],
 };
 
 const Admin = () => {
