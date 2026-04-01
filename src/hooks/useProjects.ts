@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Project, ProjectImage } from "@/types/project";
+import type { Project, ProjectImage, Iteration } from "@/types/project";
 import type { Json } from "@/integrations/supabase/types";
 
 function rowToProject(row: any, images?: ProjectImage[]): Project {
@@ -12,6 +12,7 @@ function rowToProject(row: any, images?: ProjectImage[]): Project {
     tech_pivot: (row.tech_pivot ?? {}) as Project["tech_pivot"],
     component_states: (row.component_states ?? []) as Project["component_states"],
     takeaways: (row.takeaways ?? []) as Project["takeaways"],
+    iterations: (row.iterations ?? []) as Iteration[],
     images,
   };
 }
@@ -92,6 +93,7 @@ export function useSaveProject() {
         tech_pivot: rest.tech_pivot as unknown as Json,
         component_states: rest.component_states as unknown as Json,
         takeaways: rest.takeaways as unknown as Json,
+        iterations: rest.iterations as unknown as Json,
       };
 
       if (project.id) {

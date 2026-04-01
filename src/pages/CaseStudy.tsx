@@ -27,6 +27,14 @@ const CaseStudy = () => {
   null;
 
   const visibleGalleryImages = project.images?.filter((i) => i.visible) ?? [];
+  const iterationImages = (project.iterations ?? []).map((iter, i) => ({
+    url: iter.url,
+    caption: iter.caption || `Iteration ${i + 1}`,
+  }));
+  const allLightboxImages = [
+    ...visibleGalleryImages.map((img) => ({ url: img.url, caption: img.caption || project.title })),
+    ...iterationImages,
+  ];
 
   return (
     <main className="min-h-screen bg-background">
@@ -142,7 +150,7 @@ const CaseStudy = () => {
 
       {/* Lightbox */}
       <AnimatePresence>
-        {lightboxIndex !== null && visibleGalleryImages[lightboxIndex] && (
+        {lightboxIndex !== null && allLightboxImages[lightboxIndex] && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -158,16 +166,16 @@ const CaseStudy = () => {
               <X size={28} />
             </button>
 
-            {visibleGalleryImages.length > 1 && (
+            {allLightboxImages.length > 1 && (
               <>
                 <button
-                  onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + visibleGalleryImages.length) % visibleGalleryImages.length); }}
+                  onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + allLightboxImages.length) % allLightboxImages.length); }}
                   className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors z-10"
                 >
                   <ArrowLeft size={32} />
                 </button>
                 <button
-                  onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % visibleGalleryImages.length); }}
+                  onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % allLightboxImages.length); }}
                   className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors z-10"
                 >
                   <ArrowRight size={32} />
@@ -177,12 +185,12 @@ const CaseStudy = () => {
 
             <div className="max-w-5xl max-h-[85vh] px-12" onClick={(e) => e.stopPropagation()}>
               <img
-                src={visibleGalleryImages[lightboxIndex].url}
-                alt={visibleGalleryImages[lightboxIndex].caption || project.title}
+                src={allLightboxImages[lightboxIndex].url}
+                alt={allLightboxImages[lightboxIndex].caption || project.title}
                 className="max-w-full max-h-[80vh] object-contain mx-auto rounded-lg"
               />
-              {visibleGalleryImages[lightboxIndex].caption && (
-                <p className="text-white/70 text-sm text-center mt-4 italic">{visibleGalleryImages[lightboxIndex].caption}</p>
+              {allLightboxImages[lightboxIndex].caption && (
+                <p className="text-white/70 text-sm text-center mt-4 italic">{allLightboxImages[lightboxIndex].caption}</p>
               )}
             </div>
           </motion.div>
@@ -338,6 +346,45 @@ const CaseStudy = () => {
         </div>
       </section>
 
+      {/* 8. ITERATIONS */}
+      {project.iterations?.length > 0 && (
+        <>
+          <Divider />
+          <section className="py-24">
+            <div className="container mx-auto px-6 lg:px-16">
+              <SectionHeader label="Iterations" title="Design Evolution" />
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                {project.iterations.map((iter, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: i * 0.08 }}
+                    className="bg-card border border-border/40 rounded-2xl overflow-hidden"
+                  >
+                    <button
+                      className="block w-full cursor-pointer group"
+                      onClick={() => setLightboxIndex(visibleGalleryImages.length + i)}
+                    >
+                      <img
+                        src={iter.url}
+                        alt={iter.caption || `Iteration ${i + 1}`}
+                        loading="lazy"
+                        className="w-full h-48 md:h-56 object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </button>
+                    {iter.caption && (
+                      <p className="font-body text-xs text-muted-foreground text-center italic p-3">{iter.caption}</p>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
       {/* NEXT PROJECT */}
       {nextProject &&
       <section className="py-24 bg-card">
@@ -353,10 +400,10 @@ const CaseStudy = () => {
     </main>);
 };
 
+
 // Helpers
 const Divider = () =>
 <div className="container mx-auto px-6 lg:px-16"><div className="border-t border-border/40" /></div>;
-
 
 const SectionHeader = ({ label, title, subtitle }: {label: string;title: string;subtitle?: string;}) =>
 <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-14">

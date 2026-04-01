@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog";
 import { useAuth } from "@/hooks/useAuth";
 import RichTextEditor from "@/components/RichTextEditor";
 import {
@@ -19,7 +20,7 @@ import {
   useUploadBlogImage,
   type BlogPost,
 } from "@/hooks/useBlogPosts";
-import { Navigate, Link, useNavigate, useLocation } from "react-router-dom";
+import { Navigate, Link, useNavigate, useLocation, useBlocker } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,7 +36,7 @@ import {
   ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff, Upload, Save, X, GripVertical,
   ChevronUp, ChevronDown, Settings, FileText, RefreshCw, ExternalLink, Palette, Mail,
 } from "lucide-react";
-import type { Project, ProjectImage, PainPoint, ProcessStep, ComponentState, Takeaway } from "@/types/project";
+import type { Project, ProjectImage, PainPoint, ProcessStep, ComponentState, Takeaway, Iteration } from "@/types/project";
 import { toast } from "sonner";
 
 const ICON_OPTIONS = [
@@ -80,6 +81,7 @@ const emptyProject: Omit<Project, "id"> = {
   meta_description: "",
   sort_order: 0,
   published: false,
+  iterations: [],
 };
 
 const Admin = () => {
@@ -124,15 +126,39 @@ const Admin = () => {
   const [settingsForm, setSettingsForm] = useState<SiteSettings | null>(null);
   const [skillInput, setSkillInput] = useState({ design: "", dev: "", other: "" });
 
+  // Dirty tracking for unsaved changes
+  const [isDirty, setIsDirty] = useState(false);
+  const originalEditingRef = useRef<string>("");
+
+  // Mark dirty whenever editing state changes
+  const wrappedSetEditing = useCallback((val: typeof editing | ((prev: typeof editing) => typeof editing)) => {
+    setEditing((prev) => {
+      const next = typeof val === "function" ? val(prev) : val;
+      if (next && originalEditingRef.current && JSON.stringify(next) !== originalEditingRef.current) {
+        setIsDirty(true);
+      }
+      return next;
+    });
+  }, []);
+
+  // Navigation blocker
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      isDirty && viewMode === "edit" && currentLocation.pathname !== nextLocation.pathname
+  );
+
   // Sync URL → editing state for projects
   useEffect(() => {
     if (viewMode === "edit" && projects) {
       if (viewParam === "new") {
         if (!editing || editing.id) {
-          setEditing({ ...emptyProject } as any);
+          const fresh = { ...emptyProject } as any;
+          setEditing(fresh);
           setToolInput("");
           setGalleryImages([]);
           setGalleryDirty(false);
+          setIsDirty(false);
+          originalEditingRef.current = JSON.stringify(fresh);
         }
       } else if (viewParam) {
         const project = projects.find((p) => p.id === viewParam);
@@ -141,10 +167,13 @@ const Admin = () => {
           setToolInput(project.tools.join(", "));
           setGalleryImages(project.images ?? []);
           setGalleryDirty(false);
+          setIsDirty(false);
+          originalEditingRef.current = JSON.stringify(project);
         }
       }
     } else if (viewMode !== "edit") {
       if (editing) setEditing(null);
+      setIsDirty(false);
     }
   }, [viewMode, viewParam, projects]);
 
@@ -177,6 +206,16 @@ const Admin = () => {
       setSettingsForm(null);
     }
   }, [viewMode, siteSettings]);
+
+  // Browser back/refresh guard
+  useEffect(() => {
+    if (!isDirty && !galleryDirty) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty, galleryDirty]);
 
   if (authLoading) return null;
   if (!session) return <Navigate to="/login" replace />;
@@ -284,6 +323,7 @@ const Admin = () => {
       }
 
       toast.success(editing.id ? "Project updated" : "Project created");
+      setIsDirty(false);
       navigate("/admin");
       setImageFile(null);
       setGalleryImages([]);
@@ -344,6 +384,7 @@ const Admin = () => {
 
   const updateField = (field: string, value: any) => {
     setEditing((prev) => (prev ? { ...prev, [field]: value } : prev));
+    setIsDirty(true);
   };
 
   // Blog handlers
@@ -1244,7 +1285,7 @@ const Admin = () => {
                   >
                     <div className="relative">
                       <img src={img.url} alt="" className="w-full h-32 object-cover" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-between p-2">
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-between p-2 pointer-events-auto">
                         <div className="flex gap-1">
                           <Button
                             variant="secondary"
@@ -1391,7 +1432,69 @@ const Admin = () => {
           <RichTextEditor label="Callout" value={editing.comparison?.callout || ""} onChange={(v) => updateField("comparison", { ...editing.comparison, callout: v })} />
         </Section>
 
-        {/* Process */}
+        {/* Iterations */}
+        <Section title="Iterations">
+          {!editing.id ? (
+            <p className="text-sm text-muted-foreground">Save the project first, then add iteration images.</p>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {(editing.iterations || []).map((iter: Iteration, i: number) => (
+                  <div key={i} className="rounded-lg overflow-hidden border border-border/40">
+                    <img src={iter.url} alt="" className="w-full h-32 object-cover" />
+                    <div className="p-2 space-y-2">
+                      <Input
+                        placeholder="Caption (optional)"
+                        value={iter.caption || ""}
+                        onChange={(e) => {
+                          const iters = [...(editing.iterations || [])];
+                          iters[i] = { ...iters[i], caption: e.target.value };
+                          updateField("iterations", iters);
+                        }}
+                        className="text-xs h-7"
+                      />
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="w-full h-7 text-xs"
+                        onClick={() => {
+                          const iters = [...(editing.iterations || [])];
+                          iters.splice(i, 1);
+                          updateField("iterations", iters);
+                        }}
+                      >
+                        <Trash2 size={12} className="mr-1" /> Remove
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-body transition-colors">
+                <Plus size={16} />
+                Add Iteration Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    try {
+                      const url = await uploadImage.mutateAsync(file);
+                      updateField("iterations", [...(editing.iterations || []), { url, caption: "" }]);
+                      toast.success("Iteration image added");
+                    } catch (err: any) {
+                      toast.error("Upload failed: " + err.message);
+                    }
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+            </>
+          )}
+        </Section>
+
+
         <Section title="Process Steps">
           {(editing.process || []).map((step: ProcessStep, i: number) => (
             <div key={i} className="space-y-2 bg-secondary/30 rounded-lg p-4">
@@ -1478,6 +1581,38 @@ const Admin = () => {
           </Button>
         </div>
       </div>
+
+      {/* Unsaved Changes Dialog */}
+      <AlertDialog open={blocker.state === "blocked"}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. Would you like to save before leaving?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => blocker.reset?.()}>Cancel</AlertDialogCancel>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDirty(false);
+                blocker.proceed?.();
+              }}
+            >
+              Discard
+            </Button>
+            <AlertDialogAction
+              onClick={async () => {
+                await handleSave();
+                blocker.proceed?.();
+              }}
+            >
+              Save & Exit
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </main>
   );
 };
