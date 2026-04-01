@@ -1275,7 +1275,7 @@ const Admin = () => {
                   >
                     <div className="relative">
                       <img src={img.url} alt="" className="w-full h-32 object-cover" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-between p-2">
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-between p-2 pointer-events-auto">
                         <div className="flex gap-1">
                           <Button
                             variant="secondary"
