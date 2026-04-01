@@ -93,6 +93,7 @@ export function useSaveProject() {
         tech_pivot: rest.tech_pivot as unknown as Json,
         component_states: rest.component_states as unknown as Json,
         takeaways: rest.takeaways as unknown as Json,
+        iterations: rest.iterations as unknown as Json,
       };
 
       if (project.id) {

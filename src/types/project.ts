@@ -71,6 +71,7 @@ export interface Project {
   stakeholders: string;
   cover_caption: string;
   meta_description: string;
+  iterations: Iteration[];
   sort_order: number;
   published: boolean;
   images?: ProjectImage[];
