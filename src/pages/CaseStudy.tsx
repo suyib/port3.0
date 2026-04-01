@@ -393,6 +393,10 @@ const CaseStudy = () => {
 };
 
 
+// Helpers
+const Divider = () =>
+<div className="container mx-auto px-6 lg:px-16"><div className="border-t border-border/40" /></div>;
+
 const SectionHeader = ({ label, title, subtitle }: {label: string;title: string;subtitle?: string;}) =>
 <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-14">
     <p className="font-body text-sm tracking-[0.3em] uppercase text-accent mb-4">{label}</p>
