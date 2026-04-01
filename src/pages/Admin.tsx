@@ -36,7 +36,7 @@ import {
   ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff, Upload, Save, X, GripVertical,
   ChevronUp, ChevronDown, Settings, FileText, RefreshCw, ExternalLink, Palette, Mail,
 } from "lucide-react";
-import type { Project, ProjectImage, PainPoint, ProcessStep, ComponentState, Takeaway } from "@/types/project";
+import type { Project, ProjectImage, PainPoint, ProcessStep, ComponentState, Takeaway, Iteration } from "@/types/project";
 import { toast } from "sonner";
 
 const ICON_OPTIONS = [
