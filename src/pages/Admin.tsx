@@ -152,10 +152,13 @@ const Admin = () => {
     if (viewMode === "edit" && projects) {
       if (viewParam === "new") {
         if (!editing || editing.id) {
-          setEditing({ ...emptyProject } as any);
+          const fresh = { ...emptyProject } as any;
+          setEditing(fresh);
           setToolInput("");
           setGalleryImages([]);
           setGalleryDirty(false);
+          setIsDirty(false);
+          originalEditingRef.current = JSON.stringify(fresh);
         }
       } else if (viewParam) {
         const project = projects.find((p) => p.id === viewParam);
@@ -164,10 +167,13 @@ const Admin = () => {
           setToolInput(project.tools.join(", "));
           setGalleryImages(project.images ?? []);
           setGalleryDirty(false);
+          setIsDirty(false);
+          originalEditingRef.current = JSON.stringify(project);
         }
       }
     } else if (viewMode !== "edit") {
       if (editing) setEditing(null);
+      setIsDirty(false);
     }
   }, [viewMode, viewParam, projects]);
 
