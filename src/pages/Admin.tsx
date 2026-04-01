@@ -207,6 +207,16 @@ const Admin = () => {
     }
   }, [viewMode, siteSettings]);
 
+  // Browser back/refresh guard
+  useEffect(() => {
+    if (!isDirty && !galleryDirty) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty, galleryDirty]);
+
   if (authLoading) return null;
   if (!session) return <Navigate to="/login" replace />;
 
