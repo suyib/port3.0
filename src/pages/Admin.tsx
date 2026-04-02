@@ -1198,7 +1198,7 @@ const Admin = () => {
     <main className="min-h-screen bg-background">
       <nav className="border-b border-border/40 bg-background/80 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 lg:px-16 py-4 flex items-center justify-between">
-          <button onClick={() => navigate("/admin")} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={() => handleNavigateWithGuard("/admin")} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft size={16} /> Back to List
           </button>
           <div className="flex items-center gap-3">
