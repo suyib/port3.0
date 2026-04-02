@@ -20,7 +20,7 @@ import {
   useUploadBlogImage,
   type BlogPost,
 } from "@/hooks/useBlogPosts";
-import { Navigate, Link, useNavigate, useLocation, useBlocker } from "react-router-dom";
+import { Navigate, Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -141,11 +141,18 @@ const Admin = () => {
     });
   }, []);
 
-  // Navigation blocker
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      isDirty && viewMode === "edit" && currentLocation.pathname !== nextLocation.pathname
-  );
+  // Unsaved changes dialog state
+  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+
+  const handleNavigateWithGuard = useCallback((to: string) => {
+    if (isDirty || galleryDirty) {
+      setPendingNavigation(to);
+      setShowUnsavedDialog(true);
+    } else {
+      navigate(to);
+    }
+  }, [isDirty, galleryDirty, navigate]);
 
   // Sync URL → editing state for projects
   useEffect(() => {
@@ -1191,7 +1198,7 @@ const Admin = () => {
     <main className="min-h-screen bg-background">
       <nav className="border-b border-border/40 bg-background/80 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-6 lg:px-16 py-4 flex items-center justify-between">
-          <button onClick={() => navigate("/admin")} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={() => handleNavigateWithGuard("/admin")} className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft size={16} /> Back to List
           </button>
           <div className="flex items-center gap-3">
@@ -1583,7 +1590,7 @@ const Admin = () => {
       </div>
 
       {/* Unsaved Changes Dialog */}
-      <AlertDialog open={blocker.state === "blocked"}>
+      <AlertDialog open={showUnsavedDialog} onOpenChange={setShowUnsavedDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
@@ -1592,12 +1599,15 @@ const Admin = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => blocker.reset?.()}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => { setShowUnsavedDialog(false); setPendingNavigation(null); }}>Cancel</AlertDialogCancel>
             <Button
               variant="outline"
               onClick={() => {
                 setIsDirty(false);
-                blocker.proceed?.();
+                setGalleryDirty(false);
+                setShowUnsavedDialog(false);
+                if (pendingNavigation) navigate(pendingNavigation);
+                setPendingNavigation(null);
               }}
             >
               Discard
@@ -1605,7 +1615,9 @@ const Admin = () => {
             <AlertDialogAction
               onClick={async () => {
                 await handleSave();
-                blocker.proceed?.();
+                setShowUnsavedDialog(false);
+                if (pendingNavigation) navigate(pendingNavigation);
+                setPendingNavigation(null);
               }}
             >
               Save & Exit
