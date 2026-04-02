@@ -141,11 +141,18 @@ const Admin = () => {
     });
   }, []);
 
-  // Navigation blocker
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      isDirty && viewMode === "edit" && currentLocation.pathname !== nextLocation.pathname
-  );
+  // Unsaved changes dialog state
+  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+
+  const handleNavigateWithGuard = useCallback((to: string) => {
+    if (isDirty || galleryDirty) {
+      setPendingNavigation(to);
+      setShowUnsavedDialog(true);
+    } else {
+      navigate(to);
+    }
+  }, [isDirty, galleryDirty, navigate]);
 
   // Sync URL → editing state for projects
   useEffect(() => {
