@@ -1590,7 +1590,7 @@ const Admin = () => {
       </div>
 
       {/* Unsaved Changes Dialog */}
-      <AlertDialog open={blocker.state === "blocked"}>
+      <AlertDialog open={showUnsavedDialog} onOpenChange={setShowUnsavedDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
@@ -1599,12 +1599,15 @@ const Admin = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => blocker.reset?.()}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => { setShowUnsavedDialog(false); setPendingNavigation(null); }}>Cancel</AlertDialogCancel>
             <Button
               variant="outline"
               onClick={() => {
                 setIsDirty(false);
-                blocker.proceed?.();
+                setGalleryDirty(false);
+                setShowUnsavedDialog(false);
+                if (pendingNavigation) navigate(pendingNavigation);
+                setPendingNavigation(null);
               }}
             >
               Discard
@@ -1612,7 +1615,9 @@ const Admin = () => {
             <AlertDialogAction
               onClick={async () => {
                 await handleSave();
-                blocker.proceed?.();
+                setShowUnsavedDialog(false);
+                if (pendingNavigation) navigate(pendingNavigation);
+                setPendingNavigation(null);
               }}
             >
               Save & Exit
