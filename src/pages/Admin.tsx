@@ -142,9 +142,10 @@ const Admin = () => {
   }, []);
 
   // useBlocker for navigation guard
+  const settingsDirty = !!(settingsForm && siteSettings && JSON.stringify(settingsForm) !== JSON.stringify(siteSettings));
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      (isDirty || galleryDirty || editingPost !== null || settingsForm !== null) &&
+      (isDirty || galleryDirty || editingPost !== null || settingsDirty) &&
       currentLocation.pathname !== nextLocation.pathname
   );
 
