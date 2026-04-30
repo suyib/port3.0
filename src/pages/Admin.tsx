@@ -142,9 +142,10 @@ const Admin = () => {
   }, []);
 
   // useBlocker for navigation guard
+  const settingsDirty = !!(settingsForm && siteSettings && JSON.stringify(settingsForm) !== JSON.stringify(siteSettings));
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      (isDirty || galleryDirty || editingPost !== null || settingsForm !== null) &&
+      (isDirty || galleryDirty || editingPost !== null || settingsDirty) &&
       currentLocation.pathname !== nextLocation.pathname
   );
 
@@ -210,13 +211,13 @@ const Admin = () => {
 
   // Browser refresh/tab close guard
   useEffect(() => {
-    if (!isDirty && !galleryDirty && editingPost === null && settingsForm === null) return;
+    if (!isDirty && !galleryDirty && editingPost === null && !settingsDirty) return;
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault();
     };
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
-  }, [isDirty, galleryDirty, editingPost, settingsForm]);
+  }, [isDirty, galleryDirty, editingPost, settingsDirty]);
 
   if (authLoading) return null;
   if (!session) return <Navigate to="/login" replace />;
